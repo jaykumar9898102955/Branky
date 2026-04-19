@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import styles from '../../styles/Dashboard.module.css';
+import styles from '../../css/Dashboard.module.css';
 
 const API = 'http://localhost:5000/api';
 
