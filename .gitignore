@@ -1,3 +1,5 @@
-
-bachend/node_modules
-node_modules
+.next/
+node_modules/
+.env.local
+.env
+*.log

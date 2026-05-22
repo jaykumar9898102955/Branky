@@ -1,75 +1,42 @@
-# 🤖 Branky S.T.E.M. Labs — v3 (Next.js + Express)
+# 🤖 Branky S.T.E.M. Labs — 2026 Bootcamp Website
 
-Complete MERN-stack landing page + admin panel for Branky STEM Labs summer camps.
+Full-stack Next.js 14 + MongoDB website with Admin Panel. All brand assets included.
 
-## 🗂️ Structure
-```
-branky-stemlab-v3/
-├── frontend/               → Next.js app (Pages Router)
-│   ├── pages/
-│   │   ├── index.js        → Public landing page
-│   │   └── admin/
-│   │       ├── login.js    → Admin login
-│   │       └── dashboard.js→ Admin dashboard
-│   ├── styles/             → CSS Modules (brand colors)
-│   └── public/             → Logo + fonts
-├── backend/
-│   └── index.js            → Express API (auth + registrations)
-└── package.json            → Root scripts
-```
+## Brand Assets Used
+- `logo-main.png` — Primary logo (blue, white bg) — Navbar, Footer, Modal
+- `logo-orange.png` — Orange variant logo
+- `logo-blue-bg.png` — White logo on blue bg
+- `logo-icon-blue.png` — B icon blue — About section points, Mentors watermark
+- `logo-icon-orange.png` — B icon orange — Hero badge, floating icon
+- `logo-icon-small.png` — Small B icon — Admin nav link
+- `app-icon.png` — App icon circle — Favicon, Footer social, CTA badge
+- `brand-grid.png` — Blueprint grid — Hero bg, Programs bg, Timeline bg, CTA bg
+- `brand-wave.png` — Wavy S-curve — Hero decor, About decor, Why decor, Timeline decor
+- `brand-shapes.png` — Outline shapes — About bg, Why bg
+- `brand-bar.png` — Blue pill bar shape — Available for banners
+- `robot1-6.png` — Student project photos — Hero, Programs, Gallery
 
-## 🚀 Quick Start
-
-### 1. Install Dependencies
+## Quick Start
 ```bash
-cd branky-stemlab-v3
-npm run install:all
-
-```
-
-### 2. Start Everything
-```bash
+cd branky-stem
+npm install
+# Edit .env.local with your MongoDB URI
 npm run dev
-
 ```
-- **Landing Page** → http://localhost:3000
-- **Admin Login** → http://localhost:3000/admin/login
-- **API** → http://localhost:5000
 
-## 🔑 Admin Credentials
-| Username | Password | Role |
-|---------|----------|------|
-| `admin` | `admin@123` | Super Admin |
-| `manager` | `branky@2025` | Manager |
+Open: http://localhost:3000
+Admin: http://localhost:3000/admin
+- Email: admin@brankylabs.in
+- Password: Branky@2026
 
-## 📡 API Endpoints
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | /api/register | ❌ | Submit registration |
-| POST | /api/admin/login | ❌ | Admin login |
-| GET | /api/admin/stats | ✅ | Dashboard stats |
-| GET | /api/admin/registrations | ✅ | List registrations |
-| PATCH | /api/admin/registrations/:id/status | ✅ | Update status |
-| DELETE | /api/admin/registrations/:id | ✅ | Delete |
-| POST | /api/admin/seed | ✅ Super Admin | Seed demo data |
-
-## ✨ Features
-### Landing Page (Next.js)
-- Animated hero + countdown timer
-- Flip-card program showcase
-- 6-day curriculum accordion with YouTube video links
-- Registration modal (student, parent, school, state, city)
-- Stats, timeline, FAQ, CTA, Footer
-
-### Admin Panel
-- **Login page** — JWT authentication, demo credential hints
-- **Overview tab** — 4 stat cards, 7-day bar chart, program breakdown, state map, quick actions
-- **Registrations tab** — Full data table, search, filter by program/status, pagination, status update, delete
-- **Analytics tab** — Visual charts, status breakdown, program popularity
-- **Detail drawer** — Click any row to see full registration details + actions
-
-## 🔧 Connect MongoDB (Production)
+## Deploy to Vercel
 ```bash
-cd backend && npm install mongoose
+npx vercel
+# Add env vars in Vercel dashboard:
+# MONGODB_URI, JWT_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD
 ```
-Replace the in-memory arrays in `backend/index.js` with Mongoose models.
+
+## Brand Colors
+- Blue: #1D5CE3
+- Orange: #FF931E
+- Fonts: Fredoka One (headings), Karla (body)
