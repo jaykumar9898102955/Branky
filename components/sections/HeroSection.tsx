@@ -120,7 +120,7 @@ export default function HeroSection({ onApply }: { onApply: (p?: string) => void
         <span style={{ fontSize:'.65rem',color:'var(--gray-mid)',letterSpacing:'.12em',textTransform:'uppercase',fontWeight:700 }}>Scroll</span>
       </div>
 
-      <style>{`
+      <style dangerouslySetInnerHTML={{__html:`
         @keyframes blobFloat2 { 0%,100%{transform:translateY(0);} 50%{transform:translateY(12px);} }
         @keyframes fadeUp { from{opacity:0;transform:translateY(18px);} to{opacity:1;transform:translateY(0);} }
         @media(max-width:860px){
@@ -129,7 +129,7 @@ export default function HeroSection({ onApply }: { onApply: (p?: string) => void
           #home > div > div > div:last-child { display:none !important; }
           #home > div > div > div:first-child > div:last-child { grid-template-columns:repeat(2,1fr) !important; }
         }
-      `}</style>
+      `}} />
     </section>
   )
 }
