@@ -65,7 +65,7 @@ export default function AboutSection() {
           </div>
         </div>
       </div>
-      <style>{`@media(max-width:860px){#about{padding:64px 20px!important;} #about>div{grid-template-columns:1fr!important;gap:40px!important;}}`}</style>
+      <style dangerouslySetInnerHTML={{__html:`@media(max-width:860px){#about{padding:64px 20px!important;} #about>div{grid-template-columns:1fr!important;gap:40px!important;}}`}} />
     </section>
   )
 }

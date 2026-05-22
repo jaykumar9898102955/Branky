@@ -59,7 +59,7 @@ export default function ProgramsSection({ onApply }: { onApply: (p: string) => v
           ))}
         </div>
       </div>
-      <style>{`@media(max-width:860px){#programs{padding:64px 20px!important;} #programs>div>div:last-child{grid-template-columns:1fr!important;}}`}</style>
+      <style dangerouslySetInnerHTML={{__html:`@media(max-width:860px){#programs{padding:64px 20px!important;} #programs>div>div:last-child{grid-template-columns:1fr!important;}}`}} />
     </section>
   )
 }

@@ -46,7 +46,7 @@ export default function WhySection() {
           ))}
         </div>
       </div>
-      <style>{`@media(max-width:860px){#why{padding:64px 20px!important;} #why>div>div:last-child{grid-template-columns:1fr 1fr!important;}}`}</style>
+      <style dangerouslySetInnerHTML={{__html:`@media(max-width:860px){#why{padding:64px 20px!important;} #why>div>div:last-child{grid-template-columns:1fr 1fr!important;}}`}} />
     </section>
   )
 }
