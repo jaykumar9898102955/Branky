@@ -1,25 +1,32 @@
-import mongoose from 'mongoose'
+import mysql, { Pool } from 'mysql2/promise'
 
-const MONGODB_URI = process.env.MONGODB_URI as string
+declare global {
+  // eslint-disable-next-line no-var
+  var __mysqlPool: Pool | undefined
+}
 
-if (!MONGODB_URI) throw new Error('Please define MONGODB_URI in .env.local')
-
-let cached: { conn: any; promise: any } = (global as any).__mongoose
-
-if (!cached) {
-  cached = (global as any).__mongoose = { conn: null, promise: null }
+export function getPool(): Pool {
+  if (!global.__mysqlPool) {
+    if (!process.env.DB_HOST || !process.env.DB_USER || !process.env.DB_NAME) {
+      throw new Error('Please define DB_HOST, DB_USER, and DB_NAME in .env.local')
+    }
+    global.__mysqlPool = mysql.createPool({
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT || 3306),
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD || '',
+      database: process.env.DB_NAME,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+      charset: 'utf8mb4',
+    })
+  }
+  return global.__mysqlPool
 }
 
 export async function connectDB() {
-  if (cached.conn) return cached.conn
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI, { bufferCommands: false })
-  }
-  try {
-    cached.conn = await cached.promise
-  } catch (e) {
-    cached.promise = null
-    throw e
-  }
-  return cached.conn
+  return getPool()
 }
+
+export default connectDB

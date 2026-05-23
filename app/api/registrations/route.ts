@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { connectDB } from '@/lib/db'
-import Registration from '@/models/Registration'
+import { findByEmailAndProgram, createRegistration } from '@/models/Registration'
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,22 +12,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'All required fields must be filled.' }, { status: 400 })
     }
 
-    const existing = await Registration.findOne({ email: email.toLowerCase(), program })
+    const normalizedEmail = String(email).trim().toLowerCase()
+
+    const existing = await findByEmailAndProgram(normalizedEmail, program)
     if (existing) {
       return NextResponse.json({ error: 'Already registered for this program with this email.' }, { status: 409 })
     }
 
-    const reg = await Registration.create({
-      studentName: studentName.trim(),
-      parentName: parentName.trim(),
-      phone: phone.trim(),
-      email: email.trim().toLowerCase(),
+    const insertId = await createRegistration({
+      studentName: String(studentName).trim(),
+      parentName: String(parentName).trim(),
+      phone: String(phone).trim(),
+      email: normalizedEmail,
       age, program, city,
       source: source || 'Website',
       message: message || '',
     })
 
-    return NextResponse.json({ success: true, id: reg._id.toString() }, { status: 201 })
+    return NextResponse.json({ success: true, id: String(insertId) }, { status: 201 })
   } catch (err: any) {
     console.error('Registration error:', err)
     return NextResponse.json({ error: 'Server error. Please try again.' }, { status: 500 })
