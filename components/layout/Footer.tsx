@@ -75,10 +75,16 @@ export default function Footer({ onApply }: { onApply: () => void }) {
       </div>
 
       <style dangerouslySetInnerHTML={{__html:`
+        /* PC: 2fr 1fr 1fr 1fr — default inline style */
+        /* Tablet+Phone */
         @media(max-width:860px){
           footer>div:nth-child(2){grid-template-columns:1fr 1fr!important;padding:48px 20px 32px!important;gap:36px!important;}
           footer>div:last-child{padding:14px 20px 24px!important;flex-direction:column!important;align-items:flex-start!important;gap:6px!important;}
           footer>div:nth-child(2)>div:first-child{grid-column:1/-1;}
+        }
+        /* Phone only */
+        @media(max-width:480px){
+          footer>div:nth-child(2){grid-template-columns:1fr!important;gap:24px!important;padding:36px 20px 24px!important;}
         }
       `}} />
     </footer>

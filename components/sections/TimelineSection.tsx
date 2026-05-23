@@ -35,10 +35,10 @@ export default function TimelineSection() {
         {/* Timeline */}
         <div style={{ position:'relative' }}>
           {/* Center line */}
-          <div style={{ position:'absolute', left:'50%', top:0, bottom:0, width:4, background:'linear-gradient(to bottom,var(--blue),var(--orange),var(--blue))', transform:'translateX(-50%)', borderRadius:4 }} />
+          <div className="tl-center-line" style={{ position:'absolute', left:'50%', top:0, bottom:0, width:4, background:'linear-gradient(to bottom,var(--blue),var(--orange),var(--blue))', transform:'translateX(-50%)', borderRadius:4 }} />
 
           {steps.map((s, i) => (
-            <div key={i} style={{ display:'grid', gridTemplateColumns:'1fr 72px 1fr', marginBottom:44, alignItems:'start' }}>
+            <div key={i} className={`tl-row tl-row-${s.side}`} style={{ display:'grid', gridTemplateColumns:'1fr 72px 1fr', marginBottom:44, alignItems:'start' }}>
               {/* Left box or spacer */}
               {s.side==='left' ? (
                 <div className="tl-box" style={{ paddingRight:36 }}>
@@ -76,12 +76,31 @@ export default function TimelineSection() {
         </div>
       </div>
       <style dangerouslySetInnerHTML={{__html:`
+        /* PC: alternating left/right — default inline style */
+        /* Phone: all items stack as [dot | content] */
         @media(max-width:760px){
           #timeline { padding:64px 20px !important; }
-          #timeline > div > div:last-child > div { grid-template-columns: 20px 1fr !important; }
-          #timeline > div > div:last-child > div > div:nth-child(1) { display: none; }
-          #timeline > div > div:last-child > div > div:nth-child(3) { display: none; }
-          #timeline .tl-box { padding-left: 16px !important; padding-right: 0 !important; }
+
+          /* Shift the vertical line to align with the dots on the left */
+          #timeline .tl-center-line { left:18px !important; transform:none !important; }
+
+          /* Each row becomes: [36px dot col] [1fr content col] */
+          .tl-row { grid-template-columns:36px 1fr !important; gap:0 10px !important; margin-bottom:28px !important; }
+
+          /* Left steps: child1=content, child2=dot, child3=spacer
+             → move content to col 2, dot to col 1, hide spacer */
+          .tl-row-left > div:first-child  { grid-column:2 !important; grid-row:1 !important; padding:0 !important; }
+          .tl-row-left > div:nth-child(2) { grid-column:1 !important; grid-row:1 !important; justify-content:flex-start !important; padding-left:6px !important; }
+          .tl-row-left > div:last-child   { display:none !important; }
+
+          /* Right steps: child1=spacer, child2=dot, child3=content
+             → hide spacer, keep dot in col 1, move content to col 2 */
+          .tl-row-right > div:first-child  { display:none !important; }
+          .tl-row-right > div:nth-child(2) { grid-column:1 !important; justify-content:flex-start !important; padding-left:6px !important; }
+          .tl-row-right > div:last-child   { grid-column:2 !important; padding:0 !important; }
+
+          /* Remove horizontal padding from content wrappers (gap handles spacing) */
+          .tl-box { padding:0 !important; }
         }
       `}} />
     </section>

@@ -3,7 +3,7 @@ import { Clock } from 'lucide-react'
 
 export default function ApplyCtaSection({ onApply }: { onApply: () => void }) {
   return (
-    <section style={{ background:'linear-gradient(135deg,var(--blue-dark) 0%,var(--blue) 100%)', padding:'96px 5%', position:'relative', overflow:'hidden' }}>
+    <section className="apply-cta" style={{ background:'linear-gradient(135deg,var(--blue-dark) 0%,var(--blue) 100%)', padding:'96px 5%', position:'relative', overflow:'hidden' }}>
       {/* Wave top */}
       <div style={{ position:'absolute', top:-1, left:0, right:0, overflow:'hidden', lineHeight:0 }}>
         <svg viewBox="0 0 1440 60" style={{ display:'block', width:'100%' }} preserveAspectRatio="none">
@@ -33,7 +33,7 @@ export default function ApplyCtaSection({ onApply }: { onApply: () => void }) {
         </div>
 
         <div style={{ display:'flex', flexDirection:'column', gap:16, alignItems:'flex-start', flexShrink:0 }}>
-          <button className="btn btn-orange btn-lg" onClick={onApply} style={{ fontSize:'1.08rem', padding:'16px 48px' }}>
+          <button className="btn btn-orange btn-lg cta-apply-btn" onClick={onApply} style={{ fontSize:'1.08rem', padding:'16px 48px' }}>
             Apply Now — It's Free ↗
           </button>
           <div style={{ display:'flex', alignItems:'center', gap:10 }}>
@@ -42,7 +42,15 @@ export default function ApplyCtaSection({ onApply }: { onApply: () => void }) {
           </div>
         </div>
       </div>
-      <style dangerouslySetInnerHTML={{__html:`@media(max-width:760px){section{padding:70px 20px!important;} section>div{flex-direction:column!important;}}`}} />
+      <style dangerouslySetInnerHTML={{__html:`
+        /* PC: side-by-side flex — default inline style */
+        /* Phone */
+        @media(max-width:760px){
+          .apply-cta{padding:70px 20px!important;}
+          .apply-cta>div:last-child{flex-direction:column!important;align-items:stretch!important;gap:20px!important;}
+          .cta-apply-btn{width:100%!important;justify-content:center!important;}
+        }
+      `}} />
     </section>
   )
 }

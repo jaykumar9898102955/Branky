@@ -56,6 +56,8 @@ export default function ApplyModal({ isOpen, onClose, defaultProgram }: Props) {
 
   return(
     <div onMouseMove={tilt} style={{position:'fixed',inset:0,zIndex:500,display:'flex',alignItems:'center',justifyContent:'center',padding:16}} onClick={e=>{if(e.target===e.currentTarget)onClose()}}>
+      {/* Phone only: collapse form grids to 1 column */}
+      <style>{`@media(max-width:480px){.modal-grid{grid-template-columns:1fr!important;}}`}</style>
       <div onClick={onClose} style={{position:'absolute',inset:0,background:'rgba(13,13,13,.83)',backdropFilter:'blur(18px)'}} />
 
       <div ref={boxRef} onMouseLeave={untilt} style={{position:'relative',zIndex:1,background:'#fff',borderRadius:28,width:'min(580px,96vw)',maxHeight:'94vh',overflowY:'auto',padding:'clamp(28px,5vw,52px)',boxShadow:'0 40px 100px rgba(0,0,0,.28)',animation:'modal3d .5s cubic-bezier(.23,1,.32,1) both',transition:'transform .2s ease'}}>
@@ -78,16 +80,16 @@ export default function ApplyModal({ isOpen, onClose, defaultProgram }: Props) {
 
             {error&&<div style={{background:'#fef2f2',border:'2px solid #fecaca',borderRadius:12,padding:'11px 16px',marginBottom:18,fontSize:'.87rem',color:'#dc2626',fontWeight:700,display:'flex',alignItems:'center',gap:8}}><AlertCircle size={16}/> {error}</div>}
 
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14}}>
+            <div className="modal-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14}}>
               <div><Lbl t="Student Name" req /><input value={form.studentName} onChange={set('studentName')} placeholder="Full name" /></div>
               <div><Lbl t="Age / Grade" req /><input value={form.age} onChange={set('age')} placeholder="e.g. 13 / Gr.8" /></div>
             </div>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14,marginTop:14}}>
+            <div className="modal-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14,marginTop:14}}>
               <div><Lbl t="Parent Name" req /><input value={form.parentName} onChange={set('parentName')} placeholder="Guardian name" /></div>
               <div><Lbl t="Phone" req /><input type="tel" value={form.phone} onChange={set('phone')} placeholder="+91 98765 43210" /></div>
             </div>
             <div style={{marginTop:14}}><Lbl t="Email Address" req /><input type="email" value={form.email} onChange={set('email')} placeholder="you@email.com" /></div>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14,marginTop:14}}>
+            <div className="modal-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14,marginTop:14}}>
               <div><Lbl t="Program" req />
                 <select value={form.program} onChange={set('program')}>
                   <option value="">Select program</option>

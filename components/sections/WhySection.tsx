@@ -46,7 +46,13 @@ export default function WhySection() {
           ))}
         </div>
       </div>
-      <style dangerouslySetInnerHTML={{__html:`@media(max-width:860px){#why{padding:64px 20px!important;} #why>div>div:last-child{grid-template-columns:1fr 1fr!important;}}`}} />
+      <style dangerouslySetInnerHTML={{__html:`
+        /* PC: repeat(3,1fr) — default inline style */
+        /* Tablet+Phone */
+        @media(max-width:860px){#why{padding:64px 20px!important;} #why>div>div:last-child{grid-template-columns:1fr 1fr!important;}}
+        /* Phone only */
+        @media(max-width:480px){#why>div>div:last-child{grid-template-columns:1fr!important;}}
+      `}} />
     </section>
   )
 }

@@ -75,10 +75,17 @@ export default function GallerySection() {
         </div>
       )}
       <style dangerouslySetInnerHTML={{__html:`
+        /* PC: repeat(4,1fr) — default inline style */
+        /* Tablet+Phone */
         @media(max-width:860px){
           #gallery{padding:70px 20px!important;}
           #gallery>div>div:last-child{grid-template-columns:1fr 1fr!important;grid-auto-rows:clamp(140px,35vw,200px)!important;}
           #gallery>div>div:last-child>div:first-child{grid-column:1/-1!important;grid-row:auto!important;}
+        }
+        /* Phone only */
+        @media(max-width:480px){
+          #gallery>div>div:last-child{grid-template-columns:1fr!important;grid-auto-rows:clamp(180px,55vw,240px)!important;}
+          #gallery>div>div:last-child>div:first-child{grid-column:auto!important;}
         }
       `}} />
     </section>

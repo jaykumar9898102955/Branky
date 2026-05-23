@@ -59,7 +59,18 @@ export default function ProgramsSection({ onApply }: { onApply: (p: string) => v
           ))}
         </div>
       </div>
-      <style dangerouslySetInnerHTML={{__html:`@media(max-width:860px){#programs{padding:64px 20px!important;} #programs>div>div:last-child{grid-template-columns:1fr!important;}}`}} />
+      <style dangerouslySetInnerHTML={{__html:`
+        /* PC: repeat(3,1fr) — default inline style */
+        /* Tablet+Phone */
+        @media(max-width:860px){
+          #programs{padding:64px 20px!important;}
+          #programs>div>div:last-child{grid-template-columns:1fr 1fr!important;}
+        }
+        /* Phone only */
+        @media(max-width:480px){
+          #programs>div>div:last-child{grid-template-columns:1fr!important;}
+        }
+      `}} />
     </section>
   )
 }

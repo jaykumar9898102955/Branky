@@ -99,5 +99,11 @@ select option { background:#fff; }
 ::-webkit-scrollbar-track { background:var(--gray-light); }
 ::-webkit-scrollbar-thumb { background:var(--blue); border-radius:3px; }
 
-/* Mobile */
-@media(max-width:768px) { body{cursor:auto;} .cursor,.cursor-ring{display:none!important;} }
+/* ── PC default: cursor active ──────────────────── */
+/* ── Tablet + Phone (≤860px): hide custom cursor ── */
+@media(max-width:860px) { body{cursor:auto;} .cursor,.cursor-ring{display:none!important;} }
+
+/* ── Phone only (≤480px): smaller buttons ────────── */
+@media(max-width:480px) {
+  .btn-lg { padding:13px 28px!important; font-size:.95rem!important; }
+}

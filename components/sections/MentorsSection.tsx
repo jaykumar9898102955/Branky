@@ -51,7 +51,13 @@ export default function MentorsSection() {
           ))}
         </div>
       </div>
-      <style dangerouslySetInnerHTML={{__html:`@media(max-width:860px){#mentors{padding:64px 20px!important;} #mentors>div>div:last-child{grid-template-columns:1fr 1fr!important;}}`}} />
+      <style dangerouslySetInnerHTML={{__html:`
+        /* PC: repeat(4,1fr) — default inline style */
+        /* Tablet+Phone */
+        @media(max-width:860px){#mentors{padding:64px 20px!important;} #mentors>div>div:last-child{grid-template-columns:1fr 1fr!important;}}
+        /* Phone only */
+        @media(max-width:480px){#mentors>div>div:last-child{grid-template-columns:1fr!important;}}
+      `}} />
     </section>
   )
 }
