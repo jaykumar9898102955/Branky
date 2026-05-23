@@ -74,13 +74,13 @@ export default function Footer({ onApply }: { onApply: () => void }) {
         </div>
       </div>
 
-      <style>{`
+      <style dangerouslySetInnerHTML={{__html:`
         @media(max-width:860px){
           footer>div:nth-child(2){grid-template-columns:1fr 1fr!important;padding:48px 20px 32px!important;gap:36px!important;}
           footer>div:last-child{padding:14px 20px 24px!important;flex-direction:column!important;align-items:flex-start!important;gap:6px!important;}
           footer>div:nth-child(2)>div:first-child{grid-column:1/-1;}
         }
-      `}</style>
+      `}} />
     </footer>
   )
 }

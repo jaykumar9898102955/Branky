@@ -74,13 +74,13 @@ export default function GallerySection() {
             onMouseLeave={e=>(e.currentTarget as HTMLElement).style.background='rgba(255,255,255,.12)'}><X size={20}/></button>
         </div>
       )}
-      <style>{`
+      <style dangerouslySetInnerHTML={{__html:`
         @media(max-width:860px){
           #gallery{padding:70px 20px!important;}
           #gallery>div>div:last-child{grid-template-columns:1fr 1fr!important;grid-auto-rows:clamp(140px,35vw,200px)!important;}
           #gallery>div>div:last-child>div:first-child{grid-column:1/-1!important;grid-row:auto!important;}
         }
-      `}</style>
+      `}} />
     </section>
   )
 }

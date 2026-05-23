@@ -75,7 +75,7 @@ export default function TimelineSection() {
           ))}
         </div>
       </div>
-      <style>{`
+      <style dangerouslySetInnerHTML={{__html:`
         @media(max-width:760px){
           #timeline { padding:64px 20px !important; }
           #timeline > div > div:last-child > div { grid-template-columns: 20px 1fr !important; }
@@ -83,7 +83,7 @@ export default function TimelineSection() {
           #timeline > div > div:last-child > div > div:nth-child(3) { display: none; }
           #timeline .tl-box { padding-left: 16px !important; padding-right: 0 !important; }
         }
-      `}</style>
+      `}} />
     </section>
   )
 }
