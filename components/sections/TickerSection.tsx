@@ -1,5 +1,5 @@
 export default function TickerSection() {
-  const items = ['Robotics','Coding','Electronics','3D Printing','AI & Machine Learning','Space Science','Mechanical Engineering','Biomedical','Arduino','Raspberry Pi']
+  const items = ['Robotics','Artificial Intelligence','Python Coding','Electronics','Drones','Mechatronics','IoT','Leadership','Tech Designing','Problem Solving']
   const doubled = [...items, ...items]
   return (
     <div style={{ background:'var(--blue)', padding:'15px 0', overflow:'hidden', position:'relative', zIndex:1, borderTop:'4px solid var(--orange)', borderBottom:'4px solid var(--orange)' }}>

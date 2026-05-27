@@ -1,3 +1,4 @@
+'use client'
 import Image from 'next/image'
 import { Microscope, Users, Medal, Backpack, Globe, CreditCard } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'

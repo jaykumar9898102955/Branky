@@ -1,40 +1,29 @@
-'use client'
-import { useState } from 'react'
-import Cursor from '@/components/ui/Cursor'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import HeroSection from '@/components/sections/HeroSection'
+import TrustBarSection from '@/components/sections/TrustBarSection'
 import TickerSection from '@/components/sections/TickerSection'
-import AboutSection from '@/components/sections/AboutSection'
+import TechPillsSection from '@/components/sections/TechPillsSection'
+import PainPointSection from '@/components/sections/PainPointSection'
 import ProgramsSection from '@/components/sections/ProgramsSection'
-import GallerySection from '@/components/sections/GallerySection'
-import TimelineSection from '@/components/sections/TimelineSection'
-import WhySection from '@/components/sections/WhySection'
-import MentorsSection from '@/components/sections/MentorsSection'
-import ApplyCtaSection from '@/components/sections/ApplyCtaSection'
-import ApplyModal from '@/components/ui/ApplyModal'
+import FreeDemoStrip from '@/components/sections/FreeDemoStrip'
+import FacilitySection from '@/components/sections/FacilitySection'
 
 export default function HomePage() {
-  const [open, setOpen] = useState(false)
-  const [prog, setProg] = useState('')
-  const openModal = (p = '') => { setProg(p); setOpen(true) }
   return (
     <>
-      <Cursor />
-      <Navbar onApply={() => openModal()} />
+      <Navbar />
       <main>
-        <HeroSection onApply={openModal} />
+        <HeroSection />
+        <TrustBarSection />
         <TickerSection />
-        <AboutSection />
-        <ProgramsSection onApply={openModal} />
-        <GallerySection />
-        <TimelineSection />
-        <WhySection />
-        <MentorsSection />
-        <ApplyCtaSection onApply={() => openModal()} />
+        <TechPillsSection />
+        <PainPointSection />
+        <ProgramsSection />
+        <FreeDemoStrip />
+        <FacilitySection />
       </main>
-      <Footer onApply={() => openModal()} />
-      <ApplyModal isOpen={open} onClose={() => setOpen(false)} defaultProgram={prog} />
+      <Footer />
     </>
   )
 }

@@ -2,17 +2,27 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
-export default function Navbar({ onApply }: { onApply: () => void }) {
+const navLinks = [
+  { label:'Home', href:'/' },
+  { label:'Programs', href:'/programs' },
+  { label:'Bootcamp & Workshops', href:'/bootcamp-workshops' },
+  { label:'Our Labs', href:'/our-labs' },
+  { label:'About Us', href:'/about' },
+  { label:'Contact Us', href:'/contact' },
+]
+
+export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const pathname = usePathname()
+
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 50)
     window.addEventListener('scroll', fn)
     return () => window.removeEventListener('scroll', fn)
   }, [])
-  const go = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); setOpen(false) }
-  const links = ['about','programs','gallery','timeline','mentors']
 
   return (
     <>
@@ -20,22 +30,25 @@ export default function Navbar({ onApply }: { onApply: () => void }) {
 
         {/* Logo */}
         <Link href="/" style={{ display:'flex', alignItems:'center', flexShrink:0 }}>
-          <Image src="/assets/logo-main.png" alt="Branky S.T.E.M. Labs" width={140} height={44} style={{ objectFit:'contain', height:'auto' }} priority />
+          <Image src="/assets/logo-main.png" alt="Branky STEM Labs" width={140} height={44} style={{ objectFit:'contain', height:'auto' }} priority />
         </Link>
 
         {/* Desktop nav */}
-        <ul style={{ display:'flex',gap:32,listStyle:'none',alignItems:'center',margin:0 }} className="desktop-nav">
-          {links.map(id => (
-            <li key={id}>
-              <button onClick={() => go(id)} style={{ background:'none',border:'none',fontFamily:'Karla,sans-serif',fontWeight:700,fontSize:'.9rem',color:'var(--text)',cursor:'pointer',padding:'4px 0',transition:'color .25s',letterSpacing:'.01em' }}
-                onMouseEnter={e => e.currentTarget.style.color='var(--blue)'}
-                onMouseLeave={e => e.currentTarget.style.color='var(--text)'}
-              >{id.charAt(0).toUpperCase()+id.slice(1)}</button>
+        <ul style={{ display:'flex',gap:24,listStyle:'none',alignItems:'center',margin:0 }} className="desktop-nav">
+          {navLinks.map(link => (
+            <li key={link.href}>
+              <Link href={link.href}
+                style={{ fontFamily:'Karla,sans-serif',fontWeight:700,fontSize:'.88rem',color: pathname===link.href?'var(--blue)':'var(--text)',textDecoration:'none',padding:'4px 0',transition:'color .25s',letterSpacing:'.01em',borderBottom: pathname===link.href?'2px solid var(--orange)':'2px solid transparent',paddingBottom:3 }}
+                onMouseEnter={e => { if(pathname!==link.href) e.currentTarget.style.color='var(--blue)' }}
+                onMouseLeave={e => { if(pathname!==link.href) e.currentTarget.style.color='var(--text)' }}
+              >{link.label}</Link>
             </li>
           ))}
         </ul>
 
-        <button className="btn btn-blue btn-md desktop-nav" onClick={onApply} style={{ flexShrink:0 }}>Apply Now →</button>
+        <Link href="/contact" className="btn btn-orange btn-md desktop-nav" style={{ flexShrink:0 }}>
+          Book Free Demo →
+        </Link>
 
         {/* Hamburger */}
         <button onClick={() => setOpen(!open)} aria-label="Menu" style={{ display:'none',flexDirection:'column',gap:5,background:'none',border:'none',cursor:'pointer',padding:8,borderRadius:8 }} className="hamburger">
@@ -46,15 +59,18 @@ export default function Navbar({ onApply }: { onApply: () => void }) {
       </nav>
 
       {/* Mobile dropdown */}
-      <div style={{ position:'fixed',top:68,left:0,right:0,zIndex:199,background:'#fff',borderBottom:'2px solid var(--blue-pale)',padding:open?'20px 24px 28px':'0 24px',maxHeight:open?'400px':'0',overflow:'hidden',transition:'all .35s cubic-bezier(.23,1,.32,1)',boxShadow:open?'0 8px 32px rgba(29,92,227,.1)':'none' }}>
+      <div style={{ position:'fixed',top:68,left:0,right:0,zIndex:199,background:'#fff',borderBottom:'2px solid var(--blue-pale)',padding:open?'20px 24px 28px':'0 24px',maxHeight:open?'500px':'0',overflow:'hidden',transition:'all .35s cubic-bezier(.23,1,.32,1)',boxShadow:open?'0 8px 32px rgba(29,92,227,.1)':'none' }}>
         <div style={{ display:'flex',flexDirection:'column',gap:4 }}>
-          {links.map(id => (
-            <button key={id} onClick={() => go(id)} style={{ background:'none',border:'none',fontFamily:'Karla,sans-serif',fontWeight:700,fontSize:'1rem',color:'var(--text)',cursor:'pointer',textAlign:'left',padding:'12px 0',borderBottom:'1px solid var(--blue-pale)',transition:'color .2s' }}
+          {navLinks.map(link => (
+            <Link key={link.href} href={link.href} onClick={() => setOpen(false)}
+              style={{ fontFamily:'Karla,sans-serif',fontWeight:700,fontSize:'1rem',color: pathname===link.href?'var(--blue)':'var(--text)',textDecoration:'none',display:'block',padding:'12px 0',borderBottom:'1px solid var(--blue-pale)',transition:'color .2s' }}
               onMouseEnter={e => e.currentTarget.style.color='var(--blue)'}
-              onMouseLeave={e => e.currentTarget.style.color='var(--text)'}
-            >{id.charAt(0).toUpperCase()+id.slice(1)}</button>
+              onMouseLeave={e => { if(pathname!==link.href) e.currentTarget.style.color='var(--text)' }}
+            >{link.label}</Link>
           ))}
-          <button className="btn btn-blue btn-md" onClick={() => { onApply(); setOpen(false) }} style={{ marginTop:12,width:'100%',borderRadius:14 }}>Apply Now →</button>
+          <Link href="/contact" className="btn btn-orange btn-md" onClick={() => setOpen(false)} style={{ marginTop:12,width:'100%',borderRadius:14,justifyContent:'center' }}>
+            Book Free Demo →
+          </Link>
         </div>
       </div>
 

@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import ClientShell from '@/components/ui/ClientShell'
 
 export const metadata: Metadata = {
-  title: 'Branky S.T.E.M. Labs — 2026 Bootcamp',
-  description: "India's most hands-on STEM bootcamp. Robotics, AI, Coding & Engineering for young innovators.",
-  keywords: 'STEM, robotics, coding, AI, bootcamp, kids, India, Ahmedabad, Branky',
+  title: 'Branky STEM Labs — AI, Robotics & Coding for Kids | Vadodara',
+  description: "Vadodara's full-fledged AI, Robotics & Coding learning centre for children aged 4–14. Hands-on programs, smart labs, expert mentors.",
+  keywords: 'STEM, robotics, coding, AI, kids, Vadodara, Branky, learning centre, ages 4-14, IoT, electronics',
   icons: { icon: '/assets/app-icon.png', apple: '/assets/app-icon.png' },
 }
 
@@ -19,7 +20,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" href="/assets/app-icon.png" />
         <link rel="apple-touch-icon" href="/assets/app-icon.png" />
       </head>
-      <body>{children}</body>
+      <body>
+        <ClientShell>
+          {children}
+        </ClientShell>
+      </body>
     </html>
   )
 }

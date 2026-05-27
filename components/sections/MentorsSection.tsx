@@ -1,3 +1,4 @@
+'use client'
 import Image from 'next/image'
 import { FlaskConical, Code2, Settings, Rocket, Dna, Leaf, Monitor, Target } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
