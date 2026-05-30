@@ -93,10 +93,6 @@ export default function AdminPage() {
           onMouseLeave={e=>{if(!ll)e.currentTarget.style.background='var(--blue)'}}>
           {ll?'Logging in...':'Login to Dashboard →'}
         </button>
-        <div style={{marginTop:20,padding:14,background:'var(--blue-pale)',borderRadius:12}}>
-          <p style={{fontSize:'.78rem',color:'var(--blue)',fontWeight:700,marginBottom:5}}>Demo Credentials:</p>
-          <p style={{fontSize:'.78rem',color:'var(--gray)'}}>Email: admin@brankylabs.in<br />Password: Branky@2026</p>
-        </div>
         <Link href="/" style={{display:'block',textAlign:'center',marginTop:16,fontSize:'.84rem',color:'var(--gray)',textDecoration:'none'}}>← Back to Website</Link>
       </div>
     </div>

@@ -1,0 +1,26 @@
+Options -MultiViews
+RewriteEngine On
+
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://brankystemlab.com/$1 [R=301,L]
+
+# Redirect www to non-www
+RewriteCond %{HTTP_HOST} ^www\.brankystemlab\.com [NC]
+RewriteRule ^(.*)$ https://brankystemlab.com/$1 [R=301,L]
+
+# Proxy WebSocket connections to Next.js
+RewriteCond %{HTTP:Upgrade} websocket [NC]
+RewriteCond %{HTTP:Connection} upgrade [NC]
+RewriteRule ^/?(.*) "ws://127.0.0.1:%{ENV:PORT}/$1" [P,L]
+
+# Serve existing static files directly (faster)
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Proxy everything else to Next.js
+RewriteRule ^/?(.*) "http://127.0.0.1:%{ENV:PORT}/$1" [P,L]
+
+ProxyRequests Off
+ProxyPreserveHost On
+ProxyErrorOverride Off
