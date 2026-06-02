@@ -8,8 +8,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const { studentName, parentName, phone, email, age, program, city, source, message } = body
 
-    if (!studentName || !parentName || !phone || !email || !age || !program || !city) {
-      return NextResponse.json({ error: 'All required fields must be filled.' }, { status: 400 })
+    const missing = ['studentName','parentName','phone','email','age','program','city'].filter(f => !body[f])
+    if (missing.length > 0) {
+      return NextResponse.json({ error: `Missing fields: ${missing.join(', ')}` }, { status: 400 })
     }
 
     const normalizedEmail = String(email).trim().toLowerCase()
