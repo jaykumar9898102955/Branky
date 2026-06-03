@@ -1,0 +1,16 @@
+{
+  "/admin/page": "app/admin/page.js",
+  "/api/admin/logout/route": "app/api/admin/logout/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/registrations/route": "app/api/registrations/route.js",
+  "/api/admin/login/route": "app/api/admin/login/route.js",
+  "/api/admin/registrations/[id]/route": "app/api/admin/registrations/[id]/route.js",
+  "/api/admin/registrations/route": "app/api/admin/registrations/route.js",
+  "/api/test-db/route": "app/api/test-db/route.js",
+  "/page": "app/page.js",
+  "/programs/page": "app/programs/page.js",
+  "/bootcamp-workshops/page": "app/bootcamp-workshops/page.js",
+  "/contact/page": "app/contact/page.js",
+  "/about/page": "app/about/page.js",
+  "/our-labs/page": "app/our-labs/page.js"
+}
