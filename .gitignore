@@ -1,14 +1,25 @@
-
+# dependencies
 node_modules/
-.env.local
+
+# environment
 .env
-*.log
-website-content-structure.txt
+.env.local
+.env*.local
 
 # build output
 .next/
 out/
 
+# typescript
+tsconfig.tsbuildinfo
+
+# logs
+*.log
+npm-debug.log*
+
 # OS
 .DS_Store
 Thumbs.db
+
+# misc
+website-content-structure.txt
