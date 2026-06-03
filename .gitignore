@@ -6,6 +6,7 @@ node_modules/
 website-content-structure.txt
 
 # build output
+.next/
 out/
 
 # OS
