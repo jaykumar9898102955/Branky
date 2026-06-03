@@ -8,7 +8,6 @@ export interface RegistrationRow extends RowDataPacket {
   studentName: string
   parentName: string
   phone: string
-  email: string
   age: string
   program: string
   city: string
@@ -26,7 +25,6 @@ export interface RegistrationDTO {
   studentName: string
   parentName: string
   phone: string
-  email: string
   age: string
   program: string
   city: string
@@ -45,7 +43,6 @@ export function toDTO(row: RegistrationRow): RegistrationDTO {
     studentName: row.studentName,
     parentName: row.parentName,
     phone: row.phone,
-    email: row.email,
     age: row.age,
     program: row.program,
     city: row.city,
@@ -62,7 +59,6 @@ export interface CreateInput {
   studentName: string
   parentName: string
   phone: string
-  email: string
   age: string
   program: string
   city: string
@@ -70,26 +66,17 @@ export interface CreateInput {
   message?: string
 }
 
-export async function findByEmailAndProgram(email: string, program: string): Promise<RegistrationRow | null> {
-  const pool = getPool()
-  const [rows] = await pool.query<RegistrationRow[]>(
-    'SELECT * FROM registrations WHERE email = ? AND program = ? LIMIT 1',
-    [email, program]
-  )
-  return rows[0] ?? null
-}
 
 export async function createRegistration(data: CreateInput): Promise<number> {
   const pool = getPool()
   const [result] = await pool.query<ResultSetHeader>(
     `INSERT INTO registrations
-      (studentName, parentName, phone, email, age, program, city, source, message)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      (studentName, parentName, phone, age, program, city, source, message)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       data.studentName,
       data.parentName,
       data.phone,
-      data.email,
       data.age,
       data.program,
       data.city,
@@ -115,7 +102,7 @@ export async function findAllRegistrations(filter: FindAllFilter): Promise<Regis
     params.push(filter.status)
   }
   if (filter.search) {
-    where.push('(studentName LIKE ? OR email LIKE ? OR city LIKE ? OR program LIKE ?)')
+    where.push('(studentName LIKE ? OR phone LIKE ? OR city LIKE ? OR program LIKE ?)')
     const like = `%${filter.search}%`
     params.push(like, like, like, like)
   }
@@ -158,7 +145,6 @@ const UPDATABLE_FIELDS = [
   'studentName',
   'parentName',
   'phone',
-  'email',
   'age',
   'program',
   'city',

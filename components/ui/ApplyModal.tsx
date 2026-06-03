@@ -1,12 +1,12 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { AlertCircle, Lock, PartyPopper, X, Phone, Mail, ClipboardList, Rocket } from 'lucide-react'
+import { AlertCircle, Lock, PartyPopper, X, Phone, ClipboardList, Rocket } from 'lucide-react'
 
 interface Props { isOpen:boolean; onClose:()=>void; defaultProgram?:string }
 
 export default function ApplyModal({ isOpen, onClose, defaultProgram }: Props) {
-  const [form,setForm] = useState({studentName:'',parentName:'',phone:'',email:'',age:'',program:'',city:'',source:'',message:''})
+  const [form,setForm] = useState({studentName:'',parentName:'',phone:'',age:'',program:'',city:'',source:'',message:''})
   const [loading,setLoading] = useState(false)
   const [error,setError] = useState('')
   const [success,setSuccess] = useState(false)
@@ -33,9 +33,8 @@ export default function ApplyModal({ isOpen, onClose, defaultProgram }: Props) {
   const set=(k:string)=>(e:React.ChangeEvent<any>)=>setForm(f=>({...f,[k]:e.target.value}))
 
   const submit=async()=>{
-    const{studentName,parentName,phone,email,age,program,city}=form
-    if(!studentName||!parentName||!phone||!email||!age||!program||!city){setError('Please fill in all required fields.');return}
-    if(!/\S+@\S+\.\S+/.test(email)){setError('Please enter a valid email address.');return}
+    const{studentName,parentName,phone,age,program,city}=form
+    if(!studentName||!parentName||!phone||!age||!program||!city){setError('Please fill in all required fields.');return}
     setLoading(true);setError('')
     try{
       const res=await fetch('/api/registrations',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)})
@@ -88,7 +87,6 @@ export default function ApplyModal({ isOpen, onClose, defaultProgram }: Props) {
               <div><Lbl t="Parent Name" req /><input value={form.parentName} onChange={set('parentName')} placeholder="Guardian name" /></div>
               <div><Lbl t="Phone" req /><input type="tel" value={form.phone} onChange={set('phone')} placeholder="+91 98765 43210" /></div>
             </div>
-            <div style={{marginTop:14}}><Lbl t="Email Address" req /><input type="email" value={form.email} onChange={set('email')} placeholder="you@email.com" /></div>
             <div className="modal-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14,marginTop:14}}>
               <div><Lbl t="Program" req />
                 <select value={form.program} onChange={set('program')}>
@@ -121,10 +119,10 @@ export default function ApplyModal({ isOpen, onClose, defaultProgram }: Props) {
             <div style={{marginBottom:14,animation:'successPop .5s cubic-bezier(.23,1,.32,1)',display:'flex',justifyContent:'center',color:'var(--orange)'}}><PartyPopper size={60}/></div>
             <Image src="/assets/logo-main.png" alt="Branky" width={130} height={42} style={{objectFit:'contain',margin:'0 auto 18px',display:'block',height:'auto'}} />
             <h3 className="h-display" style={{fontSize:'1.7rem',fontWeight:400,color:'var(--black)',marginBottom:10}}>Application Submitted!</h3>
-            <p style={{fontSize:'.93rem',color:'var(--gray)',lineHeight:1.7,marginBottom:24}}>Thanks for applying!<br />Our team will call you within <strong>24 hours</strong>.<br />Check your email for confirmation.</p>
+            <p style={{fontSize:'.93rem',color:'var(--gray)',lineHeight:1.7,marginBottom:24}}>Thanks for applying!<br />Our team will call you within <strong>24 hours</strong>.</p>
             <div style={{background:'var(--blue-pale)',borderRadius:14,padding:'16px 18px',marginBottom:24,textAlign:'left',border:'2px solid rgba(29,92,227,.1)'}}>
               <p style={{fontSize:'.78rem',fontWeight:800,color:'var(--blue)',marginBottom:8,letterSpacing:'.05em',textTransform:'uppercase'}}>What happens next?</p>
-              {([{IC:Phone,t:'We call you within 24 hours'},{IC:Mail,t:'Confirmation email sent'},{IC:ClipboardList,t:'Assessment & enrollment'},{IC:Rocket,t:'Bootcamp begins July 2026!'}] as const).map(({IC,t})=>(
+              {([{IC:Phone,t:'We call you within 24 hours'},{IC:ClipboardList,t:'Assessment & enrollment'},{IC:Rocket,t:'Bootcamp begins July 2026!'}] as const).map(({IC,t})=>(
                 <div key={t} style={{fontSize:'.87rem',color:'var(--text)',marginBottom:7,display:'flex',alignItems:'center',gap:8}}><IC size={14} style={{flexShrink:0,color:'var(--blue)'}}/>{t}</div>
               ))}
             </div>

@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS registrations (
   studentName VARCHAR(255) NOT NULL,
   parentName VARCHAR(255) NOT NULL,
   phone VARCHAR(20) NOT NULL,
-  email VARCHAR(255) NOT NULL,
   age VARCHAR(50) NOT NULL,
   program VARCHAR(255) NOT NULL,
   city VARCHAR(100) NOT NULL,
@@ -17,7 +16,7 @@ CREATE TABLE IF NOT EXISTS registrations (
   notes TEXT,
   createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  UNIQUE KEY uniq_email_program (email, program),
+
   INDEX idx_status (status),
   INDEX idx_createdAt (createdAt)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

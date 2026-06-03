@@ -2,10 +2,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { AlertTriangle, CheckCircle, Clock, ClipboardList, Eye, Inbox, Sparkles, Trash2, X, User, Users, Phone, Mail, Target, MapPin, Link2, Calendar, Save, RefreshCw } from 'lucide-react'
+import { AlertTriangle, CheckCircle, Clock, ClipboardList, Eye, Inbox, Sparkles, Trash2, X, User, Users, Phone, Target, MapPin, Link2, Calendar, Save, RefreshCw } from 'lucide-react'
 
 type Status='new'|'reviewed'|'confirmed'|'waitlist'
-interface Reg{_id:string;studentName:string;parentName:string;phone:string;email:string;age:string;program:string;city:string;source:string;message:string;status:Status;notes:string;createdAt:string}
+interface Reg{_id:string;studentName:string;parentName:string;phone:string;age:string;program:string;city:string;source:string;message:string;status:Status;notes:string;createdAt:string}
 interface Stats{total:number;new:number;confirmed:number;waitlist:number}
 const SC:Record<Status,{bg:string;color:string;label:string}>={
   new:{bg:'#dbeafe',color:'#1e40af',label:'New'},
@@ -167,7 +167,7 @@ export default function AdminPage() {
               <div style={{overflowX:'auto'}}>
                 <table style={{width:'100%',borderCollapse:'collapse'}}>
                   <thead>
-                    <tr>{['#','Student','Parent','Phone','Email','Program','City','Date','Status','Act'].map(h=>(
+                    <tr>{['#','Student','Parent','Phone','Program','City','Date','Status','Act'].map(h=>(
                       <th key={h} style={{padding:'11px 14px',textAlign:'left',background:'var(--gray-light)',fontSize:'.7rem',fontWeight:700,color:'var(--gray)',letterSpacing:'.07em',textTransform:'uppercase',whiteSpace:'nowrap'}}>{h}</th>
                     ))}</tr>
                   </thead>
@@ -180,7 +180,6 @@ export default function AdminPage() {
                           <td style={{padding:'13px 14px',fontWeight:700,color:'var(--black)',whiteSpace:'nowrap',fontSize:'.85rem'}}>{r.studentName}</td>
                           <td style={{padding:'13px 14px',color:'var(--gray)',fontSize:'.83rem',whiteSpace:'nowrap'}}>{r.parentName}</td>
                           <td style={{padding:'13px 14px',fontSize:'.83rem',whiteSpace:'nowrap'}}>{r.phone}</td>
-                          <td style={{padding:'13px 14px',color:'var(--blue)',fontSize:'.83rem',whiteSpace:'nowrap'}}>{r.email}</td>
                           <td style={{padding:'13px 14px',fontSize:'.83rem',whiteSpace:'nowrap'}}>{r.program}</td>
                           <td style={{padding:'13px 14px',fontSize:'.83rem'}}>{r.city}</td>
                           <td style={{padding:'13px 14px',color:'var(--gray)',fontSize:'.8rem',whiteSpace:'nowrap'}}>{new Date(r.createdAt).toLocaleDateString('en-IN')}</td>
@@ -217,7 +216,7 @@ export default function AdminPage() {
                   <div style={{width:48,height:48,borderRadius:'50%',background:'linear-gradient(135deg,var(--blue-pale),var(--orange-pale))',display:'flex',alignItems:'center',justifyContent:'center',border:'2px solid var(--blue-pale)',color:'var(--blue)'}}><User size={22}/></div>
                   <div><div style={{fontWeight:800,fontSize:'1rem',color:'var(--black)'}}>{sel.studentName}</div><div style={{fontSize:'.8rem',color:'var(--gray)'}}>{sel.age} · {sel.city}</div></div>
                 </div>
-                {([{IC:Users,k:'Parent',v:sel.parentName},{IC:Phone,k:'Phone',v:sel.phone},{IC:Mail,k:'Email',v:sel.email},{IC:Target,k:'Program',v:sel.program},{IC:MapPin,k:'City',v:sel.city},{IC:Link2,k:'Source',v:sel.source},{IC:Calendar,k:'Applied',v:new Date(sel.createdAt).toLocaleString('en-IN')}] as const).map(({IC,k,v})=>(
+                {([{IC:Users,k:'Parent',v:sel.parentName},{IC:Phone,k:'Phone',v:sel.phone},{IC:Target,k:'Program',v:sel.program},{IC:MapPin,k:'City',v:sel.city},{IC:Link2,k:'Source',v:sel.source},{IC:Calendar,k:'Applied',v:new Date(sel.createdAt).toLocaleString('en-IN')}] as const).map(({IC,k,v})=>(
                   <div key={k} style={{display:'flex',gap:10,marginBottom:10,fontSize:'.86rem'}}>
                     <span style={{color:'var(--gray)',minWidth:100,fontWeight:600,flexShrink:0,display:'flex',alignItems:'center',gap:4}}><IC size={13}/>{k}</span>
                     <span style={{color:'var(--text)',fontWeight:500,wordBreak:'break-all'}}>{v}</span>
