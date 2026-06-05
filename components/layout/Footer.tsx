@@ -29,7 +29,7 @@ export default function Footer() {
         <Image src="/assets/brand-wave.png" alt="" width={180} height={180} style={{ width:'100%',height:'auto',filter:'brightness(0) invert(1)' }} />
       </div>
 
-      <div style={{ maxWidth:1200,margin:'0 auto',padding:'64px 5% 36px',display:'grid',gridTemplateColumns:'2fr 1.2fr 1fr 1.2fr',gap:'4%' }}>
+      <div className='footer-wrapper' style={{ maxWidth:1200,margin:'0 auto',padding:'64px 5% 36px',display:'grid',gridTemplateColumns:'2fr 1.2fr 1fr 1.2fr',gap:'4%' }}>
 
         {/* Column 1 — Brand */}
         <div>
@@ -138,6 +138,14 @@ export default function Footer() {
           footer>div:last-child{padding:14px 20px 24px!important;flex-direction:column!important;align-items:flex-start!important;gap:6px!important;}
           footer>div:nth-child(2)>div:first-child{grid-column:1/-1;}
         }
+        @media(max-width:576px){
+           .footer-wrapper{
+             margin: 0 auto;
+             padding: 64px 5% 36px;
+             display: flex !important;
+             gap: 3rem !important;
+             flex-direction: column !important;
+            }
         @media(max-width:480px){
           footer>div:nth-child(2){grid-template-columns:1fr!important;gap:24px!important;padding:36px 20px 24px!important;}
         }

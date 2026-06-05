@@ -1,6 +1,7 @@
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect, useRef } from 'react'
 
 const programs = [
   { img:'/assets/robot1.png', age:'4–6 Years', duration:'Structured Learning Program', accent:'orange',
@@ -23,6 +24,24 @@ const programs = [
 ]
 
 export default function ProgramsSection() {
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const idxRef = useRef(0)
+
+  const scrollTo = (idx: number) => {
+    const el = scrollRef.current
+    if (!el) return
+    const cards = el.children
+    const total = cards.length
+    idxRef.current = (idx + total) % total
+    const card = cards[idxRef.current] as HTMLElement
+    el.scrollTo({ left: card.offsetLeft - el.offsetLeft, behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    const timer = setInterval(() => scrollTo(idxRef.current + 1), 3000)
+    return () => clearInterval(timer)
+  }, [])
+
   return (
     <section id="programs" style={{ padding:'96px 5%', background:'#fff', position:'relative', overflow:'hidden' }}>
       {/* Brand grid bg */}
@@ -39,11 +58,11 @@ export default function ProgramsSection() {
           <div style={{ height:4, width:40, background:'var(--orange)', borderRadius:8 }} />
           <div style={{ height:4, width:110, background:'var(--blue)', borderRadius:8 }} />
         </div>
-        <p className="reveal d2" style={{ fontSize:'1rem', color:'var(--gray)', lineHeight:1.7, marginBottom:52, maxWidth:560 }}>
+        <p id="programs-description" className="reveal d2" style={{ fontSize:'1rem', color:'var(--gray)', lineHeight:1.7, marginBottom:52, maxWidth:560 }}>
           A progressive learning journey that grows with your child's skills, creativity and ambition.
         </p>
 
-        <div className="programs-grid" style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:24 }}>
+        <div ref={scrollRef} className="programs-grid" style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:24 }}>
           {programs.map((p, i) => (
             <div key={p.title}
               className={`prog-card${p.accent==='orange'?' orange-accent':''} reveal d${Math.min(i+1,4)}`}
@@ -84,16 +103,47 @@ export default function ProgramsSection() {
             </div>
           ))}
         </div>
+
+        {/* Mobile scroll buttons */}
+        <div className="prog-nav" style={{ display:'none', justifyContent:'center', gap:12, marginTop:20 }}>
+          <button onClick={() => scrollTo(idxRef.current - 1)} style={{ width:42, height:42, borderRadius:'50%', border:'2px solid var(--blue)', background:'#fff', color:'var(--blue)', fontSize:'1.2rem', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>‹</button>
+          <button onClick={() => scrollTo(idxRef.current + 1)} style={{ width:42, height:42, borderRadius:'50%', border:'none', background:'var(--blue)', color:'#fff', fontSize:'1.2rem', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>›</button>
+        </div>
       </div>
 
       <style dangerouslySetInnerHTML={{__html:`
         @media(max-width:860px){
-          #programs{padding:64px 20px!important;}
-          .programs-grid{grid-template-columns:1fr!important;}
-          .programs-grid>div{grid-column:auto!important;}
+          .prog-nav{display:flex!important;}
+          #programs{padding:64px 0 64px!important;}
+          #programs>div{padding:0 20px;}
+          #programs>div>p,#programs>div>.tag,#programs>div>h2,#programs>div>div{padding-left:0;padding-right:0;}
+          .programs-grid{
+            display:flex!important;
+            flex-direction:row!important;
+            overflow-x:auto!important;
+            gap:16px!important;
+            padding:8px 20px 20px!important;
+            scroll-snap-type:x mandatory;
+            -webkit-overflow-scrolling:touch;
+            scrollbar-width:none;
+          }
+          .programs-grid::-webkit-scrollbar{display:none;}
+          .programs-grid>div{
+            grid-column:auto!important;
+            min-width:78vw!important;
+            max-width:320px!important;
+            flex-shrink:0;
+            scroll-snap-align:start;
+          }
         }
+        @media(max-width:576px){
+           #programs-description{
+             margin-bottom : 10px !important;
+             }
+           }
         @media(max-width:480px){
-          #programs{padding:52px 16px!important;}
+          #programs{padding:52px 0 52px!important;}
+          .programs-grid>div{min-width:86vw!important;}
         }
       `}} />
     </section>

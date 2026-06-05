@@ -37,10 +37,10 @@ export default function HeroSection() {
       <div style={{ position:'absolute',top:'60%',left:'6%',width:10,height:10,borderRadius:'50%',background:'var(--blue)',opacity:.4,zIndex:0,animation:'float2 5s ease-in-out infinite' }} />
       <div style={{ position:'absolute',bottom:'25%',right:'8%',width:20,height:20,borderRadius:4,background:'var(--orange)',opacity:.2,transform:'rotate(45deg)',zIndex:0,animation:'float1 6s ease-in-out 1s infinite' }} />
 
-      <div style={{ position:'relative',zIndex:1,display:'grid',gridTemplateColumns:'1fr 1fr',gap:'6%',alignItems:'center',maxWidth:1200,margin:'0 auto',width:'100%' }}>
+      <div className='hero-wrapper' style={{ position:'relative',zIndex:1,display:'grid',gridTemplateColumns:'1fr 1fr',gap:'6%',alignItems:'center',maxWidth:1200,margin:'0 auto',width:'100%' }}>
 
         {/* LEFT */}
-        <div className="reveal">
+        <div className="reveal" id='hero-mobile'>
           <div className="tag tag-blue" style={{ marginBottom:28 }}>
             <span style={{ width:8,height:8,background:'var(--orange)',borderRadius:'50%',display:'inline-block',animation:'pulse 2s ease infinite',flexShrink:0 }} />
             Vadodara's #1 STEM Learning Centre
@@ -82,7 +82,7 @@ export default function HeroSection() {
           </div>
 
           {/* Stats */}
-          <div ref={ref} className="hero-stats-grid" style={{ display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:0,paddingTop:24,borderTop:'2.5px solid var(--blue-pale)' }}>
+          {/* <div ref={ref} className="hero-stats-grid" style={{ display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:0,paddingTop:24,borderTop:'2.5px solid var(--blue-pale)' }}>
             {[{t:500,l:'Students',s:'+'},{t:5,l:'Programs',s:''},{t:4,l:'Age Groups',s:''},{t:1,l:'Smart Lab',s:''}].map((s,i) => (
               <div key={s.l} className="stat-col" style={{ padding:'10px 16px',borderRight:i<3?'2px solid var(--blue-pale)':'none',textAlign:i===0?'left':'center' }}>
                 <div style={{ display:'flex',alignItems:'baseline',gap:2,justifyContent:i===0?'flex-start':'center' }}>
@@ -92,7 +92,7 @@ export default function HeroSection() {
                 <div style={{ fontSize:'.72rem',color:'var(--gray)',fontWeight:700,letterSpacing:'.08em',textTransform:'uppercase',marginTop:3 }}>{s.l}</div>
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
 
         {/* RIGHT */}
@@ -164,6 +164,23 @@ export default function HeroSection() {
           #home .stat-col:nth-child(2),#home .stat-col:nth-child(3){border-top-color:var(--orange)!important;}
           #home .stat-col .cnum{font-size:clamp(1.5rem,5vw,1.9rem)!important;}
         }
+        @media (max-width: 576px) {
+             .hero-wrapper {
+              display: flex !important;
+             }
+
+             #hero-mobile{
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              text-align: center;
+              }
+
+              .hero-btns {
+               width: 100%;
+               }
+              
+             }
         @media(max-width:420px){
           #home{padding:80px 16px 44px!important;}
           #home h1.h-display{font-size:clamp(2.3rem,9vw,2.8rem)!important;}
