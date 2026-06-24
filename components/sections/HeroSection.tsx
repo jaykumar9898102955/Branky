@@ -27,10 +27,7 @@ export default function HeroSection() {
       {/* Brand blueprint grid background */}
       <div style={{ position:'absolute',inset:0,backgroundImage:`url('/assets/brand-grid.png')`,backgroundSize:'cover',opacity:.045,pointerEvents:'none',zIndex:0 }} />
 
-      {/* Brand wave decoration */}
-      <div style={{ position:'absolute',top:-20,right:-40,width:'38%',maxWidth:380,pointerEvents:'none',zIndex:0,animation:'blobFloat 10s ease-in-out infinite',opacity:.18 }}>
-        <Image src="/assets/brand-wave.png" alt="" width={380} height={380} style={{ width:'100%',height:'auto',objectFit:'contain' }} />
-      </div>
+
 
       {/* Floating dot accents */}
       <div style={{ position:'absolute',top:'22%',right:'44%',width:16,height:16,borderRadius:'50%',background:'var(--orange)',opacity:.5,zIndex:0,animation:'float1 4s ease-in-out infinite' }} />
@@ -128,10 +125,6 @@ export default function HeroSection() {
           <div style={{ position:'absolute',bottom:'18%',left:'-5%',width:44,height:44,background:'var(--orange)',borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',animation:'techFloat 6s ease-in-out 1.5s infinite',boxShadow:'0 8px 20px rgba(255,147,30,.3)',zIndex:2 }}>
             <Cpu size={22}/>
           </div>
-          <div style={{ position:'absolute',top:'55%',right:'-4%',width:40,height:40,background:'var(--blue-pale)',border:'2px solid var(--blue)',borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',color:'var(--blue)',animation:'techFloat 4.5s ease-in-out 3s infinite',zIndex:2 }}>
-            <Zap size={20}/>
-          </div>
-
           {/* Floating logo icon */}
           <div style={{ position:'absolute',bottom:-18,right:-12,zIndex:2,animation:'float2 5s ease-in-out infinite',filter:'drop-shadow(0 8px 16px rgba(255,147,30,.25))' }}>
             <Image src="/assets/logo-icon-orange.png" alt="" width={64} height={64} style={{ objectFit:'contain' }} />

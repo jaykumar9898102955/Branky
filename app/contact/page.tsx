@@ -32,6 +32,10 @@ export default function ContactPage() {
               At Branky STEM Labs, we're always excited to connect with families passionate about technology, creativity and future skills. Whether you have questions, want to explore our programs or experience our smart labs firsthand, our team is here to guide you.
             </p>
           </div>
+          {/* Booking Form */}
+        <div style={{ maxWidth:780, margin:'0 auto' }}>
+         <BookingForm />
+        </div>
         </section>
 
         {/* Contact Cards + Form */}
@@ -48,11 +52,6 @@ export default function ContactPage() {
                 <span style={{ color:'var(--gray)' }}>•</span>
                 <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><Zap size={16} style={{ color:'var(--orange)' }} /> Explore Our Programs</span>
               </span>
-            </div>
-
-            {/* Booking Form */}
-            <div style={{ maxWidth:780, margin:'0 auto' }}>
-              <BookingForm />
             </div>
           </div>
         </section>

@@ -15,24 +15,9 @@ const items = [
 export default function GallerySection() {
   const [light, setLight] = useState<string|null>(null)
   return (
-    <section id="gallery" style={{ background:'var(--blue)',padding:'96px 5%',position:'relative',overflow:'hidden' }}>
-      {/* Wave top */}
-      <div style={{ position:'absolute',top:-1,left:0,right:0,overflow:'hidden',lineHeight:0 }}>
-        <svg viewBox="0 0 1440 60" style={{ display:'block',width:'100%' }} preserveAspectRatio="none">
-          <path d="M0,30 C360,60 1080,0 1440,30 L1440,0 L0,0 Z" fill="#fff" />
-        </svg>
-      </div>
-      {/* Wave bottom */}
-      <div style={{ position:'absolute',bottom:-1,left:0,right:0,overflow:'hidden',lineHeight:0 }}>
-        <svg viewBox="0 0 1440 60" style={{ display:'block',width:'100%' }} preserveAspectRatio="none">
-          <path d="M0,20 C480,60 960,0 1440,30 L1440,60 L0,60 Z" fill="var(--gray-xlight)" />
-        </svg>
-      </div>
-
-      {/* Brand wave decoration */}
-      <div style={{ position:'absolute',top:60,right:-30,width:'22%',maxWidth:200,opacity:.1,pointerEvents:'none',animation:'blobFloat 10s ease-in-out infinite' }}>
-        <Image src="/assets/brand-wave.png" alt="" width={200} height={200} style={{ width:'100%',height:'auto',filter:'brightness(0) invert(1)' }} />
-      </div>
+    <section id="gallery" style={{ background:'linear-gradient(145deg,#1255e8 0%,#0a3db5 55%,#082e8a 100%)',padding:'96px 5%',position:'relative',overflow:'hidden' }}>
+      {/* Subtle dot pattern */}
+      <div style={{ position:'absolute',inset:0,backgroundImage:'radial-gradient(circle,rgba(255,255,255,.07) 1px,transparent 1px)',backgroundSize:'28px 28px',pointerEvents:'none',zIndex:0 }} />
 
       <div style={{ maxWidth:1200,margin:'0 auto',position:'relative',zIndex:1 }}>
         <div className="tag tag-white reveal">Student Creations</div>
