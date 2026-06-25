@@ -2,12 +2,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, LayoutDashboard, ClipboardList, Users, Globe, LogOut } from 'lucide-react'
 
 const NAV = [
-  { href: '/admin',                  icon: '📊', label: 'Dashboard'     },
-  { href: '/admin/registrations',    icon: '📋', label: 'Registrations' },
-  { href: '/admin/students',         icon: '👥', label: 'Students'      },
+  { href: '/admin',                  Icon: LayoutDashboard, label: 'Dashboard'     },
+  { href: '/admin/registrations',    Icon: ClipboardList,   label: 'Registrations' },
+  { href: '/admin/students',         Icon: Users,           label: 'Students'      },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -136,10 +136,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             const active = pathname === item.href
             return (
               <a key={item.href} href={item.href} onClick={() => setSideOpen(false)}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 10, marginBottom: 4, textDecoration: 'none', fontWeight: 700, fontSize: '.88rem', transition: 'all .18s', background: active ? '#1D5CE3' : 'transparent', color: active ? '#fff' : 'rgba(255,255,255,.55)' }}
-                onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,.08)'; (e.currentTarget as HTMLElement).style.color = '#fff' }}
-                onMouseLeave={e => { if (!active) { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,.55)' } }}>
-                <span style={{ fontSize: '1.1rem' }}>{item.icon}</span>
+                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 10, marginBottom: 4, textDecoration: 'none', fontWeight: 700, fontSize: '.88rem', background: active ? '#1D5CE3' : 'transparent', color: active ? '#fff' : 'rgba(255,255,255,.55)' }}>
+                <item.Icon size={17} />
                 {item.label}
               </a>
             )
@@ -149,16 +147,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Bottom: site link + logout */}
         <div style={{ padding: '12px 12px', borderTop: '1px solid rgba(255,255,255,.08)' }}>
           <a href="/" target="_blank"
-            style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderRadius: 10, marginBottom: 6, textDecoration: 'none', fontSize: '.82rem', fontWeight: 600, color: 'rgba(255,255,255,.4)', transition: 'color .18s' }}
-            onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#fff'}
-            onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,.4)'}>
-            🌐 View Website
+            style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderRadius: 10, marginBottom: 6, textDecoration: 'none', fontSize: '.82rem', fontWeight: 600, color: 'rgba(255,255,255,.4)' }}>
+            <Globe size={15} /> View Website
           </a>
           <button onClick={logout}
-            style={{ width: '100%', padding: '9px 14px', background: 'rgba(220,38,38,.15)', border: '1.5px solid rgba(220,38,38,.25)', borderRadius: 10, color: '#fca5a5', fontWeight: 700, fontSize: '.85rem', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'Karla,sans-serif', transition: 'all .18s' }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(220,38,38,.4)'; (e.currentTarget as HTMLElement).style.color = '#fff' }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(220,38,38,.15)'; (e.currentTarget as HTMLElement).style.color = '#fca5a5' }}>
-            🚪 Logout
+            style={{ width: '100%', padding: '9px 14px', background: 'rgba(220,38,38,.15)', border: '1.5px solid rgba(220,38,38,.25)', borderRadius: 10, color: '#fca5a5', fontWeight: 700, fontSize: '.85rem', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'Karla,sans-serif' }}>
+            <LogOut size={15} /> Logout
           </button>
         </div>
       </aside>

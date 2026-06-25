@@ -1,137 +1,342 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { ClipboardList, Users, IndianRupee, TrendingUp, ArrowRight } from 'lucide-react'
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, CartesianGrid, Legend } from 'recharts'
+import { ClipboardList, Users, IndianRupee, TrendingUp, AlertTriangle, BookOpen, BarChart2, LineChart as LineIcon, Wallet, UserPlus, UserCheck } from 'lucide-react'
 
-interface RegStats  { total: number; new: number; confirmed: number; waitlist: number }
-interface StudentStats { total: number; current: number; past: number }
-interface FeeStats  { totalCollected: number; totalOutstanding: number }
+interface DashData {
+  regStats:  { total: number; new: number; reviewed: number; confirmed: number; waitlist: number }
+  stuStats:  { total: number; current: number; past: number }
+  feeStats:  { collected: number; outstanding: number; overdueCount: number }
+  monthlyFees:  { month: string; total: number }[]
+  monthlyRegs:  { month: string; total: number }[]
+  topCourses:   { course: string; students: number; collected: number }[]
+  recentStudents: { id: number; name: string; program: string; status: string; joinDate: string }[]
+  recentRegs:     { id: number; name: string; program: string; status: string; createdAt: string }[]
+}
 
-const fmt = (n: number) => `₹${n.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`
+const fmt  = (n: number) => `₹${n.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`
+const BLUE = '#1D5CE3'
+const ORG  = '#FF931E'
+const GRN  = '#059669'
+const RED  = '#dc2626'
+const SLATE = '#64748b'
+
+const PIE_REG = [
+  { key: 'new',       label: 'New',       color: ORG  },
+  { key: 'reviewed',  label: 'Reviewed',  color: BLUE },
+  { key: 'confirmed', label: 'Confirmed', color: GRN  },
+  { key: 'waitlist',  label: 'Waitlist',  color: '#f59e0b' },
+]
+
+const STATUS_COLOR: Record<string, string> = {
+  new: '#FF931E', reviewed: '#1D5CE3', confirmed: '#059669', waitlist: '#f59e0b',
+  current: '#059669', past: '#64748b',
+}
+
+const CustomTooltipFee = ({ active, payload, label }: any) => {
+  if (!active || !payload?.length) return null
+  return (
+    <div style={{ background: '#1e293b', borderRadius: 10, padding: '8px 14px', fontSize: '.82rem', color: '#fff', fontFamily: 'Karla,sans-serif' }}>
+      <div style={{ fontWeight: 700, marginBottom: 2 }}>{label}</div>
+      <div style={{ color: ORG }}>{fmt(payload[0].value)}</div>
+    </div>
+  )
+}
+
+const CustomTooltipReg = ({ active, payload, label }: any) => {
+  if (!active || !payload?.length) return null
+  return (
+    <div style={{ background: '#1e293b', borderRadius: 10, padding: '8px 14px', fontSize: '.82rem', color: '#fff', fontFamily: 'Karla,sans-serif' }}>
+      <div style={{ fontWeight: 700, marginBottom: 2 }}>{label}</div>
+      <div style={{ color: BLUE }}>{payload[0].value} registrations</div>
+    </div>
+  )
+}
 
 export default function AdminDashboard() {
-  const [regStats,  setRegStats]  = useState<RegStats>({ total: 0, new: 0, confirmed: 0, waitlist: 0 })
-  const [stuStats,  setStuStats]  = useState<StudentStats>({ total: 0, current: 0, past: 0 })
-  const [feeStats,  setFeeStats]  = useState<FeeStats>({ totalCollected: 0, totalOutstanding: 0 })
-  const [loading,   setLoading]   = useState(true)
-
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true)
-      try {
-        const [regRes, stuRes, feeRes] = await Promise.all([
-          fetch('/api/admin/registrations'),
-          fetch('/api/admin/students'),
-          fetch('/api/admin/fee-plans'),
-        ])
-        if (regRes.ok) { const d = await regRes.json(); setRegStats(d.stats ?? {}) }
-        if (stuRes.ok) { const d = await stuRes.json(); setStuStats(d.stats ?? {}) }
-        if (feeRes.ok) { const d = await feeRes.json(); setFeeStats({ totalCollected: d.stats?.totalCollected ?? 0, totalOutstanding: d.stats?.totalOutstanding ?? 0 }) }
-      } finally { setLoading(false) }
-    }
-    load()
-  }, [])
-
+  const [data, setData] = useState<DashData | null>(null)
+  const [loading, setLoading] = useState(true)
   const F = { fontFamily: "'Karla',sans-serif" }
 
-  const SECTIONS = [
-    {
-      href:  '/admin/registrations',
-      icon:  '📋',
-      title: 'Registrations',
-      desc:  'View and manage all website applications.',
-      color: '#1D5CE3',
-      stats: [
-        { label: 'Total',     value: regStats.total     },
-        { label: 'New',       value: regStats.new,       color: '#FF931E' },
-        { label: 'Confirmed', value: regStats.confirmed, color: '#065f46' },
-        { label: 'Waitlist',  value: regStats.waitlist,  color: '#92400e' },
-      ],
-    },
-    {
-      href:  '/admin/students',
-      icon:  '👥',
-      title: 'Students',
-      desc:  'Manage enrolled students and fee plans.',
-      color: '#065f46',
-      stats: [
-        { label: 'Total',   value: stuStats.total              },
-        { label: 'Current', value: stuStats.current, color: '#065f46' },
-        { label: 'Past',    value: stuStats.past,    color: '#64748b' },
-      ],
-    },
-    {
-      href:  '/admin/students',
-      icon:  '💰',
-      title: 'Fees',
-      desc:  'Track collected fees and outstanding payments.',
-      color: '#FF931E',
-      stats: [
-        { label: 'Collected',    value: fmt(feeStats.totalCollected),    color: '#065f46' },
-        { label: 'Outstanding',  value: fmt(feeStats.totalOutstanding),  color: '#dc2626' },
-      ],
-    },
-  ]
+  useEffect(() => {
+    fetch('/api/admin/dashboard')
+      .then(r => r.json())
+      .then(d => { setData(d); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [])
+
+  const Spinner = () => (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 180 }}>
+      <div style={{ width: 32, height: 32, border: '3px solid #e2e8f0', borderTop: `3px solid ${BLUE}`, borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+    </div>
+  )
+
+  const Card = ({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) => (
+    <div style={{ background: '#fff', borderRadius: 18, padding: '20px 22px', boxShadow: '0 1px 6px rgba(0,0,0,.06)', ...style }}>{children}</div>
+  )
+
+  const CardTitle = ({ children }: { children: React.ReactNode }) => (
+    <div style={{ fontWeight: 800, fontSize: '.88rem', color: '#1e293b', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6 }}>{children}</div>
+  )
 
   return (
     <div style={{ minHeight: '100vh', background: '#f1f5f9', ...F }}>
       <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;600;700;800&display=swap');*{box-sizing:border-box;}@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}` }} />
 
-      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '36px 24px' }}>
-        {/* Header */}
-        <div style={{ marginBottom: 32 }}>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0d0d0d', marginBottom: 6 }}>Dashboard</h1>
-          <p style={{ color: '#64748b', fontSize: '.92rem' }}>Overview of Branky STEM Labs admin.</p>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 20px' }}>
+
+        {/* ── Header ── */}
+        <div style={{ marginBottom: 28 }}>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0d0d0d', marginBottom: 4 }}>Dashboard</h1>
+          <p style={{ color: SLATE, fontSize: '.9rem' }}>Branky STEM Labs — overview &amp; analytics</p>
         </div>
 
-        {/* Top stat cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 14, marginBottom: 36 }}>
-          {loading ? [1,2,3,4].map(i => (
-            <div key={i} style={{ background: '#fff', borderRadius: 16, padding: '20px', height: 90, boxShadow: '0 2px 8px rgba(0,0,0,.04)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <div style={{ width: 28, height: 28, border: '3px solid #e2e8f0', borderTop: '3px solid #1D5CE3', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+        {/* ── Top KPI Cards ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 14, marginBottom: 24 }}>
+          {loading ? [1,2,3,4,5,6].map(i => (
+            <div key={i} style={{ background:'#fff', borderRadius:16, height:88, boxShadow:'0 1px 4px rgba(0,0,0,.05)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <div style={{ width:24, height:24, border:`3px solid #e2e8f0`, borderTop:`3px solid ${BLUE}`, borderRadius:'50%', animation:'spin 1s linear infinite' }} />
             </div>
-          )) : [
-            { label: 'Registrations', value: regStats.total,              color: '#1D5CE3', IC: ClipboardList },
-            { label: 'Active Students', value: stuStats.current,          color: '#065f46', IC: Users        },
-            { label: 'Fees Collected', value: fmt(feeStats.totalCollected), color: '#FF931E', IC: IndianRupee },
-            { label: 'Outstanding',   value: fmt(feeStats.totalOutstanding), color: '#dc2626', IC: TrendingUp },
+          )) : data ? [
+            { label: 'Total Registrations', value: data.regStats.total,        color: BLUE,  Icon: ClipboardList },
+            { label: 'Active Students',     value: data.stuStats.current,       color: GRN,   Icon: Users        },
+            { label: 'Past Students',       value: data.stuStats.past,          color: SLATE, Icon: Users        },
+            { label: 'Fees Collected',      value: fmt(data.feeStats.collected),   color: ORG,   Icon: IndianRupee  },
+            { label: 'Outstanding',         value: fmt(data.feeStats.outstanding), color: RED,   Icon: TrendingUp   },
+            { label: 'Overdue Fees',        value: data.feeStats.overdueCount,  color: RED,   Icon: AlertTriangle },
           ].map(s => (
-            <div key={s.label} style={{ background: '#fff', borderRadius: 16, padding: '18px 20px', borderLeft: `4px solid ${s.color}`, boxShadow: '0 2px 8px rgba(0,0,0,.04)', display: 'flex', alignItems: 'center', gap: 14 }}>
-              <div style={{ color: s.color, flexShrink: 0 }}><s.IC size={24} /></div>
+            <div key={s.label} style={{ background:'#fff', borderRadius:16, padding:'16px 18px', borderLeft:`4px solid ${s.color}`, boxShadow:'0 1px 6px rgba(0,0,0,.05)', display:'flex', alignItems:'center', gap:12 }}>
+              <div style={{ color:s.color, flexShrink:0 }}><s.Icon size={22} /></div>
               <div>
-                <div style={{ fontSize: typeof s.value === 'number' ? '1.7rem' : '1.2rem', fontWeight: 800, color: '#0d0d0d', lineHeight: 1 }}>{s.value}</div>
-                <div style={{ fontSize: '.7rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.05em', marginTop: 3 }}>{s.label}</div>
+                <div style={{ fontSize: typeof s.value === 'number' ? '1.65rem' : '1.1rem', fontWeight:800, color:'#0d0d0d', lineHeight:1 }}>{s.value}</div>
+                <div style={{ fontSize:'.68rem', color:SLATE, fontWeight:700, textTransform:'uppercase', letterSpacing:'.05em', marginTop:3 }}>{s.label}</div>
               </div>
             </div>
-          ))}
+          )) : null}
         </div>
 
-        {/* Section cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 18 }}>
-          {SECTIONS.map(sec => (
-            <a key={sec.href + sec.title} href={sec.href} style={{ textDecoration: 'none', display: 'block' }}>
-              <div style={{ background: '#fff', borderRadius: 20, padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,.06)', border: '2px solid transparent', cursor: 'pointer' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 42, height: 42, borderRadius: 12, background: sec.color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem' }}>{sec.icon}</div>
-                    <div>
-                      <div style={{ fontWeight: 800, fontSize: '1rem', color: '#0d0d0d' }}>{sec.title}</div>
-                      <div style={{ fontSize: '.75rem', color: '#94a3b8', marginTop: 1 }}>{sec.desc}</div>
+        {/* ── Row 1: Fee Bar Chart + Registration Pie ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 18, marginBottom: 18 }}>
+
+          {/* Monthly Fee Collection bar chart */}
+          <Card>
+            <CardTitle><BarChart2 size={15} /> Monthly Fee Collection</CardTitle>
+            {loading ? <Spinner /> : data?.monthlyFees.length ? (
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={data.monthlyFees} margin={{ top:4, right:8, left:0, bottom:0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                  <XAxis dataKey="month" tick={{ fontSize:11, fill:SLATE, fontFamily:'Karla,sans-serif' }} axisLine={false} tickLine={false} />
+                  <YAxis tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} tick={{ fontSize:11, fill:SLATE, fontFamily:'Karla,sans-serif' }} axisLine={false} tickLine={false} width={52} />
+                  <Tooltip content={<CustomTooltipFee />} />
+                  <Bar dataKey="total" fill={ORG} radius={[6,6,0,0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div style={{ height:220, display:'flex', alignItems:'center', justifyContent:'center', color:'#cbd5e1', fontSize:'.85rem' }}>No payment data yet</div>
+            )}
+          </Card>
+
+          {/* Registration Status Pie */}
+          <Card>
+            <CardTitle><ClipboardList size={15} /> Registration Status</CardTitle>
+            {loading ? <Spinner /> : data ? (() => {
+              const pieData = PIE_REG.map(p => ({ name: p.label, value: (data.regStats as any)[p.key], color: p.color })).filter(x => x.value > 0)
+              return pieData.length > 0 ? (
+                <>
+                  <ResponsiveContainer width="100%" height={160}>
+                    <PieChart>
+                      <Pie data={pieData} dataKey="value" cx="50%" cy="50%" outerRadius={70} innerRadius={40} paddingAngle={3}>
+                        {pieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+                      </Pie>
+                      <Tooltip formatter={(v: any) => [v, '']} contentStyle={{ fontFamily:'Karla,sans-serif', fontSize:12, borderRadius:8 }} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div style={{ display:'flex', flexWrap:'wrap', gap:'8px 14px', marginTop:8 }}>
+                    {pieData.map(d => (
+                      <div key={d.name} style={{ display:'flex', alignItems:'center', gap:5 }}>
+                        <div style={{ width:10, height:10, borderRadius:3, background:d.color, flexShrink:0 }} />
+                        <span style={{ fontSize:'.75rem', color:SLATE, fontWeight:700 }}>{d.name}: <strong style={{ color:'#0d0d0d' }}>{d.value}</strong></span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div style={{ height:160, display:'flex', alignItems:'center', justifyContent:'center', color:'#cbd5e1', fontSize:'.85rem' }}>No registrations yet</div>
+              )
+            })() : null}
+          </Card>
+        </div>
+
+        {/* ── Row 2: Monthly Registrations Line + Student Status ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 18, marginBottom: 18 }}>
+
+          {/* Monthly Registrations line */}
+          <Card>
+            <CardTitle><LineIcon size={15} /> Monthly Registrations</CardTitle>
+            {loading ? <Spinner /> : data?.monthlyRegs.length ? (
+              <ResponsiveContainer width="100%" height={200}>
+                <LineChart data={data.monthlyRegs} margin={{ top:4, right:8, left:0, bottom:0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                  <XAxis dataKey="month" tick={{ fontSize:11, fill:SLATE, fontFamily:'Karla,sans-serif' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize:11, fill:SLATE, fontFamily:'Karla,sans-serif' }} axisLine={false} tickLine={false} width={28} allowDecimals={false} />
+                  <Tooltip content={<CustomTooltipReg />} />
+                  <Line type="monotone" dataKey="total" stroke={BLUE} strokeWidth={2.5} dot={{ fill:BLUE, r:4 }} activeDot={{ r:6 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div style={{ height:200, display:'flex', alignItems:'center', justifyContent:'center', color:'#cbd5e1', fontSize:'.85rem' }}>No registration data yet</div>
+            )}
+          </Card>
+
+          {/* Student Status donut */}
+          <Card>
+            <CardTitle><Users size={15} /> Students</CardTitle>
+            {loading ? <Spinner /> : data ? (() => {
+              const total = data.stuStats.total
+              const pct = total > 0 ? Math.round((data.stuStats.current / total) * 100) : 0
+              const stuPie = [
+                { name:'Current', value: data.stuStats.current, color: GRN },
+                { name:'Past',    value: data.stuStats.past,    color: '#e2e8f0' },
+              ].filter(x => x.value > 0)
+              return (
+                <>
+                  <div style={{ position:'relative', height:150, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                    <ResponsiveContainer width="100%" height={150}>
+                      <PieChart>
+                        <Pie data={stuPie} dataKey="value" cx="50%" cy="50%" outerRadius={65} innerRadius={44} paddingAngle={2} startAngle={90} endAngle={-270}>
+                          {stuPie.map((e, i) => <Cell key={i} fill={e.color} />)}
+                        </Pie>
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div style={{ position:'absolute', textAlign:'center', pointerEvents:'none' }}>
+                      <div style={{ fontSize:'1.5rem', fontWeight:800, color:'#0d0d0d', lineHeight:1 }}>{pct}%</div>
+                      <div style={{ fontSize:'.65rem', color:SLATE, fontWeight:700, marginTop:2 }}>ACTIVE</div>
                     </div>
                   </div>
-                  <ArrowRight size={18} color={sec.color} />
-                </div>
-                <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                  {sec.stats.map(st => (
-                    <div key={st.label}>
-                      <div style={{ fontSize: typeof st.value === 'number' ? '1.4rem' : '1rem', fontWeight: 800, color: (st as any).color ?? '#0d0d0d', lineHeight: 1 }}>{st.value}</div>
-                      <div style={{ fontSize: '.68rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', marginTop: 2 }}>{st.label}</div>
+                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginTop:8 }}>
+                    {[{ label:'Current', value: data.stuStats.current, color: GRN }, { label:'Past', value: data.stuStats.past, color: SLATE }].map(s => (
+                      <div key={s.label} style={{ textAlign:'center', padding:'8px', background:'#f8fafc', borderRadius:10 }}>
+                        <div style={{ fontSize:'1.3rem', fontWeight:800, color:s.color }}>{s.value}</div>
+                        <div style={{ fontSize:'.68rem', color:SLATE, fontWeight:700, textTransform:'uppercase' }}>{s.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )
+            })() : null}
+          </Card>
+        </div>
+
+        {/* ── Row 3: Top Courses + Recent Activity ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18, marginBottom: 18 }}>
+
+          {/* Top Courses */}
+          <Card>
+            <CardTitle><BookOpen size={15} /> Top Courses</CardTitle>
+            {loading ? <Spinner /> : data?.topCourses.length ? (
+              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                {data.topCourses.map((c, i) => {
+                  const maxStudents = Math.max(...data.topCourses.map(x => x.students))
+                  const pct = maxStudents > 0 ? (c.students / maxStudents) * 100 : 0
+                  return (
+                    <div key={c.course}>
+                      <div style={{ display:'flex', justifyContent:'space-between', marginBottom:4 }}>
+                        <span style={{ fontSize:'.83rem', fontWeight:700, color:'#0d0d0d' }}>
+                          <span style={{ fontSize:'.72rem', color:SLATE, marginRight:6 }}>#{i+1}</span>{c.course}
+                        </span>
+                        <div style={{ textAlign:'right' }}>
+                          <span style={{ fontSize:'.78rem', fontWeight:700, color:BLUE }}>{c.students} students</span>
+                          <span style={{ fontSize:'.72rem', color:SLATE, marginLeft:8 }}>{fmt(c.collected)}</span>
+                        </div>
+                      </div>
+                      <div style={{ height:5, background:'#f1f5f9', borderRadius:99, overflow:'hidden' }}>
+                        <div style={{ height:'100%', width:`${pct}%`, background:`linear-gradient(90deg,${BLUE},${ORG})`, borderRadius:99, transition:'width .4s' }} />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            ) : (
+              <div style={{ height:120, display:'flex', alignItems:'center', justifyContent:'center', color:'#cbd5e1', fontSize:'.85rem' }}>No course data yet</div>
+            )}
+          </Card>
+
+          {/* Fee Collected vs Outstanding bar */}
+          <Card>
+            <CardTitle><Wallet size={15} /> Fee Overview</CardTitle>
+            {loading ? <Spinner /> : data ? (() => {
+              const total = data.feeStats.collected + data.feeStats.outstanding
+              const collPct = total > 0 ? (data.feeStats.collected / total) * 100 : 0
+              return (
+                <div>
+                  <div style={{ marginBottom:20 }}>
+                    <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
+                      <span style={{ fontSize:'.8rem', fontWeight:700, color:SLATE }}>Collection Rate</span>
+                      <span style={{ fontSize:'.9rem', fontWeight:800, color:GRN }}>{collPct.toFixed(1)}%</span>
+                    </div>
+                    <div style={{ height:10, background:'#f1f5f9', borderRadius:99, overflow:'hidden' }}>
+                      <div style={{ height:'100%', width:`${collPct}%`, background:`linear-gradient(90deg,${GRN},#34d399)`, borderRadius:99, transition:'width .5s' }} />
+                    </div>
+                  </div>
+                  {[
+                    { label:'Total Invoiced', value: total, color:'#0d0d0d' },
+                    { label:'Collected',      value: data.feeStats.collected,   color: GRN },
+                    { label:'Outstanding',    value: data.feeStats.outstanding, color: RED },
+                    { label:'Overdue Instalments', value: data.feeStats.overdueCount, color: RED, isCount: true },
+                  ].map(s => (
+                    <div key={s.label} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'9px 0', borderBottom:'1px solid #f1f5f9' }}>
+                      <span style={{ fontSize:'.83rem', color:SLATE, fontWeight:600 }}>{s.label}</span>
+                      <span style={{ fontSize:'.9rem', fontWeight:800, color:s.color }}>{s.isCount ? s.value : fmt(s.value as number)}</span>
                     </div>
                   ))}
                 </div>
-              </div>
-            </a>
-          ))}
+              )
+            })() : null}
+          </Card>
         </div>
+
+        {/* ── Row 4: Recent Registrations + Recent Students ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
+
+          <Card>
+            <CardTitle><UserPlus size={15} /> Recent Registrations</CardTitle>
+            {loading ? <Spinner /> : data?.recentRegs.length ? (
+              <div style={{ display:'flex', flexDirection:'column', gap:0 }}>
+                {data.recentRegs.map(r => (
+                  <a key={r.id} href="/admin/registrations" style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'9px 0', borderBottom:'1px solid #f8fafc', textDecoration:'none' }}>
+                    <div>
+                      <div style={{ fontWeight:700, fontSize:'.85rem', color:'#0d0d0d' }}>{r.name}</div>
+                      <div style={{ fontSize:'.72rem', color:SLATE }}>{r.program} · {r.createdAt}</div>
+                    </div>
+                    <span style={{ padding:'2px 8px', borderRadius:20, fontSize:'.68rem', fontWeight:700, textTransform:'uppercase', background: STATUS_COLOR[r.status] + '22', color: STATUS_COLOR[r.status] }}>{r.status}</span>
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <div style={{ color:'#cbd5e1', fontSize:'.85rem', textAlign:'center', padding:'24px 0' }}>No registrations yet</div>
+            )}
+          </Card>
+
+          <Card>
+            <CardTitle><UserCheck size={15} /> Recent Students</CardTitle>
+            {loading ? <Spinner /> : data?.recentStudents.length ? (
+              <div style={{ display:'flex', flexDirection:'column', gap:0 }}>
+                {data.recentStudents.map(s => (
+                  <a key={s.id} href="/admin/students" style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'9px 0', borderBottom:'1px solid #f8fafc', textDecoration:'none' }}>
+                    <div>
+                      <div style={{ fontWeight:700, fontSize:'.85rem', color:'#0d0d0d' }}>{s.name}</div>
+                      <div style={{ fontSize:'.72rem', color:SLATE }}>{s.program} · Joined {s.joinDate}</div>
+                    </div>
+                    <span style={{ padding:'2px 8px', borderRadius:20, fontSize:'.68rem', fontWeight:700, textTransform:'uppercase', background: STATUS_COLOR[s.status] + '22', color: STATUS_COLOR[s.status] }}>{s.status}</span>
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <div style={{ color:'#cbd5e1', fontSize:'.85rem', textAlign:'center', padding:'24px 0' }}>No students yet</div>
+            )}
+          </Card>
+        </div>
+
       </div>
     </div>
   )
