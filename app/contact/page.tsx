@@ -10,6 +10,15 @@ import { Target, FlaskConical, Zap } from 'lucide-react'
 export const metadata: Metadata = {
   title: 'Contact Us & Book Free Demo — Branky STEM Labs Vadodara',
   description: 'Book a free demo session at Branky STEM Labs Vadodara. Visit A-5 Shivangi Society, Tandalja. Call +91 91044 01104.',
+  openGraph: {
+    title: 'Contact Us & Book Free Demo — Branky STEM Labs Vadodara',
+    description: 'Book a free demo session at Branky STEM Labs Vadodara. Visit A-5 Shivangi Society, Tandalja. Call +91 91044 01104.',
+    url: '/contact',
+  },
+  twitter: {
+    title: 'Contact Us & Book Free Demo — Branky STEM Labs Vadodara',
+    description: 'Book a free demo session at Branky STEM Labs Vadodara. Visit A-5 Shivangi Society, Tandalja. Call +91 91044 01104.',
+  },
 }
 
 export default function ContactPage() {

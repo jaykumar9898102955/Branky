@@ -11,6 +11,15 @@ import { Clock } from 'lucide-react'
 export const metadata: Metadata = {
   title: 'Bootcamp & Workshops — Branky STEM Labs Vadodara',
   description: 'Intensive bootcamps and workshops in AI, Robotics, Coding and STEM for children in Vadodara. Competition training, hackathons and project exhibitions.',
+  openGraph: {
+    title: 'Bootcamp & Workshops — Branky STEM Labs Vadodara',
+    description: 'Intensive bootcamps and workshops in AI, Robotics, Coding and STEM for children in Vadodara. Competition training, hackathons and project exhibitions.',
+    url: '/bootcamp-workshops',
+  },
+  twitter: {
+    title: 'Bootcamp & Workshops — Branky STEM Labs Vadodara',
+    description: 'Intensive bootcamps and workshops in AI, Robotics, Coding and STEM for children in Vadodara. Competition training, hackathons and project exhibitions.',
+  },
 }
 
 export default function BootcampPage() {

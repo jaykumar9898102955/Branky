@@ -3,10 +3,21 @@ import './globals.css'
 import ClientShell from '@/components/ui/ClientShell'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://brankystemlab.com'),
   title: 'Branky STEM Labs — AI, Robotics & Coding for Kids | Vadodara',
   description: "Vadodara's full-fledged AI, Robotics & Coding learning centre for children aged 4–14. Hands-on programs, smart labs, expert mentors.",
   keywords: 'STEM, robotics, coding, AI, kids, Vadodara, Branky, learning centre, ages 4-14, IoT, electronics',
   icons: { icon: '/assets/app-icon.png', apple: '/assets/app-icon.png' },
+  openGraph: {
+    siteName: 'Branky STEM Labs',
+    type: 'website',
+    locale: 'en_IN',
+    images: [{ url: '/assets/brand-banner.png', alt: 'Branky STEM Labs' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: ['/assets/brand-banner.png'],
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

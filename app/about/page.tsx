@@ -14,6 +14,15 @@ import { Medal } from 'lucide-react'
 export const metadata: Metadata = {
   title: 'About Us — Branky STEM Labs Vadodara',
   description: 'Learn about Branky STEM Labs — Vadodara\'s AI, Robotics & STEM learning centre for children aged 4–14. Our story, mission and facilities.',
+  openGraph: {
+    title: 'About Us — Branky STEM Labs Vadodara',
+    description: 'Learn about Branky STEM Labs — Vadodara\'s AI, Robotics & STEM learning centre for children aged 4–14. Our story, mission and facilities.',
+    url: '/about',
+  },
+  twitter: {
+    title: 'About Us — Branky STEM Labs Vadodara',
+    description: 'Learn about Branky STEM Labs — Vadodara\'s AI, Robotics & STEM learning centre for children aged 4–14. Our story, mission and facilities.',
+  },
 }
 
 export default function AboutPage() {

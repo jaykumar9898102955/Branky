@@ -10,6 +10,15 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Programs & Courses — Branky STEM Labs Vadodara',
   description: 'Age-wise robotics, AI, coding and STEM programs for children aged 4–14 in Vadodara. 5 structured courses from beginner to advanced.',
+  openGraph: {
+    title: 'Programs & Courses — Branky STEM Labs Vadodara',
+    description: 'Age-wise robotics, AI, coding and STEM programs for children aged 4–14 in Vadodara. 5 structured courses from beginner to advanced.',
+    url: '/programs',
+  },
+  twitter: {
+    title: 'Programs & Courses — Branky STEM Labs Vadodara',
+    description: 'Age-wise robotics, AI, coding and STEM programs for children aged 4–14 in Vadodara. 5 structured courses from beginner to advanced.',
+  },
 }
 
 export default function ProgramsPage() {
