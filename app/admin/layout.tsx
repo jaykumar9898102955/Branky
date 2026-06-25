@@ -1,0 +1,187 @@
+'use client'
+import { useState, useEffect, useCallback } from 'react'
+import Image from 'next/image'
+import { usePathname, useRouter } from 'next/navigation'
+import { AlertTriangle } from 'lucide-react'
+
+const NAV = [
+  { href: '/admin',                  icon: '📊', label: 'Dashboard'     },
+  { href: '/admin/registrations',    icon: '📋', label: 'Registrations' },
+  { href: '/admin/students',         icon: '👥', label: 'Students'      },
+]
+
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const [checking, setChecking]     = useState(true)
+  const [authed, setAuthed]         = useState(false)
+  const [sideOpen, setSideOpen]     = useState(false)
+  const [loginForm, setLoginForm]   = useState({ email: '', password: '' })
+  const [loginErr, setLoginErr]     = useState('')
+  const [loggingIn, setLoggingIn]   = useState(false)
+  const pathname = usePathname()
+  const router   = useRouter()
+
+  // ── verify existing session on every page load ──────────────────────────
+  const verify = useCallback(async () => {
+    setChecking(true)
+    try {
+      const r = await fetch('/api/admin/verify')
+      setAuthed(r.ok)
+    } catch {
+      setAuthed(false)
+    } finally {
+      setChecking(false)
+    }
+  }, [])
+
+  useEffect(() => { verify() }, [verify])
+
+  // ── login ────────────────────────────────────────────────────────────────
+  const login = async () => {
+    setLoggingIn(true); setLoginErr('')
+    try {
+      const r = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loginForm),
+      })
+      if (!r.ok) { setLoginErr('Invalid email or password'); return }
+      setAuthed(true)
+    } catch { setLoginErr('Network error. Please try again.') }
+    finally { setLoggingIn(false) }
+  }
+
+  // ── logout ───────────────────────────────────────────────────────────────
+  const logout = async () => {
+    await fetch('/api/admin/logout', { method: 'POST' })
+    setAuthed(false)
+    router.push('/admin')
+  }
+
+  // ── loading spinner ──────────────────────────────────────────────────────
+  if (checking) return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', fontFamily: 'Karla, sans-serif' }}>
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ width: 44, height: 44, border: '4px solid #e2e8f0', borderTop: '4px solid #1D5CE3', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 16px' }} />
+        <div style={{ color: '#64748b', fontWeight: 600 }}>Loading admin…</div>
+      </div>
+      <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+    </div>
+  )
+
+  // ── login form ───────────────────────────────────────────────────────────
+  if (!authed) return (
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#1D5CE3,#1448b8)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, fontFamily: 'Karla, sans-serif' }}>
+      {/* hide global WhatsApp button on admin */}
+      <style>{`a[href*="wa.me"]{display:none!important}@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+      <div style={{ background: '#fff', borderRadius: 28, padding: 'clamp(32px,5vw,52px)', width: 'min(420px,96vw)', boxShadow: '0 40px 100px rgba(0,0,0,.3)', position: 'relative' }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 5, background: 'linear-gradient(90deg,#1D5CE3,#FF931E)', borderRadius: '28px 28px 0 0' }} />
+        <Image src="/assets/logo-main.png" alt="Branky" width={150} height={48} style={{ objectFit: 'contain', marginBottom: 8, display: 'block', height: 'auto' }} />
+        <p style={{ fontSize: '.88rem', color: '#64748b', marginBottom: 28, fontWeight: 600 }}>Admin Panel — Secure Login</p>
+        {loginErr && (
+          <div style={{ background: '#fef2f2', border: '2px solid #fecaca', borderRadius: 12, padding: '11px 16px', marginBottom: 16, fontSize: '.87rem', color: '#dc2626', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <AlertTriangle size={16} /> {loginErr}
+          </div>
+        )}
+        {[{ k: 'email', l: 'Email', t: 'email', p: 'admin@brankylabs.in' }, { k: 'password', l: 'Password', t: 'password', p: '••••••••' }].map(f => (
+          <div key={f.k} style={{ marginBottom: 14 }}>
+            <label style={{ display: 'block', fontSize: '.73rem', fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 6, color: '#1e293b' }}>{f.l}</label>
+            <input
+              type={f.t} placeholder={f.p}
+              value={(loginForm as any)[f.k]}
+              onChange={e => setLoginForm(x => ({ ...x, [f.k]: e.target.value }))}
+              onKeyDown={e => e.key === 'Enter' && login()}
+              style={{ width: '100%', padding: '12px 16px', background: '#f8fafc', border: '2px solid #e2e8f0', borderRadius: 12, fontFamily: 'Karla,sans-serif', fontSize: '.95rem', outline: 'none', boxSizing: 'border-box' }}
+            />
+          </div>
+        ))}
+        <button onClick={login} disabled={loggingIn}
+          style={{ width: '100%', padding: 14, background: loggingIn ? '#94a3b8' : '#1D5CE3', color: '#fff', border: 'none', borderRadius: 14, fontWeight: 800, fontSize: '1rem', cursor: loggingIn ? 'not-allowed' : 'pointer', fontFamily: 'Karla,sans-serif', marginTop: 4 }}>
+          {loggingIn ? 'Logging in…' : 'Login to Admin →'}
+        </button>
+        <a href="/" style={{ display: 'block', textAlign: 'center', marginTop: 14, fontSize: '.84rem', color: '#64748b', textDecoration: 'none', fontWeight: 600 }}>← Back to Website</a>
+      </div>
+    </div>
+  )
+
+  // ── admin layout with sidebar ────────────────────────────────────────────
+  return (
+    <div className="admin-root" style={{ minHeight: '100vh', display: 'flex', fontFamily: 'Karla, sans-serif' }}>
+      {/* hide global WhatsApp & cursor on admin pages */}
+      <style>{`
+        a[href*="wa.me"]{display:none!important}
+        @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+        @media(max-width:768px){ .admin-sidebar{transform:translateX(-100%)!important} .admin-sidebar.open{transform:translateX(0)!important} .admin-overlay{display:block!important} }
+        .admin-root,
+        .admin-root *{cursor:default!important}
+      `}</style>
+
+      {/* Sidebar overlay on mobile */}
+      {sideOpen && (
+        <div className="admin-overlay" onClick={() => setSideOpen(false)}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)', zIndex: 40, display: 'none' }} />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`admin-sidebar${sideOpen ? ' open' : ''}`}
+        style={{ width: 220, background: '#0f172a', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, bottom: 0, left: 0, zIndex: 50, transition: 'transform .25s ease', overflowY: 'auto' }}>
+        {/* Logo */}
+        <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid rgba(255,255,255,.08)' }}>
+          <Image src="/assets/logo-15.png" alt="Branky" width={110} height={36} style={{ objectFit: 'contain', filter: 'brightness(0) invert(1)', height: 'auto', display: 'block' }} />
+          <div style={{ marginTop: 8, fontSize: '.72rem', color: 'rgba(255,255,255,.4)', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase' }}>Admin Panel</div>
+        </div>
+
+        {/* Nav items */}
+        <nav style={{ flex: 1, padding: '16px 12px' }}>
+          {NAV.map(item => {
+            const active = pathname === item.href
+            return (
+              <a key={item.href} href={item.href} onClick={() => setSideOpen(false)}
+                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 10, marginBottom: 4, textDecoration: 'none', fontWeight: 700, fontSize: '.88rem', transition: 'all .18s', background: active ? '#1D5CE3' : 'transparent', color: active ? '#fff' : 'rgba(255,255,255,.55)' }}
+                onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,.08)'; (e.currentTarget as HTMLElement).style.color = '#fff' }}
+                onMouseLeave={e => { if (!active) { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,.55)' } }}>
+                <span style={{ fontSize: '1.1rem' }}>{item.icon}</span>
+                {item.label}
+              </a>
+            )
+          })}
+        </nav>
+
+        {/* Bottom: site link + logout */}
+        <div style={{ padding: '12px 12px', borderTop: '1px solid rgba(255,255,255,.08)' }}>
+          <a href="/" target="_blank"
+            style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderRadius: 10, marginBottom: 6, textDecoration: 'none', fontSize: '.82rem', fontWeight: 600, color: 'rgba(255,255,255,.4)', transition: 'color .18s' }}
+            onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#fff'}
+            onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,.4)'}>
+            🌐 View Website
+          </a>
+          <button onClick={logout}
+            style={{ width: '100%', padding: '9px 14px', background: 'rgba(220,38,38,.15)', border: '1.5px solid rgba(220,38,38,.25)', borderRadius: 10, color: '#fca5a5', fontWeight: 700, fontSize: '.85rem', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'Karla,sans-serif', transition: 'all .18s' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(220,38,38,.4)'; (e.currentTarget as HTMLElement).style.color = '#fff' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(220,38,38,.15)'; (e.currentTarget as HTMLElement).style.color = '#fca5a5' }}>
+            🚪 Logout
+          </button>
+        </div>
+      </aside>
+
+      {/* Main content */}
+      <div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f1f5f9', display: 'flex', flexDirection: 'column' }}>
+        {/* Top bar (mobile hamburger) */}
+        <div style={{ background: '#0f172a', height: 52, display: 'none', alignItems: 'center', paddingLeft: 16, gap: 12, position: 'sticky', top: 0, zIndex: 30 }}
+          className="mobile-topbar">
+          <button onClick={() => setSideOpen(s => !s)}
+            style={{ background: 'none', border: 'none', color: '#fff', fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}>☰</button>
+          <span style={{ color: '#fff', fontWeight: 800, fontSize: '1rem' }}>Branky Admin</span>
+        </div>
+
+        <style>{`
+          @media(max-width:768px){
+            div[style*="marginLeft: 220px"]{margin-left:0!important}
+            .mobile-topbar{display:flex!important}
+          }
+        `}</style>
+
+        {children}
+      </div>
+    </div>
+  )
+}

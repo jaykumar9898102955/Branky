@@ -1,10 +1,15 @@
 'use client'
 import { useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 
 export default function Cursor() {
+  const pathname = usePathname()
   const curRef = useRef<HTMLDivElement>(null)
   const ringRef = useRef<HTMLDivElement>(null)
+  const isAdmin = pathname?.startsWith('/admin') ?? false
+
   useEffect(() => {
+    if (isAdmin) return
     let mx=0,my=0,rx=0,ry=0
     const move=(e:MouseEvent)=>{
       mx=e.clientX;my=e.clientY
@@ -22,6 +27,8 @@ export default function Cursor() {
     add()
     const obs=new MutationObserver(add);obs.observe(document.body,{childList:true,subtree:true})
     return()=>{document.removeEventListener('mousemove',move);obs.disconnect()}
-  },[])
+  },[isAdmin])
+
+  if (isAdmin) return null
   return(<><div ref={curRef} className="cursor"/><div ref={ringRef} className="cursor-ring"/></>)
 }
