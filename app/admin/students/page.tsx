@@ -66,6 +66,10 @@ export default function StudentsPage() {
   const [toast, setToast] = useState('')
   const [offlineForm, setOfflineForm] = useState(BLANK_OFFLINE)
   const [offlineSaving, setOfflineSaving] = useState(false)
+  const [editForm, setEditForm] = useState<{ open: boolean; studentName: string; parentName: string; phone: string; program: string; joinDate: string }>({ open: false, studentName: '', parentName: '', phone: '', program: '', joinDate: '' })
+  const [editSaving, setEditSaving] = useState(false)
+  const [deleteConfirm, setDeleteConfirm] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(''), 3500) }
 
@@ -82,7 +86,7 @@ export default function StudentsPage() {
   useEffect(() => { loadStudents() }, [loadStudents])
 
   const selectStudent = async (s: StudentDTO) => {
-    setSel(s); setPlans([]); setActivePlan(0); setFpForm(BLANK_FP); setPayForm(p => ({ ...p, open: false, ids: [] }))
+    setSel(s); setPlans([]); setActivePlan(0); setFpForm(BLANK_FP); setPayForm(p => ({ ...p, open: false, ids: [] })); setEditForm(f => ({ ...f, open: false })); setDeleteConfirm(false)
     setPlanLoading(true)
     const data = await apiFetch(`/api/admin/students/${s.id}`)
     setPlans(data.feePlans ?? [])
@@ -207,6 +211,38 @@ export default function StudentsPage() {
     await loadStudents()
     if (sel?.id === s.id) setSel(st => st ? { ...st, status: newStatus } : st)
     showToast(`Student marked as ${newStatus}`)
+  }
+
+  const openEdit = (s: StudentDTO) => {
+    setEditForm({ open: true, studentName: s.studentName, parentName: s.parentName ?? '', phone: s.phone, program: s.program ?? '', joinDate: s.joinDate ?? '' })
+  }
+
+  const saveEdit = async () => {
+    if (!sel) return
+    setEditSaving(true)
+    const data = await apiFetch(`/api/admin/students/${sel.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ studentName: editForm.studentName, parentName: editForm.parentName, phone: editForm.phone, program: editForm.program, joinDate: editForm.joinDate }),
+    })
+    setEditSaving(false)
+    if (data.success) {
+      setSel(data.student)
+      setStudents(prev => prev.map(s => s.id === sel.id ? data.student : s))
+      setEditForm(f => ({ ...f, open: false }))
+      showToast('Student details updated!')
+    } else showToast(data.error ?? 'Error saving')
+  }
+
+  const confirmDeleteStudent = async () => {
+    if (!sel) return
+    setDeleting(true)
+    const data = await apiFetch(`/api/admin/students/${sel.id}`, { method: 'DELETE' })
+    setDeleting(false)
+    if (data.success) {
+      setSel(null); setPlans([]); setDeleteConfirm(false)
+      await loadStudents()
+      showToast('Student deleted.')
+    } else showToast(data.error ?? 'Error deleting')
   }
 
   const instStatus = (inst: InstallmentDTO) => {
@@ -467,7 +503,7 @@ export default function StudentsPage() {
           {/* Student detail modal popup */}
           {sel && (
             <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.55)', zIndex: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}
-              onClick={() => { setSel(null); setPlans([]) }}>
+              onClick={() => { setSel(null); setPlans([]); setDeleteConfirm(false) }}>
             <div style={{ background: '#fff', borderRadius: 20, boxShadow: '0 32px 80px rgba(0,0,0,.35)', overflow: 'hidden', width: 'min(780px,98vw)', maxHeight: 'calc(100vh - 32px)', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}
               onClick={e => e.stopPropagation()}>
               {/* Student header */}
@@ -493,7 +529,45 @@ export default function StudentsPage() {
               <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 0, minHeight: 400 }}>
                 {/* Left column — student info + status */}
                 <div style={{ padding: '20px 20px', borderRight: '1px solid #e2e8f0', background: '#f8fafc' }}>
-                  <div style={{ fontWeight: 800, fontSize: '.8rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 12 }}>Student Info</div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                    <div style={{ fontWeight: 800, fontSize: '.8rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '.06em' }}>Student Info</div>
+                    {!editForm.open && (
+                      <button onClick={() => openEdit(sel)}
+                        style={{ padding: '3px 10px', fontSize: '.72rem', fontWeight: 700, border: '1.5px solid #e2e8f0', borderRadius: 8, background: '#fff', color: '#64748b' }}>
+                        ✏ Edit
+                      </button>
+                    )}
+                  </div>
+
+                  {editForm.open ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      {[
+                        { label: 'Student Name', key: 'studentName', type: 'text' },
+                        { label: 'Parent Name', key: 'parentName', type: 'text' },
+                        { label: 'Phone', key: 'phone', type: 'tel' },
+                        { label: 'Program', key: 'program', type: 'text' },
+                        { label: 'Join Date', key: 'joinDate', type: 'date' },
+                      ].map(f => (
+                        <div key={f.key}>
+                          <label style={{ fontSize: '.7rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '.04em', display: 'block', marginBottom: 3 }}>{f.label}</label>
+                          <input type={f.type} value={(editForm as any)[f.key]}
+                            onChange={e => setEditForm(p => ({ ...p, [f.key]: e.target.value }))}
+                            style={{ width: '100%', padding: '6px 10px', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.85rem', outline: 'none', boxSizing: 'border-box', background: '#fff' }} />
+                        </div>
+                      ))}
+                      <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+                        <button onClick={saveEdit} disabled={editSaving}
+                          style={{ flex: 1, padding: '7px 0', background: editSaving ? '#94a3b8' : '#1D5CE3', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '.82rem' }}>
+                          {editSaving ? 'Saving…' : 'Save'}
+                        </button>
+                        <button onClick={() => setEditForm(f => ({ ...f, open: false }))}
+                          style={{ padding: '7px 12px', background: '#f1f5f9', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '.82rem', color: '#64748b' }}>
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
                   {[
                     { label: 'Phone', value: sel.phone },
                     { label: 'Parent', value: sel.parentName },
@@ -507,6 +581,9 @@ export default function StudentsPage() {
                       <div style={{ fontSize: '.88rem', fontWeight: 600, color: '#0d0d0d', marginTop: 2 }}>{item.value}</div>
                     </div>
                   ))}
+                    </>
+                  )}
+
                   <div style={{ marginTop: 20, borderTop: '1px solid #e2e8f0', paddingTop: 16 }}>
                     <div style={{ fontWeight: 800, fontSize: '.8rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 10 }}>Status</div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -521,6 +598,31 @@ export default function StudentsPage() {
                       <div style={{ marginTop: 12, padding: '8px 12px', background: '#fee2e2', border: '1.5px solid #fca5a5', borderRadius: 10 }}>
                         <div style={{ fontWeight: 800, fontSize: '.78rem', color: '#991b1b' }}>⚠ Overdue Payments</div>
                         <div style={{ fontSize: '.72rem', color: '#b91c1c', marginTop: 2 }}>Some installments are past due date</div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Delete student */}
+                  <div style={{ marginTop: 20, borderTop: '1px solid #e2e8f0', paddingTop: 16 }}>
+                    {!deleteConfirm ? (
+                      <button onClick={() => setDeleteConfirm(true)}
+                        style={{ width: '100%', padding: '8px 0', background: '#fef2f2', border: '1.5px solid #fecaca', borderRadius: 10, color: '#dc2626', fontWeight: 700, fontSize: '.82rem' }}>
+                        🗑 Delete Student
+                      </button>
+                    ) : (
+                      <div style={{ background: '#fef2f2', border: '1.5px solid #fca5a5', borderRadius: 10, padding: '12px' }}>
+                        <div style={{ fontWeight: 700, fontSize: '.8rem', color: '#991b1b', marginBottom: 6 }}>Delete this student and all fee records?</div>
+                        <div style={{ fontSize: '.72rem', color: '#b91c1c', marginBottom: 10 }}>This cannot be undone. The registration record will be kept.</div>
+                        <div style={{ display: 'flex', gap: 6 }}>
+                          <button onClick={confirmDeleteStudent} disabled={deleting}
+                            style={{ flex: 1, padding: '7px 0', background: deleting ? '#94a3b8' : '#dc2626', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '.8rem' }}>
+                            {deleting ? 'Deleting…' : 'Yes, Delete'}
+                          </button>
+                          <button onClick={() => setDeleteConfirm(false)}
+                            style={{ padding: '7px 12px', background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 8, fontWeight: 700, fontSize: '.8rem', color: '#64748b' }}>
+                            Cancel
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>

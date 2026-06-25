@@ -143,23 +143,49 @@ export interface UpdateStudentInput {
   status?: StudentStatus
   endDate?: string | null
   notes?: string
+  // registration fields
+  studentName?: string
+  parentName?: string
+  phone?: string
+  program?: string
+  joinDate?: string
 }
 
 export async function updateStudent(id: number, patch: UpdateStudentInput): Promise<StudentRow | null> {
   const pool = getPool()
-  const sets: string[] = []
-  const params: any[] = []
 
-  if (patch.status !== undefined) { sets.push('status = ?'); params.push(patch.status) }
-  if (patch.endDate !== undefined) { sets.push('end_date = ?'); params.push(patch.endDate) }
-  if (patch.notes !== undefined) { sets.push('notes = ?'); params.push(patch.notes) }
+  const stuSets: string[] = []
+  const stuParams: any[] = []
+  if (patch.status !== undefined) { stuSets.push('status = ?'); stuParams.push(patch.status) }
+  if (patch.endDate !== undefined) { stuSets.push('end_date = ?'); stuParams.push(patch.endDate) }
+  if (patch.notes !== undefined) { stuSets.push('notes = ?'); stuParams.push(patch.notes) }
+  if (patch.joinDate !== undefined) { stuSets.push('join_date = ?'); stuParams.push(patch.joinDate) }
+  if (stuSets.length > 0) {
+    stuParams.push(id)
+    await pool.query<ResultSetHeader>(`UPDATE students SET ${stuSets.join(', ')} WHERE id = ?`, stuParams)
+  }
 
-  if (sets.length > 0) {
-    params.push(id)
-    await pool.query<ResultSetHeader>(`UPDATE students SET ${sets.join(', ')} WHERE id = ?`, params)
+  const regSets: string[] = []
+  const regParams: any[] = []
+  if (patch.studentName !== undefined) { regSets.push('studentName = ?'); regParams.push(patch.studentName) }
+  if (patch.parentName !== undefined) { regSets.push('parentName = ?'); regParams.push(patch.parentName) }
+  if (patch.phone !== undefined) { regSets.push('phone = ?'); regParams.push(patch.phone) }
+  if (patch.program !== undefined) { regSets.push('program = ?'); regParams.push(patch.program) }
+  if (regSets.length > 0) {
+    regParams.push(id)
+    await pool.query<ResultSetHeader>(
+      `UPDATE registrations r JOIN students s ON s.registration_id = r.id SET ${regSets.join(', ')} WHERE s.id = ?`,
+      regParams
+    )
   }
 
   return getStudentById(id)
+}
+
+export async function deleteStudent(id: number): Promise<boolean> {
+  const pool = getPool()
+  const [result] = await pool.query<ResultSetHeader>('DELETE FROM students WHERE id = ?', [id])
+  return result.affectedRows > 0
 }
 
 export async function getStudentStats(): Promise<StudentStats> {
