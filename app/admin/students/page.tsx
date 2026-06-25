@@ -272,6 +272,10 @@ export default function StudentsPage() {
   // ── render ────────────────────────────────────────────────────────────────
   return (
     <div style={{ minHeight: '100vh', background: '#f1f5f9', fontFamily: 'var(--font-body,system-ui,sans-serif)' }}>
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media(max-width:600px){.stu-stats{grid-template-columns:1fr!important;}}
+        @media(max-width:768px){.stu-modal-cols{grid-template-columns:1fr!important;}.stu-modal-left{border-right:none!important;border-bottom:1px solid #e2e8f0;}}
+      ` }} />
       {/* ── Offline Modal (2 steps) ── */}
       {offlineForm.open && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.55)', zIndex: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
@@ -410,7 +414,7 @@ export default function StudentsPage() {
 
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '28px 20px' }}>
         {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, marginBottom: 24 }}>
+        <div className="stu-stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, marginBottom: 24 }}>
           {[{ label: 'Total Students', value: stats.total, color: '#1D5CE3' }, { label: 'Current', value: stats.current, color: '#065f46' }, { label: 'Past', value: stats.past, color: '#64748b' }].map(s => (
             <div key={s.label} style={{ background: '#fff', borderRadius: 16, padding: '20px 24px', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
               <div style={{ fontSize: '.8rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.05em' }}>{s.label}</div>
@@ -526,9 +530,9 @@ export default function StudentsPage() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 0, minHeight: 400 }}>
+              <div className="stu-modal-cols" style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 0, minHeight: 400 }}>
                 {/* Left column — student info + status */}
-                <div style={{ padding: '20px 20px', borderRight: '1px solid #e2e8f0', background: '#f8fafc' }}>
+                <div className="stu-modal-left" style={{ padding: '20px 20px', borderRight: '1px solid #e2e8f0', background: '#f8fafc' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                     <div style={{ fontWeight: 800, fontSize: '.8rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '.06em' }}>Student Info</div>
                     {!editForm.open && (

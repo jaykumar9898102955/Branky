@@ -81,7 +81,7 @@ export default function AdminDashboard() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#f1f5f9', ...F }}>
-      <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;600;700;800&display=swap');*{box-sizing:border-box;}@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}` }} />
+      <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;600;700;800&display=swap');*{box-sizing:border-box;}@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}.kpi-card{transition:transform .18s,box-shadow .18s;}.kpi-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.1)!important;}.dash-link{transition:background .12s,border-radius .12s;display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f8fafc;text-decoration:none;}.dash-link:hover{background:#eff6ff!important;border-radius:8px;padding-left:8px;padding-right:8px;}@media(max-width:900px){.dash-r1{grid-template-columns:1fr!important;}.dash-r2{grid-template-columns:1fr!important;}.dash-r3{grid-template-columns:1fr!important;}.dash-r4{grid-template-columns:1fr!important;}.dash-kpi{grid-template-columns:repeat(2,1fr)!important;}}@media(max-width:480px){.dash-kpi{grid-template-columns:1fr!important;}}` }} />
 
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 20px' }}>
 
@@ -92,7 +92,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* ── Top KPI Cards ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 14, marginBottom: 24 }}>
+        <div className="dash-kpi" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 14, marginBottom: 24 }}>
           {loading ? [1,2,3,4,5,6].map(i => (
             <div key={i} style={{ background:'#fff', borderRadius:16, height:88, boxShadow:'0 1px 4px rgba(0,0,0,.05)', display:'flex', alignItems:'center', justifyContent:'center' }}>
               <div style={{ width:24, height:24, border:`3px solid #e2e8f0`, borderTop:`3px solid ${BLUE}`, borderRadius:'50%', animation:'spin 1s linear infinite' }} />
@@ -105,7 +105,7 @@ export default function AdminDashboard() {
             { label: 'Outstanding',         value: fmt(data.feeStats.outstanding), color: RED,   Icon: TrendingUp   },
             { label: 'Overdue Fees',        value: data.feeStats.overdueCount,  color: RED,   Icon: AlertTriangle },
           ].map(s => (
-            <div key={s.label} style={{ background:'#fff', borderRadius:16, padding:'16px 18px', borderLeft:`4px solid ${s.color}`, boxShadow:'0 1px 6px rgba(0,0,0,.05)', display:'flex', alignItems:'center', gap:12 }}>
+            <div key={s.label} className="kpi-card" style={{ background:'#fff', borderRadius:16, padding:'16px 18px', borderLeft:`4px solid ${s.color}`, boxShadow:'0 1px 6px rgba(0,0,0,.05)', display:'flex', alignItems:'center', gap:12 }}>
               <div style={{ color:s.color, flexShrink:0 }}><s.Icon size={22} /></div>
               <div>
                 <div style={{ fontSize: typeof s.value === 'number' ? '1.65rem' : '1.1rem', fontWeight:800, color:'#0d0d0d', lineHeight:1 }}>{s.value}</div>
@@ -116,7 +116,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* ── Row 1: Fee Bar Chart + Registration Pie ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 18, marginBottom: 18 }}>
+        <div className="dash-r1" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 18, marginBottom: 18 }}>
 
           {/* Monthly Fee Collection bar chart */}
           <Card>
@@ -168,7 +168,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* ── Row 2: Monthly Registrations Line + Student Status ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 18, marginBottom: 18 }}>
+        <div className="dash-r2" style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 18, marginBottom: 18 }}>
 
           {/* Monthly Registrations line */}
           <Card>
@@ -228,7 +228,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* ── Row 3: Top Courses + Recent Activity ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18, marginBottom: 18 }}>
+        <div className="dash-r3" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18, marginBottom: 18 }}>
 
           {/* Top Courses */}
           <Card>
@@ -296,14 +296,14 @@ export default function AdminDashboard() {
         </div>
 
         {/* ── Row 4: Recent Registrations + Recent Students ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
+        <div className="dash-r4" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
 
           <Card>
             <CardTitle><UserPlus size={15} /> Recent Registrations</CardTitle>
             {loading ? <Spinner /> : data?.recentRegs.length ? (
               <div style={{ display:'flex', flexDirection:'column', gap:0 }}>
                 {data.recentRegs.map(r => (
-                  <a key={r.id} href="/admin/registrations" style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'9px 0', borderBottom:'1px solid #f8fafc', textDecoration:'none' }}>
+                  <a key={r.id} href="/admin/registrations" className="dash-link">
                     <div>
                       <div style={{ fontWeight:700, fontSize:'.85rem', color:'#0d0d0d' }}>{r.name}</div>
                       <div style={{ fontSize:'.72rem', color:SLATE }}>{r.program} · {r.createdAt}</div>
@@ -322,7 +322,7 @@ export default function AdminDashboard() {
             {loading ? <Spinner /> : data?.recentStudents.length ? (
               <div style={{ display:'flex', flexDirection:'column', gap:0 }}>
                 {data.recentStudents.map(s => (
-                  <a key={s.id} href="/admin/students" style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'9px 0', borderBottom:'1px solid #f8fafc', textDecoration:'none' }}>
+                  <a key={s.id} href="/admin/students" className="dash-link">
                     <div>
                       <div style={{ fontWeight:700, fontSize:'.85rem', color:'#0d0d0d' }}>{s.name}</div>
                       <div style={{ fontSize:'.72rem', color:SLATE }}>{s.program} · Joined {s.joinDate}</div>

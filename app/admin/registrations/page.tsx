@@ -88,8 +88,9 @@ export default function RegistrationsPage() {
       <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;600;700;800&display=swap');
         *{box-sizing:border-box;}
-        tr:hover td{background:#f0f5ff}
+        tr:hover td{background:#eef3ff!important;transition:background .1s;}
         @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+        @media(max-width:900px){.reg-grid{grid-template-columns:1fr!important;}.reg-detail{position:static!important;top:unset!important;}}
       ` }} />
 
       <div style={{ maxWidth: 1300, margin: '0 auto', padding: '28px 24px' }}>
@@ -109,7 +110,7 @@ export default function RegistrationsPage() {
           ))}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: sel ? '1fr 380px' : '1fr', gap: 20 }}>
+        <div className="reg-grid" style={{ display: 'grid', gridTemplateColumns: sel ? '1fr 380px' : '1fr', gap: 20 }}>
           {/* Table card */}
           <div style={{ background: '#fff', borderRadius: 20, boxShadow: '0 2px 16px rgba(0,0,0,.05)', overflow: 'hidden' }}>
             <div style={{ padding: '16px 22px', borderBottom: '2px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
@@ -192,7 +193,7 @@ export default function RegistrationsPage() {
 
           {/* Detail panel */}
           {sel && (
-            <div style={{ background: '#fff', borderRadius: 20, boxShadow: '0 2px 16px rgba(0,0,0,.05)', overflow: 'hidden', height: 'fit-content', position: 'sticky', top: 20 }}>
+            <div className="reg-detail" style={{ background: '#fff', borderRadius: 20, boxShadow: '0 2px 16px rgba(0,0,0,.05)', overflow: 'hidden', height: 'fit-content', position: 'sticky', top: 20 }}>
               <div style={{ background: 'linear-gradient(135deg,#1D5CE3,#0a3db5)', padding: '18px 20px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                   <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(255,255,255,.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>

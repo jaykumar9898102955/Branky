@@ -111,8 +111,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         a[href*="wa.me"]{display:none!important}
         @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
         @media(max-width:768px){ .admin-sidebar{transform:translateX(-100%)!important} .admin-sidebar.open{transform:translateX(0)!important} .admin-overlay{display:block!important} }
-        .admin-root,
-        .admin-root *{cursor:default!important}
+        .admin-root,.admin-root *{cursor:default!important}
+        .admin-root button:not(:disabled),.admin-root a{cursor:pointer!important;}
+        .admin-nav-link{transition:background .15s,color .15s;}
+        .admin-nav-link:not(.nav-active):hover{background:rgba(255,255,255,.1)!important;color:rgba(255,255,255,.9)!important;}
+        .admin-site-link:hover{background:rgba(255,255,255,.07)!important;color:rgba(255,255,255,.65)!important;}
+        .admin-logout:hover{background:rgba(220,38,38,.28)!important;border-color:rgba(220,38,38,.5)!important;}
+        .admin-root button:not(:disabled){transition:all .14s ease;}
+        .admin-root button:not(:disabled):hover{filter:brightness(.91);transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.13)!important;}
+        .admin-root table tbody tr{transition:background .1s;}
+        .admin-root table tbody tr:hover td{background:#eef3ff!important;}
       `}</style>
 
       {/* Sidebar overlay on mobile */}
@@ -136,6 +144,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             const active = pathname === item.href
             return (
               <a key={item.href} href={item.href} onClick={() => setSideOpen(false)}
+                className={`admin-nav-link${active ? ' nav-active' : ''}`}
                 style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 10, marginBottom: 4, textDecoration: 'none', fontWeight: 700, fontSize: '.88rem', background: active ? '#1D5CE3' : 'transparent', color: active ? '#fff' : 'rgba(255,255,255,.55)' }}>
                 <item.Icon size={17} />
                 {item.label}
@@ -147,10 +156,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Bottom: site link + logout */}
         <div style={{ padding: '12px 12px', borderTop: '1px solid rgba(255,255,255,.08)' }}>
           <a href="/" target="_blank"
+            className="admin-site-link"
             style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderRadius: 10, marginBottom: 6, textDecoration: 'none', fontSize: '.82rem', fontWeight: 600, color: 'rgba(255,255,255,.4)' }}>
             <Globe size={15} /> View Website
           </a>
           <button onClick={logout}
+            className="admin-logout"
             style={{ width: '100%', padding: '9px 14px', background: 'rgba(220,38,38,.15)', border: '1.5px solid rgba(220,38,38,.25)', borderRadius: 10, color: '#fca5a5', fontWeight: 700, fontSize: '.85rem', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'Karla,sans-serif' }}>
             <LogOut size={15} /> Logout
           </button>
