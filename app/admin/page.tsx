@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, CartesianGrid, Legend } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, CartesianGrid } from 'recharts'
 import { ClipboardList, Users, IndianRupee, TrendingUp, AlertTriangle, BookOpen, BarChart2, LineChart as LineIcon, Wallet, UserPlus, UserCheck } from 'lucide-react'
 
 interface DashData {
@@ -65,12 +65,6 @@ export default function AdminDashboard() {
       .catch(() => setLoading(false))
   }, [])
 
-  const Spinner = () => (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 180 }}>
-      <div style={{ width: 32, height: 32, border: '3px solid #e2e8f0', borderTop: `3px solid ${BLUE}`, borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-    </div>
-  )
-
   const Card = ({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) => (
     <div style={{ background: '#fff', borderRadius: 18, padding: '20px 22px', boxShadow: '0 1px 6px rgba(0,0,0,.06)', ...style }}>{children}</div>
   )
@@ -91,13 +85,17 @@ export default function AdminDashboard() {
           <p style={{ color: SLATE, fontSize: '.9rem' }}>Branky STEM Labs — overview &amp; analytics</p>
         </div>
 
+        {/* ── Single loading state for the whole dashboard ── */}
+        {loading ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 360, gap: 16 }}>
+            <div style={{ width: 40, height: 40, border: `4px solid #e2e8f0`, borderTop: `4px solid ${BLUE}`, borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+            <div style={{ color: SLATE, fontWeight: 600, fontSize: '.95rem' }}>Loading dashboard…</div>
+          </div>
+        ) : <>
+
         {/* ── Top KPI Cards ── */}
         <div className="dash-kpi" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 14, marginBottom: 24 }}>
-          {loading ? [1,2,3,4,5,6].map(i => (
-            <div key={i} style={{ background:'#fff', borderRadius:16, height:88, boxShadow:'0 1px 4px rgba(0,0,0,.05)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-              <div style={{ width:24, height:24, border:`3px solid #e2e8f0`, borderTop:`3px solid ${BLUE}`, borderRadius:'50%', animation:'spin 1s linear infinite' }} />
-            </div>
-          )) : data ? [
+          {data ? [
             { label: 'Total Registrations', value: data.regStats.total,        color: BLUE,  Icon: ClipboardList },
             { label: 'Active Students',     value: data.stuStats.current,       color: GRN,   Icon: Users        },
             { label: 'Past Students',       value: data.stuStats.past,          color: SLATE, Icon: Users        },
@@ -121,7 +119,7 @@ export default function AdminDashboard() {
           {/* Monthly Fee Collection bar chart */}
           <Card>
             <CardTitle><BarChart2 size={15} /> Monthly Fee Collection</CardTitle>
-            {loading ? <Spinner /> : data?.monthlyFees.length ? (
+            {data?.monthlyFees.length ? (
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={data.monthlyFees} margin={{ top:4, right:8, left:0, bottom:0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -139,7 +137,7 @@ export default function AdminDashboard() {
           {/* Registration Status Pie */}
           <Card>
             <CardTitle><ClipboardList size={15} /> Registration Status</CardTitle>
-            {loading ? <Spinner /> : data ? (() => {
+            {data ? (() => {
               const pieData = PIE_REG.map(p => ({ name: p.label, value: (data.regStats as any)[p.key], color: p.color })).filter(x => x.value > 0)
               return pieData.length > 0 ? (
                 <>
@@ -173,7 +171,7 @@ export default function AdminDashboard() {
           {/* Monthly Registrations line */}
           <Card>
             <CardTitle><LineIcon size={15} /> Monthly Registrations</CardTitle>
-            {loading ? <Spinner /> : data?.monthlyRegs.length ? (
+            {data?.monthlyRegs.length ? (
               <ResponsiveContainer width="100%" height={200}>
                 <LineChart data={data.monthlyRegs} margin={{ top:4, right:8, left:0, bottom:0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -191,7 +189,7 @@ export default function AdminDashboard() {
           {/* Student Status donut */}
           <Card>
             <CardTitle><Users size={15} /> Students</CardTitle>
-            {loading ? <Spinner /> : data ? (() => {
+            {data ? (() => {
               const total = data.stuStats.total
               const pct = total > 0 ? Math.round((data.stuStats.current / total) * 100) : 0
               const stuPie = [
@@ -227,13 +225,13 @@ export default function AdminDashboard() {
           </Card>
         </div>
 
-        {/* ── Row 3: Top Courses + Recent Activity ── */}
+        {/* ── Row 3: Top Courses + Fee Overview ── */}
         <div className="dash-r3" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18, marginBottom: 18 }}>
 
           {/* Top Courses */}
           <Card>
             <CardTitle><BookOpen size={15} /> Top Courses</CardTitle>
-            {loading ? <Spinner /> : data?.topCourses.length ? (
+            {data?.topCourses.length ? (
               <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                 {data.topCourses.map((c, i) => {
                   const maxStudents = Math.max(...data.topCourses.map(x => x.students))
@@ -261,10 +259,10 @@ export default function AdminDashboard() {
             )}
           </Card>
 
-          {/* Fee Collected vs Outstanding bar */}
+          {/* Fee Overview */}
           <Card>
             <CardTitle><Wallet size={15} /> Fee Overview</CardTitle>
-            {loading ? <Spinner /> : data ? (() => {
+            {data ? (() => {
               const total = data.feeStats.collected + data.feeStats.outstanding
               const collPct = total > 0 ? (data.feeStats.collected / total) * 100 : 0
               return (
@@ -300,7 +298,7 @@ export default function AdminDashboard() {
 
           <Card>
             <CardTitle><UserPlus size={15} /> Recent Registrations</CardTitle>
-            {loading ? <Spinner /> : data?.recentRegs.length ? (
+            {data?.recentRegs.length ? (
               <div style={{ display:'flex', flexDirection:'column', gap:0 }}>
                 {data.recentRegs.map(r => (
                   <a key={r.id} href="/admin/registrations" className="dash-link">
@@ -319,7 +317,7 @@ export default function AdminDashboard() {
 
           <Card>
             <CardTitle><UserCheck size={15} /> Recent Students</CardTitle>
-            {loading ? <Spinner /> : data?.recentStudents.length ? (
+            {data?.recentStudents.length ? (
               <div style={{ display:'flex', flexDirection:'column', gap:0 }}>
                 {data.recentStudents.map(s => (
                   <a key={s.id} href="/admin/students" className="dash-link">
@@ -337,6 +335,7 @@ export default function AdminDashboard() {
           </Card>
         </div>
 
+        </>}
       </div>
     </div>
   )

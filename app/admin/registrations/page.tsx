@@ -18,7 +18,7 @@ export default function RegistrationsPage() {
   const [stats, setStats]     = useState<RegStats>({ total: 0, new: 0, confirmed: 0, waitlist: 0 })
   const [search, setSearch]   = useState('')
   const [sf, setSf]           = useState('all')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [sel, setSel]         = useState<Reg | null>(null)
   const [notes, setNotes]     = useState('')
   const [saving, setSaving]   = useState(false)

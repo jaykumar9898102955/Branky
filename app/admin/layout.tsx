@@ -22,14 +22,37 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   // ── verify existing session on every page load ──────────────────────────
   const verify = useCallback(async () => {
-    setChecking(true)
-    try {
-      const r = await fetch('/api/admin/verify')
-      setAuthed(r.ok)
-    } catch {
-      setAuthed(false)
-    } finally {
+    // If we have a session hint in sessionStorage, skip the full-page spinner
+    // and show content immediately; still verify in background
+    const cached = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('admin_auth') === '1'
+    if (cached) {
+      setAuthed(true)
       setChecking(false)
+      try {
+        const r = await fetch('/api/admin/verify')
+        if (!r.ok) {
+          sessionStorage.removeItem('admin_auth')
+          setAuthed(false)
+        }
+      } catch {
+        sessionStorage.removeItem('admin_auth')
+        setAuthed(false)
+      }
+    } else {
+      setChecking(true)
+      try {
+        const r = await fetch('/api/admin/verify')
+        if (r.ok) {
+          sessionStorage.setItem('admin_auth', '1')
+          setAuthed(true)
+        } else {
+          setAuthed(false)
+        }
+      } catch {
+        setAuthed(false)
+      } finally {
+        setChecking(false)
+      }
     }
   }, [])
 
@@ -45,6 +68,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         body: JSON.stringify(loginForm),
       })
       if (!r.ok) { setLoginErr('Invalid email or password'); return }
+      if (typeof sessionStorage !== 'undefined') sessionStorage.setItem('admin_auth', '1')
       setAuthed(true)
     } catch { setLoginErr('Network error. Please try again.') }
     finally { setLoggingIn(false) }
@@ -53,6 +77,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   // ── logout ───────────────────────────────────────────────────────────────
   const logout = async () => {
     await fetch('/api/admin/logout', { method: 'POST' })
+    if (typeof sessionStorage !== 'undefined') sessionStorage.removeItem('admin_auth')
     setAuthed(false)
     router.push('/admin')
   }

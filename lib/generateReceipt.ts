@@ -42,7 +42,7 @@ export async function generateReceipt(fee: FeeDTO, student: RegistrationDTO): Pr
       <!-- Student info -->
       <div style="padding:28px 40px 20px;display:flex;gap:32px;">
         <div style="flex:1;">
-          <div style="font-size:10px;font-weight:700;color:#64748b;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Billed To</div>
+
           <div style="font-size:17px;font-weight:800;color:#0d0d0d;">${student.studentName}</div>
           <div style="font-size:13px;color:#64748b;margin-top:3px;">Parent / Guardian: ${student.parentName}</div>
           <div style="font-size:13px;color:#64748b;margin-top:2px;">Phone: ${student.phone}</div>
