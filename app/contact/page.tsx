@@ -10,14 +10,17 @@ import { Target, FlaskConical, Zap } from 'lucide-react'
 export const metadata: Metadata = {
   title: 'Contact Us & Book Free Demo — Branky STEM Labs Vadodara',
   description: 'Book a free demo session at Branky STEM Labs Vadodara. Visit A-5 Shivangi Society, Tandalja. Call +91 91044 01104.',
+  alternates: { canonical: 'https://brankystemlab.com/contact' },
   openGraph: {
     title: 'Contact Us & Book Free Demo — Branky STEM Labs Vadodara',
     description: 'Book a free demo session at Branky STEM Labs Vadodara. Visit A-5 Shivangi Society, Tandalja. Call +91 91044 01104.',
     url: '/contact',
+    images: [{ url: '/assets/brand-banner.png', width: 1200, height: 630, alt: 'Contact Branky STEM Labs Vadodara' }],
   },
   twitter: {
     title: 'Contact Us & Book Free Demo — Branky STEM Labs Vadodara',
     description: 'Book a free demo session at Branky STEM Labs Vadodara. Visit A-5 Shivangi Society, Tandalja. Call +91 91044 01104.',
+    images: ['/assets/brand-banner.png'],
   },
 }
 
@@ -50,6 +53,19 @@ export default function ContactPage() {
         {/* Contact Cards + Form */}
         <section id="demo" style={{ padding:'72px 5% 96px', background:'#fff' }}>
           <div style={{ maxWidth:1200, margin:'0 auto' }}>
+            {/* Google Map */}
+            <div style={{ borderRadius:20, overflow:'hidden', boxShadow:'0 8px 32px rgba(29,92,227,.10)', marginBottom:48, border:'2px solid var(--blue-pale)' }}>
+              <iframe
+                title="Branky STEM Labs location — A-5 Shivangi Society, Tandalja, Vadodara"
+                src="https://maps.google.com/maps?q=A-5+Shivangi+Society+Opp+Time+Square+Ashwamegh+Nagar+Tandalja+Vadodara+390020&output=embed"
+                width="100%"
+                height="380"
+                style={{ border: 0, display: 'block' }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
             <ContactCards />
 
             {/* Bottom CTA strip */}

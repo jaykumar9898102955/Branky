@@ -2,26 +2,15 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef } from 'react'
+import { programs } from '@/lib/programs-data'
 
-const programs = [
-  { img:'/assets/robot1.png', age:'4–6 Years', duration:'Structured Learning Program', accent:'orange',
-    title:'STEM Foundations Program',
-    features:['Early Robotics & STEM Exploration','Logic Building, Creativity & Engineering Concepts','Button-Based Coding & Interactive Activities'],
-    featured: true },
-  { img:'/assets/robot2.png', age:'7–10 Years', duration:'120 Hours Program', accent:'blue',
-    title:'Foundation of Robotics – Level 1',
-    features:['Robotics, Electronics & Circuit Flow','Sensors, Mechanics & Robot Building','Block Coding & Technology Fundamentals'] },
-  { img:'/assets/robot3.png', age:'7–10 Years', duration:'120 Hours Program', accent:'blue',
-    title:'Advanced Robotics – Level 2',
-    features:['Advanced Robotics & Smart Systems','Intelligent Sensors & Logic Programming','Basic AI Concepts & Technical Projects'] },
-  { img:'/assets/robot4.png', age:'11–14 Years', duration:'120 Hours Program', accent:'blue',
-    title:'Core Robotics & Coding Program',
-    features:['Robotics Engineering & Coding Concepts','Electronics, Machine Systems & Programming','Problem Solving & Project Development'] },
-  { img:'/assets/robot5.png', age:'11–14 Years', duration:'120 Hours Program', accent:'orange',
-    title:'Advanced Robotics, IoT & Smart Machines',
-    features:['IoT Systems & Smart Machine Development','Automation Logic & Connected Technologies','Advanced Projects & Real-World Applications'],
-    featured: false },
-]
+const altText: Record<string, string> = {
+  'stem-foundations': 'Young child exploring early robotics and STEM activities at Branky STEM Labs Vadodara',
+  'foundation-of-robotics': 'Student assembling a robot and learning electronics at Branky STEM Labs Vadodara',
+  'advanced-robotics-level-2': 'Student programming an advanced robot with smart sensors at Branky STEM Labs Vadodara',
+  'core-robotics-coding': 'Teenager building and coding a robotics project at Branky STEM Labs Vadodara',
+  'advanced-robotics-iot': 'Student developing an IoT smart machine at Branky STEM Labs Vadodara',
+}
 
 export default function ProgramsSection() {
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -70,7 +59,7 @@ export default function ProgramsSection() {
 
               {/* Image — taller for featured */}
               <div style={{ height: p.featured ? 260 : 200, overflow:'hidden', position:'relative', flexShrink:0 }}>
-                <Image src={p.img} alt={p.title} fill style={{ objectFit:'cover', transition:'transform .5s' }}
+                <Image src={p.img} alt={altText[p.slug]} fill style={{ objectFit:'cover', transition:'transform .5s' }}
                   onMouseEnter={e => (e.currentTarget.style.transform='scale(1.06)')}
                   onMouseLeave={e => (e.currentTarget.style.transform='')} />
                 {/* Age badge */}
@@ -96,7 +85,7 @@ export default function ProgramsSection() {
                     </li>
                   ))}
                 </ul>
-                <Link href="/programs" className={`btn btn-${p.accent==='orange'?'orange':'outline'} btn-md`} style={{ alignSelf:'flex-start' }}>
+                <Link href={`/programs/${p.slug}`} className={`btn btn-${p.accent==='orange'?'orange':'outline'} btn-md`} style={{ alignSelf:'flex-start' }}>
                   Know More →
                 </Link>
               </div>

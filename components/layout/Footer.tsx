@@ -1,15 +1,15 @@
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { MapPin, Phone, Mail, Clock, Heart, Globe, Camera, PlayCircle, Bird, MessageCircle } from 'lucide-react'
+import { MapPin, Phone, Mail, Clock, Heart, MessageCircle } from 'lucide-react'
 
 export default function Footer() {
   const programs = [
-    ['STEM Foundations (4–6 Yrs)', '/programs'],
-    ['Foundation of Robotics L1 (7–10)', '/programs'],
-    ['Advanced Robotics L2 (7–10)', '/programs'],
-    ['Core Robotics & Coding (11–14)', '/programs'],
-    ['Advanced Robotics & IoT (11–14)', '/programs'],
+    ['STEM Foundations (4–6 Yrs)', '/programs/stem-foundations'],
+    ['Foundation of Robotics L1 (7–10)', '/programs/foundation-of-robotics'],
+    ['Advanced Robotics L2 (7–10)', '/programs/advanced-robotics-level-2'],
+    ['Core Robotics & Coding (11–14)', '/programs/core-robotics-coding'],
+    ['Advanced Robotics & IoT (11–14)', '/programs/advanced-robotics-iot'],
   ]
   const quickLinks = [
     ['Home', '/'],
@@ -37,18 +37,7 @@ export default function Footer() {
           <p style={{ fontSize:'.87rem',color:'rgba(255,255,255,.5)',lineHeight:1.8,marginBottom:24,maxWidth:280 }}>
             Vadodara's full-fledged AI, Robotics &amp; Coding centre for ages 4–14, built around hands-on learning, smart labs and real technology exposure.
           </p>
-          <div style={{ display:'flex',gap:10,marginBottom:20,flexWrap:'wrap' }}>
-            {([
-              {IC:Globe, l:'Facebook', href:'#'},
-              {IC:Camera, l:'Instagram', href:'#'},
-              {IC:PlayCircle, l:'YouTube', href:'#'},
-              {IC:Bird, l:'LinkedIn', href:'#'},
-            ] as const).map(({IC,l,href}) => (
-              <a key={l} href={href} title={l} style={{ width:40,height:40,background:'rgba(255,255,255,.08)',borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',textDecoration:'none',transition:'all .3s',border:'1.5px solid rgba(255,255,255,.1)',flexShrink:0,color:'rgba(255,255,255,.7)' }}
-                onMouseEnter={e=>{const el=e.currentTarget as HTMLElement;el.style.background='var(--orange)';el.style.borderColor='var(--orange)';el.style.color='#fff'}}
-                onMouseLeave={e=>{const el=e.currentTarget as HTMLElement;el.style.background='rgba(255,255,255,.08)';el.style.borderColor='rgba(255,255,255,.1)';el.style.color='rgba(255,255,255,.7)'}}><IC size={18}/></a>
-            ))}
-          </div>
+          {/* TODO: add social links when accounts are live */}
           <a href="https://wa.me/919104401104" target="_blank" rel="noopener noreferrer"
             style={{ display:'inline-flex',alignItems:'center',gap:8,padding:'8px 16px',background:'rgba(37,211,102,.15)',border:'1.5px solid rgba(37,211,102,.3)',borderRadius:50,textDecoration:'none',color:'#25d366',fontSize:'.82rem',fontWeight:700,transition:'all .3s' }}
             onMouseEnter={e=>{const el=e.currentTarget as HTMLElement;el.style.background='rgba(37,211,102,.25)';}}

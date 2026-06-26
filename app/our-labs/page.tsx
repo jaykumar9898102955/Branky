@@ -13,14 +13,17 @@ import type { LucideIcon } from 'lucide-react'
 export const metadata: Metadata = {
   title: 'Our Labs & Facilities — Branky STEM Labs Vadodara',
   description: 'Explore our dedicated robotics lab, AC classrooms, advanced robotics kits, electronics & coding setup, and Robo Soccer Arena in Vadodara.',
+  alternates: { canonical: 'https://brankystemlab.com/our-labs' },
   openGraph: {
     title: 'Our Labs & Facilities — Branky STEM Labs Vadodara',
     description: 'Explore our dedicated robotics lab, AC classrooms, advanced robotics kits, electronics & coding setup, and Robo Soccer Arena in Vadodara.',
     url: '/our-labs',
+    images: [{ url: '/assets/brand-banner.png', width: 1200, height: 630, alt: 'Branky STEM Labs Facilities and Robotics Lab Vadodara' }],
   },
   twitter: {
     title: 'Our Labs & Facilities — Branky STEM Labs Vadodara',
     description: 'Explore our dedicated robotics lab, AC classrooms, advanced robotics kits, electronics & coding setup, and Robo Soccer Arena in Vadodara.',
+    images: ['/assets/brand-banner.png'],
   },
 }
 
