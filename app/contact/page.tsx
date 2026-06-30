@@ -40,9 +40,6 @@ export default function ContactPage() {
               Start Your Child's<br/>
               <span style={{ color:'var(--blue)' }}>Technology Journey</span>
             </h1>
-            <p style={{ fontSize:'1.05rem', color:'var(--gray)', lineHeight:1.75, maxWidth:620, margin:'0 auto' }}>
-              At Branky STEM Labs, we're always excited to connect with families passionate about technology, creativity and future skills. Whether you have questions, want to explore our programs or experience our smart labs firsthand, our team is here to guide you.
-            </p>
           </div>
           {/* Booking Form */}
         <div style={{ maxWidth:780, margin:'0 auto' }}>

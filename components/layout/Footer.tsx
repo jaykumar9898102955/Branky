@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { MapPin, Phone, Mail, Clock, Heart, MessageCircle } from 'lucide-react'
+import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react'
 
 export default function Footer() {
   const programs = [
@@ -60,13 +60,6 @@ export default function Footer() {
                 </Link>
               </li>
             ))}
-            <li>
-              <Link href="/contact" style={{ fontSize:'.84rem',color:'var(--orange)',fontWeight:800,textDecoration:'none',display:'flex',alignItems:'center',gap:6,transition:'opacity .25s' }}
-                onMouseEnter={e=>e.currentTarget.style.opacity='.8'}
-                onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
-                ✦ Book Free Demo
-              </Link>
-            </li>
           </ul>
         </div>
 
@@ -81,6 +74,13 @@ export default function Footer() {
                   onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,.45)'}>{label}</Link>
               </li>
             ))}
+            <li>
+              <Link href="/contact" style={{ fontSize:'.84rem',color:'var(--orange)',fontWeight:800,textDecoration:'none',display:'flex',alignItems:'center',gap:6,transition:'opacity .25s' }}
+                onMouseEnter={e=>e.currentTarget.style.opacity='.8'}
+                onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
+                ✦ Book Free Demo
+              </Link>
+            </li>
           </ul>
         </div>
 
@@ -101,7 +101,7 @@ export default function Footer() {
               {IC:Phone, t:'+91 91044 01104', href:'tel:+919104401104'},
               {IC:Phone, t:'+91 75678 78715', href:'tel:+917567878715'},
               {IC:Mail, t:'brankystemlab@gmail.com', href:'mailto:brankystemlab@gmail.com'},
-              {IC:Clock, t:'Mon–Sat  9AM – 6PM', href:null},
+              {IC:Clock, t:'Mon–Sat  5PM – 7PM', href:null},
             ] as const).map(({IC,t,href}) => (
               <li key={t}>
                 {href ? (
@@ -119,9 +119,6 @@ export default function Footer() {
 
       <div style={{ maxWidth:1200,margin:'0 auto',padding:'18px 5% 28px',borderTop:'1px solid rgba(255,255,255,.07)',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:10 }}>
         <p style={{ fontSize:'.78rem',color:'rgba(255,255,255,.28)' }}>© 2026 Branky STEM Labs. All rights reserved.</p>
-        <p style={{ fontSize:'.78rem',color:'rgba(255,255,255,.28)',margin:0,display:'flex',alignItems:'center',gap:4 }}>
-          Made with <Heart size={12} style={{color:'var(--orange)',fill:'var(--orange)'}}/> in Vadodara
-        </p>
       </div>
 
       <style dangerouslySetInnerHTML={{__html:`
