@@ -170,7 +170,7 @@ const STYLES = `
 /* ─── WHAT WE TEACH ───────────────────────────── */
 .teach {
   padding:50px 5% 0;
-  background:var(--blue-xpale);
+  background:var(#3c3c3c00);
   position:relative; overflow:hidden;
 }
 .teach-grid-bg {
@@ -275,7 +275,7 @@ const STYLES = `
 }
 .join-h2 {
   font-size:clamp(2.4rem,5.5vw,4rem);
-  color:#fff; text-transform:uppercase; line-height:1;
+  color:#fff; text-transform:uppercase; line-height:1; text-align:center;
 }
 .j-age-badge {
   position:absolute; top:-30px; right:43%; z-index:2;
@@ -415,37 +415,33 @@ const STYLES = `
 
 /* ─── RESPONSIVE ──────────────────────────────── */
 
-/* Tablet (≤900px): drop absolute layout, stack vertically */
+/* Tablet (≤900px): hero layout — image first, chips below */
 @media (max-width:900px) {
-  .teach { padding:48px 5% 0; }
-  .teach-head { margin-bottom:20px; }
+  .teach { padding:40px 5% 0; }
+  .teach-head { text-align:center; margin-bottom:16px; }
   .teach-h2 { font-size:clamp(1.8rem,6vw,2.8rem); }
 
   .t-scene {
-    flex-direction:column;
+    flex-direction:row;
     flex-wrap:wrap;
     justify-content:center;
-    align-items:center;
+    align-items:flex-end;
     min-height:unset;
-    padding:16px 0 0;
-    gap:0;
+    gap:10px;
+    padding:0 0 28px;
   }
   /* All tags become static flex items */
   .tl-0,.tl-1,.tl-2,.tl-3,
   .tr-0,.tr-1,.tr-2,.tr-3 {
     position:static;
-    margin:5px;
+    margin:4px;
   }
-  /* Left tags row above image */
-  .tj-l { order:-1; }
-  /* Image in the middle */
-  .t-center { order:0; width:100%; justify-content:center; margin:12px 0 0; }
-  /* Right tags row below image */
+  /* Image: hero — first, full width */
+  .t-center { order:0; width:100%; justify-content:center; margin:0 0 14px; }
+  .t-photo { width:min(68vw, 420px); }
+  /* All tags below image */
+  .tj-l { order:1; }
   .tj-r { order:1; }
-
-  /* Wrapping container for each tag group */
-  .t-scene { display:flex; }
-  .t-photo { width:min(72vw, 400px); }
 }
 
 /* Phone (≤640px): hero layout */

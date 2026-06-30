@@ -5,6 +5,7 @@ import HeroSection from '@/components/sections/HeroSection'
 import TrustBarSection from '@/components/sections/TrustBarSection'
 import TickerSection from '@/components/sections/TickerSection'
 import TeachAndJoinSection from '@/components/sections/TeachAndJoinSection'
+import ComparisonSection from '@/components/sections/ComparisonSection'
 import ProgramsSection from '@/components/sections/ProgramsSection'
 import FreeDemoStrip from '@/components/sections/FreeDemoStrip'
 import FacilitySection from '@/components/sections/FacilitySection'
@@ -94,6 +95,7 @@ export default function HomePage() {
         <TickerSection />
         <TeachAndJoinSection />
         <ProgramsSection />
+        <ComparisonSection />
         <FreeDemoStrip />
         <FacilitySection />
       </main>

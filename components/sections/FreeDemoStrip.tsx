@@ -4,42 +4,131 @@ import { Target } from 'lucide-react'
 
 export default function FreeDemoStrip() {
   return (
-    <section style={{ background:'linear-gradient(135deg,var(--orange-dark),var(--orange))', padding:'64px 5%', position:'relative', overflow:'hidden' }}>
+    <section className="demo-strip">
       {/* Wave decoration */}
-      <div style={{ position:'absolute', top:-20, right:-40, width:'22%', maxWidth:240, opacity:.1, pointerEvents:'none', animation:'blobFloat 10s ease-in-out infinite' }}>
+      <div className="demo-deco demo-deco-r">
         <Image src="/assets/brand-wave.png" alt="" width={240} height={240} style={{ width:'100%', height:'auto', filter:'brightness(0) invert(1)' }} />
       </div>
-      <div style={{ position:'absolute', bottom:-20, left:-30, width:'16%', maxWidth:180, opacity:.08, pointerEvents:'none' }}>
+      <div className="demo-deco demo-deco-l">
         <Image src="/assets/brand-shapes.png" alt="" width={180} height={180} style={{ width:'100%', height:'auto', filter:'brightness(0) invert(1)' }} />
       </div>
 
-      <div style={{ maxWidth:1200, margin:'0 auto', position:'relative', zIndex:1, display:'flex', alignItems:'center', justifyContent:'space-between', gap:32, flexWrap:'wrap' }}>
-        <div>
-          <div style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'4px 14px', background:'rgba(255,255,255,.2)', borderRadius:50, fontSize:'.72rem', fontWeight:800, letterSpacing:'.1em', textTransform:'uppercase', color:'rgba(255,255,255,.9)', marginBottom:16 }}>
+      <div className="demo-inner">
+        <div className="demo-text">
+          <div className="demo-badge">
             <Target size={13} /> Free Demo Session
           </div>
-          <h2 className="h-display" style={{ fontSize:'clamp(1.6rem,3.5vw,2.6rem)', color:'#fff', marginBottom:12, lineHeight:1.15 }}>
+          <h2 className="h-display demo-h2">
             Not sure which program is right<br className="demo-br" /> for your child?
           </h2>
-          <p style={{ fontSize:'1rem', color:'rgba(255,255,255,.8)', margin:0, lineHeight:1.65, maxWidth:520 }}>
+          <p className="demo-p">
             Book a Free Demo Session — experience the lab, meet the mentors and let your child try a hands-on session before you decide anything.
           </p>
         </div>
 
-        <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:12, flexShrink:0 }}>
-          <Link href="/contact" className="btn btn-blue btn-lg demo-strip-btn" style={{ whiteSpace:'nowrap', paddingLeft:48, paddingRight:48 }}>
+        <div className="demo-cta">
+          <Link href="/contact" className="btn btn-blue btn-lg demo-btn">
             Book Free Demo — It&apos;s Completely Free
           </Link>
-          <p style={{ fontSize:'.78rem', color:'rgba(255,255,255,.6)', margin:0, textAlign:'center' }}>
+          <p className="demo-note">
             Seats fill fast · Vadodara only · No commitment required
           </p>
         </div>
       </div>
 
       <style dangerouslySetInnerHTML={{__html:`
-        @media(max-width:860px){
-          .demo-br{display:none;}
-          section[style*="orange-dark"]>div:last-child{flex-direction:column!important;align-items:flex-start!important;}
+        .demo-strip {
+          background:linear-gradient(135deg,var(--orange-dark),var(--orange));
+          padding:64px 5%;
+          position:relative;
+          overflow:hidden;
+        }
+        .demo-deco {
+          position:absolute;
+          pointer-events:none;
+        }
+        .demo-deco-r { top:-20px; right:-40px; width:22%; max-width:240px; opacity:.1; animation:blobFloat 10s ease-in-out infinite; }
+        .demo-deco-l { bottom:-20px; left:-30px; width:16%; max-width:180px; opacity:.08; }
+
+        .demo-inner {
+          max-width:1200px;
+          margin:0 auto;
+          position:relative;
+          z-index:1;
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          gap:32px;
+          flex-wrap:wrap;
+        }
+        .demo-badge {
+          display:inline-flex;
+          align-items:center;
+          gap:8px;
+          padding:4px 14px;
+          background:rgba(255,255,255,.2);
+          border-radius:50px;
+          font-size:.72rem;
+          font-weight:800;
+          letter-spacing:.1em;
+          text-transform:uppercase;
+          color:rgba(255,255,255,.9);
+          margin-bottom:16px;
+        }
+        .demo-h2 {
+          font-size:clamp(1.6rem,3.5vw,2.6rem);
+          color:#fff;
+          margin-bottom:12px;
+          line-height:1.15;
+        }
+        .demo-p {
+          font-size:1rem;
+          color:rgba(255,255,255,.8);
+          margin:0;
+          line-height:1.65;
+          max-width:520px;
+        }
+        .demo-cta {
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          gap:12px;
+          flex-shrink:0;
+        }
+        .demo-btn {
+          white-space:nowrap;
+          padding-left:48px;
+          padding-right:48px;
+        }
+        .demo-note {
+          font-size:.78rem;
+          color:rgba(255,255,255,.6);
+          margin:0;
+          text-align:center;
+        }
+
+        /* Tablet */
+        @media(max-width:860px) {
+          .demo-br { display:none; }
+          .demo-inner { flex-direction:column; align-items:flex-start; }
+        }
+
+        /* Phone */
+        @media(max-width:640px) {
+          .demo-strip { padding:40px 5%; }
+          .demo-inner { align-items:stretch; gap:24px; }
+          .demo-text { text-align:center; }
+          .demo-badge { margin:0 auto 14px; }
+          .demo-p { font-size:.92rem; max-width:100%; }
+          .demo-cta { align-items:stretch; }
+          .demo-btn {
+            white-space:normal;
+            text-align:center;
+            padding-left:24px;
+            padding-right:24px;
+            width:100%;
+          }
+          .demo-note { font-size:.74rem; }
         }
       `}} />
     </section>
