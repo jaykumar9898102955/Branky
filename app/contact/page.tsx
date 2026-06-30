@@ -36,7 +36,7 @@ export default function ContactPage() {
           </div>
           <div style={{ maxWidth:1200, margin:'0 auto', position:'relative', zIndex:1, textAlign:'center' }}>
 <div className="tag tag-blue" style={{ margin:'0 auto 20px' }}>Get in Touch</div>
-            <h1 className="h-display" style={{ fontSize:'clamp(2rem,4vw,3.4rem)', color:'var(--black)', marginBottom:16, lineHeight:1.1 }}>
+            <h1 className="h-display" style={{ fontSize:'clamp(2rem,2vw,3.4rem)', color:'var(--black)', marginBottom:16, lineHeight:1.1 }}>
               Start Your Child's<br/>
               <span style={{ color:'var(--blue)' }}>Technology Journey</span>
             </h1>

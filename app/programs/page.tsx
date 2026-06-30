@@ -65,7 +65,7 @@ export default function ProgramsPage() {
           </div>
           <div style={{ maxWidth:1200, margin:'0 auto', position:'relative', zIndex:1 }}>
             <div className="tag tag-blue">Programs at Branky STEM Labs</div>
-            <h1 className="h-display" style={{ fontSize:'clamp(2rem,4vw,3.4rem)', color:'var(--black)', marginBottom:16, lineHeight:1.1 }}>
+            <h1 className="h-display" style={{ fontSize:'clamp(2rem,2vw,3.4rem)', color:'var(--black)', marginBottom:16, lineHeight:1.1 }}>
               Robotics, AI &amp; Coding Programs for Kids<br />
               <span style={{ color:'var(--blue)' }}>(Ages 4–14) in Vadodara</span>
             </h1>

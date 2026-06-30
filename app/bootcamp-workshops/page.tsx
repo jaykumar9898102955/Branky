@@ -38,7 +38,7 @@ export default function BootcampPage() {
           </div>
           <div style={{ maxWidth:1200, margin:'0 auto', position:'relative', zIndex:1 }}>
 <div className="tag tag-orange">Bootcamp &amp; Workshops</div>
-            <h1 className="h-display" style={{ fontSize:'clamp(2rem,4vw,3.4rem)', color:'var(--black)', marginBottom:16, lineHeight:1.1 }}>
+            <h1 className="h-display" style={{ fontSize:'clamp(2rem,2vw,3.4rem)', color:'var(--black)', marginBottom:16, lineHeight:1.1 }}>
               Beyond the Classroom —<br/>
               <span style={{ color:'var(--orange)' }}>Compete, Build</span> &amp; <span style={{ color:'var(--blue)' }}>Innovate</span>
             </h1>

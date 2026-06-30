@@ -64,7 +64,7 @@ export default function HeroSection() {
 
           {/* Mobile-only image */}
           <div className="mobile-hero-img">
-            <Image src="/assets/robot1.png" alt="Branky STEM student" width={540} height={260}
+            <Image src="/assets/image.png" alt="Branky STEM student" width={540} height={260}
               style={{ width: '100%', height: 260, objectFit: 'cover', objectPosition: 'top center', display: 'block' }} />
             <div className="mhi-overlay" />
             <div className="mhi-badge">
@@ -90,7 +90,7 @@ export default function HeroSection() {
           <div className="hip-blob" />
 
           <div className="hip-frame">
-            <Image src="/assets/robot1.png" alt="Branky STEM student" width={540} height={520}
+            <Image src="/assets/image.png" alt="Branky STEM student" width={540} height={520}
               className="hip-photo" priority />
 
             {/* Bottom badge */}

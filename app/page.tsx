@@ -96,8 +96,8 @@ export default function HomePage() {
         <TeachAndJoinSection />
         <ProgramsSection />
         <ComparisonSection />
-        <FreeDemoStrip />
         <FacilitySection />
+        <FreeDemoStrip />
       </main>
       <Footer />
     </>

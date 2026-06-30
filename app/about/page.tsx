@@ -41,9 +41,9 @@ export default function AboutPage() {
           </div>
           <div style={{ maxWidth:1200, margin:'0 auto', position:'relative', zIndex:1 }}>
 <div className="tag tag-blue">About Branky STEM Labs</div>
-            <h1 className="h-display" style={{ fontSize:'clamp(2rem,4vw,3.4rem)', color:'var(--black)', marginBottom:16, lineHeight:1.1, maxWidth:680 }}>
-              Building the <span style={{ color:'var(--blue)' }}>Next Generation</span> of<br/>
-              <span style={{ color:'var(--orange)' }}>Tech Creators</span> &amp; Innovators
+            <h1 className="h-display" style={{ fontSize:'clamp(2rem,2vw,3.4rem)', color:'var(--black)', marginBottom:16, lineHeight:1.1, maxWidth:680 }}>
+              Building the Next Generation of<br/>
+              <span style={{ color:'var(--orange)' }}>Tech Creators</span> &amp; <span style={{ color:'var(--blue)' }}>Innovators</span>
             </h1>
             <div style={{ display:'flex', gap:8 }}>
               <div style={{ height:4, width:40, background:'var(--orange)', borderRadius:8 }} />

@@ -1,6 +1,5 @@
 'use client'
 import Image from 'next/image'
-import Link from 'next/link'
 import { FlaskConical, Leaf, Bot, Zap, Settings, Users, Target } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -74,10 +73,6 @@ export default function FacilitySection() {
             ))}
           </div>
 
-          <p style={{ fontSize:'.85rem', fontWeight:700, color:'var(--blue)', marginBottom:20, letterSpacing:'.02em' }}>
-            Empowering Young Innovators for Tomorrow&apos;s World.
-          </p>
-          <Link href="/contact" className="btn btn-orange btn-lg">Book Free Demo →</Link>
         </div>
       </div>
 
