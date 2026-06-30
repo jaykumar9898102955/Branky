@@ -18,7 +18,7 @@ export default function ContactCards() {
             Tandalja, Vadodara – 390020
           </p>
         </div>
-        <a href="https://maps.google.com/?q=Tandalja+Vadodara" target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-sm" style={{ alignSelf:'flex-start', marginTop:'auto' }}>
+        <a href="https://maps.app.goo.gl/h4HwoN54xdgM5zEL6" target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-sm" style={{ alignSelf:'flex-start', marginTop:'auto' }}>
           Get Directions →
         </a>
       </div>

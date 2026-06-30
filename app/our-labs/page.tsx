@@ -32,19 +32,19 @@ export default function OurLabsPage() {
       <Navbar />
       <main>
         {/* Page Hero */}
-        <section style={{ padding:'120px 5% 72px', background:'linear-gradient(135deg,var(--blue-xpale) 0%,#fff 60%)', position:'relative', overflow:'hidden' }}>
-          <div style={{ position:'absolute', top:-40, right:-60, width:'30%', maxWidth:340, opacity:.12, pointerEvents:'none', animation:'blobFloat 10s ease-in-out infinite' }}>
+        <section style={{ padding:'120px 5% 72px', background:'var(--blue)', position:'relative', overflow:'hidden' }}>
+          <div style={{ position:'absolute', top:-40, right:-60, width:'30%', maxWidth:340, opacity:.08, pointerEvents:'none', animation:'blobFloat 10s ease-in-out infinite', filter:'brightness(0) invert(1)' }}>
             <Image src="/assets/brand-wave.png" alt="" width={340} height={340} style={{ width:'100%', height:'auto' }} />
           </div>
           <div style={{ maxWidth:1200, margin:'0 auto', position:'relative', zIndex:1 }}>
-<div className="tag tag-blue">Our Labs & Facilities</div>
-            <h1 className="h-display" style={{ fontSize:'clamp(2rem,2vw,3.4rem)', color:'var(--black)', marginBottom:16, lineHeight:1.1 }}>
+<div className="tag tag-white">Our Labs & Facilities</div>
+            <h1 className="h-display" style={{ fontSize:'clamp(2rem,2vw,3.4rem)', color:'#fff', marginBottom:16, lineHeight:1.1 }}>
               Building the Next Generation of<br/>
-              <span style={{ color:'var(--orange)' }}>Tech Creators</span> &amp; <span style={{ color:'var(--blue)' }}>Innovators</span>
+              <span style={{ color:'var(--orange)' }}>Tech Creators</span> &amp; <span style={{ color:'rgba(255,255,255,.75)' }}>Innovators</span>
             </h1>
             <div style={{ display:'flex', gap:8 }}>
               <div style={{ height:4, width:40, background:'var(--orange)', borderRadius:8 }} />
-              <div style={{ height:4, width:120, background:'var(--blue)', borderRadius:8 }} />
+              <div style={{ height:4, width:120, background:'rgba(255,255,255,.35)', borderRadius:8 }} />
             </div>
           </div>
         </section>

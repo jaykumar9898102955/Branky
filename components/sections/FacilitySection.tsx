@@ -20,7 +20,7 @@ export default function FacilitySection() {
         {/* LEFT — Image with floating feature boxes */}
         <div className="reveal-left" style={{ position:'relative' }}>
           <div style={{ borderRadius:32, overflow:'hidden', boxShadow:'0 36px 80px rgba(29,92,227,.14)' }}>
-            <Image src="/assets/robot3.png" alt="Branky STEM Labs facility" width={560} height={480} style={{ width:'100%', height:'clamp(300px,40vw,480px)', objectFit:'cover', objectPosition:'top', display:'block' }} />
+            <Image src="/assets/lab.jpeg" alt="Branky STEM Labs facility" width={560} height={480} style={{ width:'100%', height:'clamp(300px,45vw,480px)', objectFit:'cover', objectPosition:'top', display:'block' }} />
             <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(29,92,227,.18) 0%,transparent 60%)', pointerEvents:'none' }} />
           </div>
 

@@ -57,7 +57,7 @@ export default function ContactPage() {
             <div style={{ borderRadius:20, overflow:'hidden', boxShadow:'0 8px 32px rgba(29,92,227,.10)', marginBottom:48, border:'2px solid var(--blue-pale)' }}>
               <iframe
                 title="Branky STEM Labs location — A-5 Shivangi Society, Tandalja, Vadodara"
-                src="https://maps.google.com/maps?q=A-5+Shivangi+Society+Opp+Time+Square+Ashwamegh+Nagar+Tandalja+Vadodara+390020&output=embed"
+                src="https://maps.google.com/maps?q=Branky+STEM+Labs+A-5+Shivangi+Society+Tandalja+Vadodara+390020&output=embed"
                 width="100%"
                 height="380"
                 style={{ border: 0, display: 'block' }}

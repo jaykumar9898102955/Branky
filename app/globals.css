@@ -78,9 +78,10 @@ body {
 
 /* Tags */
 .tag { display:inline-flex; align-items:center; gap:8px; padding:6px 18px; border-radius:50px; font-size:.75rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; margin-bottom:20px; }
-.tag-blue   { background:var(--blue-pale);   color:var(--blue);       border:1.5px solid rgba(29,92,227,.18); }
-.tag-orange { background:var(--orange-pale); color:var(--orange-dark); border:1.5px solid rgba(255,147,30,.18); }
-.tag-white  { background:rgba(255,255,255,.15); color:#fff; border:1.5px solid rgba(255,255,255,.28); }
+.tag-blue        { background:var(--blue-pale);   color:var(--blue);       border:1.5px solid rgba(29,92,227,.18); }
+.tag-blue-solid  { background:var(--blue);        color:#fff;              border:1.5px solid var(--blue); }
+.tag-orange      { background:var(--orange-pale); color:var(--orange-dark); border:1.5px solid rgba(255,147,30,.18); }
+.tag-white       { background:rgba(255,255,255,.15); color:#fff; border:1.5px solid rgba(255,255,255,.28); }
 
 /* Cards */
 .card-hover { transition:transform .4s cubic-bezier(.23,1,.32,1),box-shadow .4s,border-color .4s; }

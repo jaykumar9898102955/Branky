@@ -1,3 +1,11 @@
+import { redirect } from 'next/navigation'
+
+export default function BootcampPage() {
+  redirect('/')
+}
+
+/* ── Temporarily hidden ── restore by deleting above and uncommenting below ──
+
 import type { Metadata } from 'next'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
@@ -31,31 +39,28 @@ export default function BootcampPage() {
       <RevealObserver />
       <Navbar />
       <main>
-        {/* Page Hero */}
-        <section style={{ padding:'120px 5% 72px', background:'linear-gradient(135deg,var(--orange-pale) 0%,#fff 60%)', position:'relative', overflow:'hidden' }}>
-          <div style={{ position:'absolute', top:-40, right:-60, width:'30%', maxWidth:340, opacity:.15, pointerEvents:'none', animation:'blobFloat 10s ease-in-out infinite' }}>
+        <section style={{ padding:'120px 5% 72px', background:'var(--blue)', position:'relative', overflow:'hidden' }}>
+          <div style={{ position:'absolute', top:-40, right:-60, width:'30%', maxWidth:340, opacity:.08, pointerEvents:'none', animation:'blobFloat 10s ease-in-out infinite', filter:'brightness(0) invert(1)' }}>
             <Image src="/assets/brand-wave.png" alt="" width={340} height={340} style={{ width:'100%', height:'auto' }} />
           </div>
           <div style={{ maxWidth:1200, margin:'0 auto', position:'relative', zIndex:1 }}>
-<div className="tag tag-orange">Bootcamp &amp; Workshops</div>
-            <h1 className="h-display" style={{ fontSize:'clamp(2rem,2vw,3.4rem)', color:'var(--black)', marginBottom:16, lineHeight:1.1 }}>
+            <div className="tag tag-white">Bootcamp &amp; Workshops</div>
+            <h1 className="h-display" style={{ fontSize:'clamp(2rem,2vw,3.4rem)', color:'#fff', marginBottom:16, lineHeight:1.1 }}>
               Beyond the Classroom —<br/>
-              <span style={{ color:'var(--orange)' }}>Compete, Build</span> &amp; <span style={{ color:'var(--blue)' }}>Innovate</span>
+              <span style={{ color:'var(--orange)' }}>Compete, Build</span> &amp; <span style={{ color:'rgba(255,255,255,.75)' }}>Innovate</span>
             </h1>
-            <p style={{ fontSize:'1.05rem', color:'var(--gray)', lineHeight:1.75, maxWidth:580 }}>
+            <p style={{ fontSize:'1.05rem', color:'rgba(255,255,255,.75)', lineHeight:1.75, maxWidth:580 }}>
               From hackathons to competitions, our bootcamps and workshops give students the platform to apply their skills, challenge themselves and grow beyond the regular curriculum.
             </p>
           </div>
         </section>
 
-        {/* Events Grid */}
         <section style={{ padding:'80px 5%', background:'#fff' }}>
           <div style={{ maxWidth:1200, margin:'0 auto' }}>
             <BootcampCards />
           </div>
         </section>
 
-        {/* CTA — Coming Soon */}
         <section style={{ padding:'80px 5%', background:'var(--blue-xpale)' }}>
           <div style={{ maxWidth:700, margin:'0 auto', textAlign:'center' }}>
             <div style={{ width:64, height:64, background:'var(--blue-pale)', borderRadius:18, display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px' }}>
@@ -77,3 +82,5 @@ export default function BootcampPage() {
     </>
   )
 }
+
+── end of hidden content ── */

@@ -90,9 +90,12 @@ export default function Footer() {
           <ul style={{ listStyle:'none',display:'flex',flexDirection:'column',gap:14 }}>
             <li style={{ display:'flex',alignItems:'flex-start',gap:8 }}>
               <MapPin size={14} style={{ color:'var(--orange)',marginTop:3,flexShrink:0 }} />
-              <span style={{ fontSize:'.82rem',color:'rgba(255,255,255,.5)',lineHeight:1.6 }}>
+              <a href="https://maps.app.goo.gl/h4HwoN54xdgM5zEL6" target="_blank" rel="noopener noreferrer"
+                style={{ fontSize:'.82rem',color:'rgba(255,255,255,.5)',lineHeight:1.6,textDecoration:'none',transition:'color .25s' }}
+                onMouseEnter={e=>{const el=e.currentTarget as HTMLElement;el.style.color='var(--orange)';}}
+                onMouseLeave={e=>{const el=e.currentTarget as HTMLElement;el.style.color='rgba(255,255,255,.5)';}}>
                 A-5, Shivangi Society, Opp. Time Square,<br/>Ashwamegh Nagar, Tandalja,<br/>Vadodara – 390020
-              </span>
+              </a>
             </li>
             {([
               {IC:Phone, t:'+91 91044 01104', href:'tel:+919104401104'},
