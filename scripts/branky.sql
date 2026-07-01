@@ -100,3 +100,22 @@ PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 SET @dc := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'fee_plans' AND COLUMN_NAME = 'discount');
 SET @sd := IF(@dc = 0, 'ALTER TABLE fee_plans ADD COLUMN discount DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER total_fee', 'SELECT 1');
 PREPARE stmt FROM @sd; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- ─── Program master (admin-only list used for student/fee-plan dropdowns) ─
+CREATE TABLE IF NOT EXISTS programs (
+  id              INT AUTO_INCREMENT PRIMARY KEY,
+  name            VARCHAR(255) NOT NULL UNIQUE,
+  duration_months INT NOT NULL,
+  is_active       TINYINT(1) NOT NULL DEFAULT 1,
+  created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO programs (name, duration_months) VALUES
+  ('Robotics Bootcamp', 3),
+  ('Electronics & Circuits', 2),
+  ('3D Design & Printing', 2),
+  ('Coding & Programming', 3),
+  ('STEM Foundation', 1),
+  ('Advanced Robotics', 6),
+  ('AI & Machine Learning', 4);

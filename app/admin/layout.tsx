@@ -2,12 +2,13 @@
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
-import { AlertTriangle, LayoutDashboard, ClipboardList, Users, Globe, LogOut } from 'lucide-react'
+import { AlertTriangle, LayoutDashboard, ClipboardList, Users, BookOpen, Globe, LogOut } from 'lucide-react'
 
 const NAV = [
   { href: '/admin',                  Icon: LayoutDashboard, label: 'Dashboard'     },
   { href: '/admin/registrations',    Icon: ClipboardList,   label: 'Registrations' },
   { href: '/admin/students',         Icon: Users,           label: 'Students'      },
+  { href: '/admin/programs',         Icon: BookOpen,        label: 'Programs'      },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

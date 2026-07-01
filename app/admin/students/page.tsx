@@ -4,17 +4,8 @@ import { generateInstallmentReceipt } from '@/lib/generateInstallmentReceipt'
 import type { StudentDTO } from '@/models/Student'
 import type { FeePlanDTO, InstallmentDTO } from '@/models/FeePlan'
 
-// ─── courses ─────────────────────────────────────────────────────────────────
-const BRANKY_COURSES = [
-  { name: 'Robotics Bootcamp',      months: 3 },
-  { name: 'Electronics & Circuits', months: 2 },
-  { name: '3D Design & Printing',   months: 2 },
-  { name: 'Coding & Programming',   months: 3 },
-  { name: 'STEM Foundation',        months: 1 },
-  { name: 'Advanced Robotics',      months: 6 },
-  { name: 'AI & Machine Learning',  months: 4 },
-  { name: 'Other',                  months: null },
-]
+// ─── courses (loaded from the admin Programs master, see /admin/programs) ────
+const OTHER_COURSE = { name: 'Other', months: null as number | null }
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 const fmt = (n: number) => `₹${n.toLocaleString('en-IN', { minimumFractionDigits: 0 })}`
@@ -50,6 +41,7 @@ const BLANK_FP = { open: false, courseName: '', courseCustom: '', totalFee: '', 
 // ─── component ───────────────────────────────────────────────────────────────
 export default function StudentsPage() {
   const [loading, setLoading] = useState(true)
+  const [courses, setCourses] = useState<{ name: string; months: number | null }[]>([])
   const [students, setStudents] = useState<StudentDTO[]>([])
   const [stats, setStats] = useState<Stats>({ total: 0, current: 0, past: 0 })
   const [tab, setTab] = useState<Tab>('all')
@@ -84,6 +76,13 @@ export default function StudentsPage() {
   }, [tab, search])
 
   useEffect(() => { loadStudents() }, [loadStudents])
+
+  useEffect(() => {
+    apiFetch('/api/admin/programs?activeOnly=1').then(data => {
+      const list = (data.programs ?? []).map((p: { name: string; durationMonths: number }) => ({ name: p.name, months: p.durationMonths }))
+      setCourses([...list, OTHER_COURSE])
+    })
+  }, [])
 
   const selectStudent = async (s: StudentDTO) => {
     setSel(s); setPlans([]); setActivePlan(0); setFpForm(BLANK_FP); setPayForm(p => ({ ...p, open: false, ids: [] })); setEditForm(f => ({ ...f, open: false })); setDeleteConfirm(false)
@@ -165,7 +164,7 @@ export default function StudentsPage() {
     const ok = confirm('Delete this fee plan and recreate it? This cannot be undone.')
     if (!ok) return
     await apiFetch(`/api/admin/fee-plans/${currentPlan.id}`, { method: 'DELETE' })
-    const isKnown = BRANKY_COURSES.some(c => c.name === currentPlan.courseName)
+    const isKnown = courses.some(c => c.name === currentPlan.courseName)
     setFpForm({
       open: true,
       courseName: isKnown ? currentPlan.courseName : 'Other',
@@ -314,10 +313,10 @@ export default function StudentsPage() {
                   <div>
                     <label style={{ fontSize: '.75rem', fontWeight: 700, color: '#64748b', display: 'block', marginBottom: 3 }}>Course *</label>
                     <select value={offlineForm.program}
-                      onChange={e => { const c = BRANKY_COURSES.find(x => x.name === e.target.value); setOfflineForm(p => ({ ...p, program: e.target.value, feeMonths: c?.months ? String(c.months) : p.feeMonths })) }}
+                      onChange={e => { const c = courses.find(x => x.name === e.target.value); setOfflineForm(p => ({ ...p, program: e.target.value, feeMonths: c?.months ? String(c.months) : p.feeMonths })) }}
                       style={selectSt}>
                       <option value="">Select course…</option>
-                      {BRANKY_COURSES.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
+                      {courses.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
                     </select>
                   </div>
                   {offlineForm.program === 'Other' && (
@@ -681,10 +680,10 @@ export default function StudentsPage() {
                           <div>
                             <label style={{ fontSize: '.75rem', fontWeight: 700, color: '#64748b', display: 'block', marginBottom: 3 }}>Course</label>
                             <select value={fpForm.courseName}
-                              onChange={e => { const c = BRANKY_COURSES.find(x => x.name === e.target.value); setFpForm(f => ({ ...f, courseName: e.target.value, months: c?.months ? String(c.months) : f.months })) }}
+                              onChange={e => { const c = courses.find(x => x.name === e.target.value); setFpForm(f => ({ ...f, courseName: e.target.value, months: c?.months ? String(c.months) : f.months })) }}
                               style={panelSelectSt}>
                               <option value="">Select course…</option>
-                              {BRANKY_COURSES.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
+                              {courses.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
                             </select>
                           </div>
                           {fpForm.courseName === 'Other' && (
