@@ -1,8 +1,9 @@
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { programs } from '@/lib/programs-data'
+import { Check } from 'lucide-react'
 
 const altText: Record<string, string> = {
   'stem-foundations': 'Young child exploring early robotics and STEM activities at Branky STEM Labs Vadodara',
@@ -11,23 +12,7 @@ const altText: Record<string, string> = {
 }
 
 export default function ProgramsSection() {
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const idxRef = useRef(0)
-
-  const scrollTo = (idx: number) => {
-    const el = scrollRef.current
-    if (!el) return
-    const cards = el.children
-    const total = cards.length
-    idxRef.current = (idx + total) % total
-    const card = cards[idxRef.current] as HTMLElement
-    el.scrollTo({ left: card.offsetLeft - el.offsetLeft, behavior: 'smooth' })
-  }
-
-  useEffect(() => {
-    const timer = setInterval(() => scrollTo(idxRef.current + 1), 3000)
-    return () => clearInterval(timer)
-  }, [])
+  const [selected, setSelected] = useState(programs[0])
 
   return (
     <section id="programs" style={{ padding:'96px 5%', background:'#fff', position:'relative', overflow:'hidden' }}>
@@ -49,77 +34,85 @@ export default function ProgramsSection() {
           A progressive learning journey that grows with your child's skills, creativity and ambition.
         </p>
 
-        <div ref={scrollRef} className="programs-grid" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:24 }}>
-          {programs.map((p, i) => (
-            <div key={p.title}
-              className={`prog-card${p.accent==='orange'?' orange-accent':''} reveal d${Math.min(i+1,4)}`}>
+        <div className="programs-layout reveal d2" style={{ display:'grid', gridTemplateColumns:'320px 1fr', gap:28, alignItems:'start' }}>
+          {/* Program list */}
+          <div className="programs-list" style={{ display:'flex', flexDirection:'column', gap:14 }}>
+            {programs.map(p => {
+              const active = p.slug === selected.slug
+              return (
+                <button key={p.slug} onClick={() => setSelected(p)}
+                  style={{
+                    display:'flex', alignItems:'center', gap:14, textAlign:'left', width:'100%',
+                    padding:12, borderRadius:16, cursor:'pointer',
+                    border: active ? `2px solid ${p.accent==='orange'?'var(--orange)':'var(--blue)'}` : '2px solid transparent',
+                    background: active ? (p.accent==='orange'?'var(--orange-pale)':'var(--blue-pale)') : '#f7f7f8',
+                    transition:'all .25s',
+                  }}>
+                  <div style={{ width:64, height:64, borderRadius:12, overflow:'hidden', position:'relative', flexShrink:0 }}>
+                    <Image src={p.img} alt={altText[p.slug]} fill style={{ objectFit:'cover' }} />
+                  </div>
+                  <div style={{ minWidth:0 }}>
+                    <div style={{ fontSize:'.92rem', fontWeight:700, color:'var(--black)', marginBottom:4, lineHeight:1.3 }}>{p.title}</div>
+                    <div style={{ fontSize:'.75rem', color:'var(--gray)' }}>Age: {p.age}</div>
+                  </div>
+                </button>
+              )
+            })}
+          </div>
 
-              {/* Image */}
-              <div style={{ height:200, overflow:'hidden', position:'relative', flexShrink:0 }}>
-                <Image src={p.img} alt={altText[p.slug]} fill style={{ objectFit:'cover', transition:'transform .5s' }}
-                  onMouseEnter={e => (e.currentTarget.style.transform='scale(1.06)')}
-                  onMouseLeave={e => (e.currentTarget.style.transform='')} />
-                {/* Age badge */}
-                <div style={{ position:'absolute', top:14, left:14, padding:'4px 14px', borderRadius:50, fontSize:'.7rem', fontWeight:800, letterSpacing:'.07em', textTransform:'uppercase', background: p.accent==='orange'?'var(--orange)':'var(--blue)', color:'#fff', boxShadow:'0 2px 8px rgba(0,0,0,.2)' }}>
-                  Age: {p.age}
-                </div>
-                {/* Duration badge */}
-                <div style={{ position:'absolute', top:14, right:14, padding:'4px 12px', borderRadius:50, fontSize:'.68rem', fontWeight:700, background:'rgba(0,0,0,.55)', backdropFilter:'blur(8px)', color:'#fff' }}>
-                  {p.duration}
-                </div>
+          {/* Detail panel */}
+          <div className="programs-detail" style={{ background: selected.accent==='orange' ? 'var(--orange-pale)' : 'var(--blue-pale)', borderRadius:28, padding:28, display:'grid', gridTemplateColumns:'1fr 1fr', gap:32, alignItems:'center' }}>
+            <div style={{ height:320, borderRadius:20, overflow:'hidden', position:'relative' }}>
+              <Image src={selected.img} alt={altText[selected.slug]} fill style={{ objectFit:'cover' }} />
+              <div style={{ position:'absolute', top:14, left:14, padding:'4px 14px', borderRadius:50, fontSize:'.7rem', fontWeight:800, letterSpacing:'.07em', textTransform:'uppercase', background: selected.accent==='orange'?'var(--orange)':'var(--blue)', color:'#fff', boxShadow:'0 2px 8px rgba(0,0,0,.2)' }}>
+                Age: {selected.age}
               </div>
-
-              {/* Body */}
-              <div style={{ padding:'22px 24px 26px', display:'flex', flexDirection:'column', flex:1 }}>
-                <h3 className="h-display" style={{ fontSize:'1.1rem', fontWeight:400, color:'var(--black)', marginBottom:14 }}>{p.title}</h3>
-                <ul style={{ listStyle:'none', display:'flex', flexDirection:'column', gap:8, flex:1, marginBottom:20 }}>
-                  {p.features.map(f => (
-                    <li key={f} style={{ display:'flex', alignItems:'center', gap:10, fontSize:'.87rem', color:'var(--gray)', lineHeight:1.55, minWidth:0 }}>
-                      <span style={{ width:18, height:18, background: p.accent==='orange'?'var(--orange-pale)':'var(--blue-pale)', borderRadius:50, display:'inline-flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                        <span style={{ width:7, height:7, borderRadius:'50%', background: p.accent==='orange'?'var(--orange)':'var(--blue)', display:'block' }} />
-                      </span>
-                      <span style={{ whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link href={`/programs/${p.slug}`} className={`btn btn-${p.accent==='orange'?'orange':'outline'} btn-md`} style={{ alignSelf:'flex-start' }}>
-                  Know More →
-                </Link>
+              <div style={{ position:'absolute', top:14, right:14, padding:'4px 12px', borderRadius:50, fontSize:'.68rem', fontWeight:700, background:'rgba(0,0,0,.55)', backdropFilter:'blur(8px)', color:'#fff' }}>
+                {selected.duration}
               </div>
             </div>
-          ))}
-        </div>
 
-        {/* Mobile scroll buttons */}
-        <div className="prog-nav" style={{ display:'none', justifyContent:'center', gap:12, marginTop:20 }}>
-          <button onClick={() => scrollTo(idxRef.current - 1)} style={{ width:42, height:42, borderRadius:'50%', border:'2px solid var(--blue)', background:'#fff', color:'var(--blue)', fontSize:'1.2rem', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>‹</button>
-          <button onClick={() => scrollTo(idxRef.current + 1)} style={{ width:42, height:42, borderRadius:'50%', border:'none', background:'var(--blue)', color:'#fff', fontSize:'1.2rem', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>›</button>
+            <div>
+              <h3 className="h-display" style={{ fontSize:'1.5rem', fontWeight:400, color:'var(--black)', marginBottom:12 }}>{selected.title}</h3>
+              <p style={{ fontSize:'.92rem', color:'var(--gray)', lineHeight:1.65, marginBottom:20 }}>{selected.shortDescription}</p>
+              <ul style={{ listStyle:'none', display:'flex', flexDirection:'column', gap:10, marginBottom:24 }}>
+                {selected.features.map(f => (
+                  <li key={f} style={{ display:'flex', alignItems:'center', gap:10, fontSize:'.87rem', color:'var(--black)', lineHeight:1.5 }}>
+                    <span style={{ width:20, height:20, background:'#fff', borderRadius:'50%', display:'inline-flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                      <Check size={12} strokeWidth={3} color={selected.accent==='orange'?'var(--orange)':'var(--blue)'} />
+                    </span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href={`/programs/${selected.slug}`} className={`btn btn-${selected.accent==='orange'?'orange':'outline'} btn-md`}>
+                Know More →
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
 
       <style dangerouslySetInnerHTML={{__html:`
         @media(max-width:860px){
-          .prog-nav{display:flex!important;}
           #programs{padding:64px 0 64px!important;}
           #programs>div{padding:0 20px;}
           #programs>div>p,#programs>div>.tag,#programs>div>h2,#programs>div>div{padding-left:0;padding-right:0;}
-          .programs-grid{
-            display:flex!important;
+          .programs-layout{
+            grid-template-columns:1fr!important;
+          }
+          .programs-list{
             flex-direction:row!important;
             overflow-x:auto!important;
-            gap:16px!important;
-            padding:8px 20px 20px!important;
-            scroll-snap-type:x mandatory;
-            -webkit-overflow-scrolling:touch;
             scrollbar-width:none;
           }
-          .programs-grid::-webkit-scrollbar{display:none;}
-          .programs-grid>div{
-            grid-column:auto!important;
-            min-width:78vw!important;
-            max-width:320px!important;
+          .programs-list::-webkit-scrollbar{display:none;}
+          .programs-list>button{
+            width:auto!important;
             flex-shrink:0;
-            scroll-snap-align:start;
+          }
+          .programs-detail{
+            grid-template-columns:1fr!important;
           }
         }
         @media(max-width:576px){
@@ -129,7 +122,6 @@ export default function ProgramsSection() {
            }
         @media(max-width:480px){
           #programs{padding:52px 0 52px!important;}
-          .programs-grid>div{min-width:86vw!important;}
         }
       `}} />
     </section>
