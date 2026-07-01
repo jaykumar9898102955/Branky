@@ -42,9 +42,9 @@ export default function ContactPage() {
             </h1>
           </div>
           {/* Booking Form */}
-        <div style={{ maxWidth:780, margin:'0 auto' }}>
+         <div style={{ maxWidth:780, margin:'0 auto' }}>
          <BookingForm />
-        </div>
+          </div>
         </section>
 
         {/* Contact Cards + Form */}
