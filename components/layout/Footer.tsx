@@ -7,9 +7,7 @@ export default function Footer() {
   const programs = [
     ['STEM Foundations (4–6 Yrs)', '/programs/stem-foundations'],
     ['Foundation of Robotics L1 (7–10)', '/programs/foundation-of-robotics'],
-    ['Advanced Robotics L2 (7–10)', '/programs/advanced-robotics-level-2'],
     ['Core Robotics & Coding (11–14)', '/programs/core-robotics-coding'],
-    ['Advanced Robotics & IoT (11–14)', '/programs/advanced-robotics-iot'],
   ]
   const quickLinks = [
     ['Home', '/'],

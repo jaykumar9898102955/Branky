@@ -68,9 +68,7 @@ const localBusinessSchema = {
     itemListElement: [
       { '@type': 'Offer', itemOffered: { '@type': 'Course', name: 'STEM Foundations Program', url: 'https://brankystemlab.com/programs/stem-foundations' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Course', name: 'Foundation of Robotics – Level 1', url: 'https://brankystemlab.com/programs/foundation-of-robotics' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Course', name: 'Advanced Robotics – Level 2', url: 'https://brankystemlab.com/programs/advanced-robotics-level-2' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Course', name: 'Core Robotics & Coding Program', url: 'https://brankystemlab.com/programs/core-robotics-coding' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Course', name: 'Advanced Robotics, IoT & Smart Machines', url: 'https://brankystemlab.com/programs/advanced-robotics-iot' } },
     ],
   },
 }

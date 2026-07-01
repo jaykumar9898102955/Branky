@@ -7,9 +7,7 @@ import { programs } from '@/lib/programs-data'
 const altText: Record<string, string> = {
   'stem-foundations': 'Young child exploring early robotics and STEM activities at Branky STEM Labs Vadodara',
   'foundation-of-robotics': 'Student assembling a robot and learning electronics at Branky STEM Labs Vadodara',
-  'advanced-robotics-level-2': 'Student programming an advanced robot with smart sensors at Branky STEM Labs Vadodara',
   'core-robotics-coding': 'Teenager building and coding a robotics project at Branky STEM Labs Vadodara',
-  'advanced-robotics-iot': 'Student developing an IoT smart machine at Branky STEM Labs Vadodara',
 }
 
 export default function ProgramsSection() {
@@ -51,14 +49,13 @@ export default function ProgramsSection() {
           A progressive learning journey that grows with your child's skills, creativity and ambition.
         </p>
 
-        <div ref={scrollRef} className="programs-grid" style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:24 }}>
+        <div ref={scrollRef} className="programs-grid" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:24 }}>
           {programs.map((p, i) => (
             <div key={p.title}
-              className={`prog-card${p.accent==='orange'?' orange-accent':''} reveal d${Math.min(i+1,4)}`}
-              style={{ gridColumn: p.featured ? '1/-1' : undefined }}>
+              className={`prog-card${p.accent==='orange'?' orange-accent':''} reveal d${Math.min(i+1,4)}`}>
 
-              {/* Image — taller for featured */}
-              <div style={{ height: p.featured ? 260 : 200, overflow:'hidden', position:'relative', flexShrink:0 }}>
+              {/* Image */}
+              <div style={{ height:200, overflow:'hidden', position:'relative', flexShrink:0 }}>
                 <Image src={p.img} alt={altText[p.slug]} fill style={{ objectFit:'cover', transition:'transform .5s' }}
                   onMouseEnter={e => (e.currentTarget.style.transform='scale(1.06)')}
                   onMouseLeave={e => (e.currentTarget.style.transform='')} />
@@ -74,14 +71,14 @@ export default function ProgramsSection() {
 
               {/* Body */}
               <div style={{ padding:'22px 24px 26px', display:'flex', flexDirection:'column', flex:1 }}>
-                <h3 className="h-display" style={{ fontSize: p.featured ? '1.3rem' : '1.1rem', fontWeight:400, color:'var(--black)', marginBottom:14 }}>{p.title}</h3>
+                <h3 className="h-display" style={{ fontSize:'1.1rem', fontWeight:400, color:'var(--black)', marginBottom:14 }}>{p.title}</h3>
                 <ul style={{ listStyle:'none', display:'flex', flexDirection:'column', gap:8, flex:1, marginBottom:20 }}>
                   {p.features.map(f => (
-                    <li key={f} style={{ display:'flex', alignItems:'flex-start', gap:10, fontSize:'.87rem', color:'var(--gray)', lineHeight:1.55 }}>
-                      <span style={{ width:18, height:18, background: p.accent==='orange'?'var(--orange-pale)':'var(--blue-pale)', borderRadius:50, display:'inline-flex', alignItems:'center', justifyContent:'center', flexShrink:0, marginTop:1 }}>
+                    <li key={f} style={{ display:'flex', alignItems:'center', gap:10, fontSize:'.87rem', color:'var(--gray)', lineHeight:1.55, minWidth:0 }}>
+                      <span style={{ width:18, height:18, background: p.accent==='orange'?'var(--orange-pale)':'var(--blue-pale)', borderRadius:50, display:'inline-flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
                         <span style={{ width:7, height:7, borderRadius:'50%', background: p.accent==='orange'?'var(--orange)':'var(--blue)', display:'block' }} />
                       </span>
-                      {f}
+                      <span style={{ whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{f}</span>
                     </li>
                   ))}
                 </ul>

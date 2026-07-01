@@ -6,9 +6,7 @@ const ageGroups = ['4–6 Years', '7–10 Years', '11–14 Years']
 const programOptions = [
   'STEM Foundations (4–6 Years)',
   'Foundation of Robotics – Level 1 (7–10)',
-  'Advanced Robotics – Level 2 (7–10)',
   'Core Robotics & Coding (11–14)',
-  'Advanced Robotics, IoT & Smart Machines (11–14)',
   'Not Sure – Need Guidance',
 ]
 const timeSlots = ['Morning', 'Afternoon', 'Evening']
