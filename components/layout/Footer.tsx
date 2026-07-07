@@ -27,7 +27,7 @@ export default function Footer() {
         <Image src="/assets/brand-wave.png" alt="" width={180} height={180} style={{ width:'100%',height:'auto',filter:'brightness(0) invert(1)' }} />
       </div>
 
-      <div className='footer-wrapper' style={{ maxWidth:1200,margin:'0 auto',padding:'64px 5% 36px',display:'grid',gridTemplateColumns:'2fr 1.2fr 1fr 1.2fr',gap:'4%' }}>
+      <div className='footer-wrapper' style={{ maxWidth:1200,margin:'0 auto',padding:'64px 0',display:'grid',gridTemplateColumns:'2fr 1.2fr 1fr 1.2fr',gap:'4%' }}>
 
         {/* Column 1 — Brand */}
         <div>
@@ -115,7 +115,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div style={{ maxWidth:1200,margin:'0 auto',padding:'18px 5% 28px',borderTop:'1px solid rgba(255,255,255,.07)',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:10 }}>
+      <div style={{ maxWidth:1200,margin:'0 auto',padding:'18px 28px',borderTop:'1px solid rgba(255,255,255,.07)',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:10 }}>
         <p style={{ fontSize:'.78rem',color:'rgba(255,255,255,.28)' }}>© 2026 Branky STEM Labs. All rights reserved.</p>
       </div>
 
@@ -128,7 +128,7 @@ export default function Footer() {
         @media(max-width:576px){
            .footer-wrapper{
              margin: 0 auto;
-             padding: 64px 5% 36px;
+             padding: 64px 5% 36px !important;
              display: flex !important;
              gap: 3rem !important;
              flex-direction: column !important;

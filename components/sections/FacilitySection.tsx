@@ -59,7 +59,7 @@ export default function FacilitySection() {
             At Branky STEM Labs, we believe technology is best understood through building, experimenting and creating. Our hands-on environment keeps young minds curious, engaged and actively exploring.
           </p>
 
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:32 }}>
+          <div className="facility-mobile" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:32 }}>
             {features.map(f => (
               <div key={f.label} className="facility-box" style={{ padding:'14px 16px', display:'flex', alignItems:'flex-start', gap:10 }}>
                 <div style={{ width:36, height:36, background:'var(--blue-pale)', borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
@@ -79,9 +79,11 @@ export default function FacilitySection() {
       <style dangerouslySetInnerHTML={{__html:`
         @media(max-width:860px){
           .facility-layout{grid-template-columns:1fr!important;gap:48px!important;}
-          .facility-layout>div:first-child{display:none;}
         }
-        @media(max-width:480px){ section{padding:64px 16px!important;} }
+
+        @media(max-width:576px){
+          .facility-mobile{grid-template-columns:1fr!important;}
+        }
       `}} />
     </section>
   )

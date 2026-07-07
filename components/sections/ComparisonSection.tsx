@@ -47,18 +47,19 @@ export default function ComparisonSection() {
 
         {/* Card */}
         <div
-          className="reveal d1"
+          className="reveal d1 period-mobile"
           style={{
             background: 'var(--white)',
             borderRadius: 24,
-            padding: '48px 32px 40px',
-            display: 'grid',
-            gridTemplateColumns: '1fr 1px 1fr',
-            gap: '0 32px',
+            padding: '48px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '36px',
           }}
         >
           {/* Left — Schools */}
-          <div>
+          <div className="rbp">
             <div
               style={{
                 background: 'var(--orange)',
@@ -112,11 +113,11 @@ export default function ComparisonSection() {
             </div>
           </div>
 
-          {/* Divider */}
-          <div style={{ background: 'var(--light-gray)', borderRadius: 4 }} />
+          {/* VS */}
+          <div className="vs-text"> <h3>VS</h3> </div>
 
           {/* Right — Branky */}
-          <div>
+          <div className="rbp">
             <div
               style={{
                 background: 'var(--orange)',
@@ -172,6 +173,29 @@ export default function ComparisonSection() {
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
+        .rbp {
+          padding: 1.5rem;
+          border: 3px solid #ff931e;
+          border-radius: 20px;
+          min-width: 40%;
+        }
+       
+        .vs-text h3{
+          background: var(--orange);
+         color: #fff;
+    font-size: 1.1rem;
+    font-weight: 800;
+    padding: 12px 26px;
+    border-radius: 12px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    font-family: 'Karla', sans-serif;
+    white-space: nowrap;
+    transform: rotate(-22deg);
+    box-shadow: 0 6px 20px rgba(255, 147, 30, .4);
+    font-weight: 1000;
+        }
+        
         @media (max-width: 700px) {
           #comparison > div > div:last-child {
             grid-template-columns: 1fr !important;
@@ -180,6 +204,13 @@ export default function ComparisonSection() {
             display: none !important;
           }
         }
+
+
+      @media (max-width: 576px) {
+        .period-mobile{
+        padding : 24px !important;
+        flex-direction: column !important;}
+      }
       ` }} />
     </section>
   )

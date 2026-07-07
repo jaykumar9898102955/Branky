@@ -494,4 +494,16 @@ const STYLES = `
   .j-grid { grid-template-columns:1fr; }
   .j-solo { max-width:100%; grid-column:auto; }
 }
+
+
+@media (max-width:576px) {
+.j-age-badge {
+    position:absolute;
+    display:inline-block;
+    margin-top:12px;
+    transform:rotate(4deg);
+    top: -50px;
+    right: 13%;
+  }
+}
 `

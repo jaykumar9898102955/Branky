@@ -395,6 +395,13 @@ const STYLES = `
 }
 
 
+@media (max-width:576px) {
+  .hero-content{
+    padding-top: 2rem;
+  }
+}
+
+
 /* ════════════════════════════════════════
    SMALL PHONE  ≤ 380px  — compact tweaks
 ════════════════════════════════════════ */
