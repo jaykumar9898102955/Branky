@@ -122,10 +122,10 @@ export default function HeroSection() {
       </div>
 
       {/* Scroll indicator */}
-      <div className="hero-scroll">
+      {/* <div className="hero-scroll">
         <div className="hs-line" />
         <span className="hs-label">Scroll</span>
-      </div>
+      </div> */}
 
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />
     </section>
@@ -186,7 +186,7 @@ const STYLES = `
 .hero-pulse-dot { width:8px; height:8px; background:var(--orange); border-radius:50%; display:inline-block; animation:pulse 2s ease infinite; flex-shrink:0; }
 
 .hero-h1 {
-  font-size: clamp(2.8rem,5vw,4.8rem);
+  font-size: clamp(2.8rem,4.5vw,4.8rem);
   line-height: 1.05;
   color: var(--black);
   margin-bottom: 14px;
@@ -197,7 +197,7 @@ const STYLES = `
 .hu-b { height:5px; width:140px; background:var(--blue);   border-radius:10px; }
 
 .hero-para {
-  font-size: clamp(.95rem,2vw,1.1rem);
+  font-size: clamp(.95rem,2vw,1rem);
   color: var(--gray);
   line-height: 1.75;
   margin-bottom: 36px;

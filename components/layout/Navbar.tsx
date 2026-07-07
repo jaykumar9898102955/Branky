@@ -26,7 +26,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav style={{ position:'fixed',top:0,left:0,right:0,zIndex:200,height:68,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 5%',background:scrolled?'rgba(255,255,255,.97)':'rgba(255,255,255,.93)',backdropFilter:'blur(20px)',borderBottom:scrolled?'2px solid var(--blue-pale)':'2px solid transparent',boxShadow:scrolled?'0 2px 24px rgba(29,92,227,.08)':'none',transition:'all .35s' }}>
+      <nav style={{ position:'fixed',top:0,left:0,right:0,zIndex:200,height:68,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 10%',background:scrolled?'rgba(255,255,255,.97)':'rgba(255,255,255,.93)',backdropFilter:'blur(20px)',borderBottom:scrolled?'2px solid var(--blue-pale)':'2px solid transparent',boxShadow:scrolled?'0 2px 24px rgba(29,92,227,.08)':'none',transition:'all .35s' }}>
 
         {/* Logo */}
         <Link href="/" style={{ display:'flex', alignItems:'center', flexShrink:0 }}>
