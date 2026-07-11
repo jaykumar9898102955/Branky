@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import ProgramsSection from '@/components/sections/ProgramsSection'
+import ProgressStepsSection from '@/components/sections/ProgressStepsSection'
 import FreeDemoStrip from '@/components/sections/FreeDemoStrip'
 import RevealObserver from '@/components/ui/RevealObserver'
 import Image from 'next/image'
@@ -77,6 +78,7 @@ export default function ProgramsPage() {
         </section>
 
         <ProgramsSection />
+        <ProgressStepsSection />
         <FreeDemoStrip />
       </main>
       <Footer />

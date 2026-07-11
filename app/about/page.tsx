@@ -70,7 +70,7 @@ export default function AboutPage() {
             </div>
             <div className="reveal-right" style={{ position:'relative' }}>
               <div style={{ borderRadius:28, overflow:'hidden', boxShadow:'0 28px 64px rgba(29,92,227,.14)' }}>
-                <Image src="/assets/robot2.png" alt="Branky STEM Labs" width={500} height={420} style={{ width:'100%', height:420, objectFit:'cover', objectPosition:'top', display:'block' }} />
+                <Image src="/assets/robot2.png" alt="Branky STEM Labs" width={500} height={420} style={{ width:'100%', height:420, objectFit:'cover', objectPosition:'center', display:'block' }} />
               </div>
               <div style={{ position:'absolute', bottom:-18, right:-18, padding:'14px 18px', background:'#fff', borderRadius:20, border:'2px solid var(--blue-pale)', boxShadow:'0 10px 28px rgba(29,92,227,.14)', display:'flex', alignItems:'center', gap:12 }}>
                 <div style={{ width:40, height:40, background:'var(--blue-pale)', borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
@@ -90,7 +90,7 @@ export default function AboutPage() {
           <div style={{ maxWidth:760, margin:'0 auto' }}>
             <div className="tag tag-blue reveal" style={{ marginBottom:20 }}>A Message for Parents</div>
             <div className="reveal d1" style={{ background:'#fff', borderRadius:28, padding:'48px 44px', boxShadow:'0 12px 40px rgba(29,92,227,.08)', border:'2px solid var(--blue-pale)', position:'relative', overflow:'hidden' }}>
-              <div style={{ position:'absolute', top:-10, left:24, fontSize:'8rem', fontFamily:"'Fredoka One',sans-serif", color:'var(--blue-xpale)', lineHeight:1, pointerEvents:'none', userSelect:'none' }}>&ldquo;</div>
+              <div style={{ position:'absolute', top:-10, left:24, fontSize:'8rem', fontFamily:"'Neue Power',sans-serif", color:'var(--blue-xpale)', lineHeight:1, pointerEvents:'none', userSelect:'none' }}>&ldquo;</div>
               <div style={{ position:'relative', zIndex:1 }}>
                 <p style={{ fontSize:'1rem', color:'var(--gray)', lineHeight:1.9, marginBottom:16 }}>Dear Parents,</p>
                 <p style={{ fontSize:'1.05rem', color:'var(--text)', lineHeight:1.85, marginBottom:20 }}>

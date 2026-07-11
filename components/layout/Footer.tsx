@@ -46,7 +46,7 @@ export default function Footer() {
 
         {/* Column 2 — Quick Links */}
         <div>
-          <h4 className="h-display" style={{ fontWeight:400,fontSize:'1rem',marginBottom:18,color:'rgba(255,255,255,.9)' }}>Quick Links</h4>
+          <h4 style={{ fontWeight:400,fontSize:'1rem',marginBottom:18,color:'rgba(255,255,255,.9)' }}>Quick Links</h4>
           <ul style={{ listStyle:'none',display:'flex',flexDirection:'column',gap:11 }}>
             {quickLinks.map(([label,href]) => (
               <li key={label}>
@@ -63,7 +63,7 @@ export default function Footer() {
 
         {/* Column 3 — Programs */}
         <div>
-          <h4 className="h-display" style={{ fontWeight:400,fontSize:'1rem',marginBottom:18,color:'rgba(255,255,255,.9)' }}>Programs</h4>
+          <h4 style={{ fontWeight:400,fontSize:'1rem',marginBottom:18,color:'rgba(255,255,255,.9)' }}>Programs</h4>
           <ul style={{ listStyle:'none',display:'flex',flexDirection:'column',gap:11 }}>
             {programs.map(([label,href]) => (
               <li key={label}>
@@ -84,7 +84,7 @@ export default function Footer() {
 
         {/* Column 4 — Contact */}
         <div>
-          <h4 className="h-display" style={{ fontWeight:400,fontSize:'1rem',marginBottom:18,color:'rgba(255,255,255,.9)' }}>Contact</h4>
+          <h4 style={{ fontWeight:400,fontSize:'1rem',marginBottom:18,color:'rgba(255,255,255,.9)' }}>Contact</h4>
           <ul style={{ listStyle:'none',display:'flex',flexDirection:'column',gap:14 }}>
             <li style={{ display:'flex',alignItems:'flex-start',gap:8 }}>
               <MapPin size={14} style={{ color:'var(--orange)',marginTop:3,flexShrink:0 }} />

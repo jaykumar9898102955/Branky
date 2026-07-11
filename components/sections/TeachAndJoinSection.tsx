@@ -322,7 +322,7 @@ const STYLES = `
   font-size:.92rem; color:#333; line-height:1.6; font-weight:500; margin:0; flex:1;
 }
 .j-card-num {
-  font-family:'Fredoka One','Karla',sans-serif; font-size:3.4rem;
+  font-family:'Neue Power','Karla',sans-serif; font-size:3.4rem; font-weight:800;
   color:var(--orange); line-height:1; opacity:.25; flex-shrink:0; user-select:none;
 }
 

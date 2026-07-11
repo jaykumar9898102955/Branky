@@ -113,9 +113,6 @@ export default function ComparisonSection() {
             </div>
           </div>
 
-          {/* VS */}
-          <div className="vs-text"> <h3>VS</h3> </div>
-
           {/* Right — Branky */}
           <div className="rbp">
             <div
@@ -177,31 +174,12 @@ export default function ComparisonSection() {
           padding: 1.5rem;
           border: 3px solid #ff931e;
           border-radius: 20px;
-          min-width: 40%;
+          min-width: 50%;
         }
        
-        .vs-text h3{
-          background: var(--orange);
-         color: #fff;
-    font-size: 1.1rem;
-    font-weight: 800;
-    padding: 12px 26px;
-    border-radius: 12px;
-    letter-spacing: .07em;
-    text-transform: uppercase;
-    font-family: 'Karla', sans-serif;
-    white-space: nowrap;
-    transform: rotate(-22deg);
-    box-shadow: 0 6px 20px rgba(255, 147, 30, .4);
-    font-weight: 1000;
-        }
-        
         @media (max-width: 700px) {
           #comparison > div > div:last-child {
             grid-template-columns: 1fr !important;
-          }
-          #comparison > div > div:last-child > div:nth-child(2) {
-            display: none !important;
           }
         }
 

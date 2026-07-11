@@ -15,7 +15,8 @@ export default function NotFound() {
       overflow: 'hidden',
     }}>
       <style dangerouslySetInnerHTML={{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;600;700;800&family=Fredoka+One&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;600;700;800&display=swap');
+    @import url('https://fonts.cdnfonts.com/css/neue-power');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
         @keyframes pulse { 0%,100%{opacity:.6} 50%{opacity:1} }
@@ -61,7 +62,7 @@ export default function NotFound() {
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
           marginBottom: 12,
-          fontFamily: "'Fredoka One', cursive",
+          fontFamily: "'Neue Power', sans-serif",
         }}>404</div>
 
         <h1 style={{ fontSize: 'clamp(1.2rem,3vw,1.6rem)', fontWeight: 800, color: '#0d0d0d', marginBottom: 10 }}>

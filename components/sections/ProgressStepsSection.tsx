@@ -40,7 +40,7 @@ export default function ProgressStepsSection() {
             <div key={step.label} className="step-item" style={{ display:'flex', alignItems:'flex-start', flex: i < steps.length-1 ? '1' : '0 0 auto', minWidth:0 }}>
               {/* Step node */}
               <div className="step-node" style={{ display:'flex', flexDirection:'column', alignItems:'center', flexShrink:0, width:112 }}>
-                <div style={{ width:52, height:52, borderRadius:'50%', background: i === steps.length-1 ? 'var(--orange)' : 'var(--blue)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Fredoka One','Karla',sans-serif", fontSize:'1.1rem', fontWeight:400, zIndex:1, boxShadow: i === steps.length-1 ? '0 6px 20px rgba(255,147,30,.35)' : '0 6px 20px rgba(29,92,227,.25)', flexShrink:0 }}>
+                <div style={{ width:52, height:52, borderRadius:'50%', background: i === steps.length-1 ? 'var(--orange)' : 'var(--blue)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Neue Power','Karla',sans-serif", fontSize:'1.1rem', fontWeight:800, zIndex:1, boxShadow: i === steps.length-1 ? '0 6px 20px rgba(255,147,30,.35)' : '0 6px 20px rgba(29,92,227,.25)', flexShrink:0 }}>
                   {i + 1}
                 </div>
                 <div className="step-text">
