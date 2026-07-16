@@ -28,7 +28,9 @@ async function apiFetch(path: string, opts?: RequestInit) {
 // ─── types ───────────────────────────────────────────────────────────────────
 type Tab = 'all' | 'current' | 'past'
 interface Stats { total: number; current: number; past: number }
-interface PayForm { open: boolean; multi: boolean; ids: number[]; date: string; notes: string }
+interface PayForm { open: boolean; multi: boolean; amountMode: boolean; amount: string; ids: number[]; date: string; method: string; notes: string }
+
+const PAY_METHODS = ['Cash', 'UPI', 'Card', 'Bank Transfer', 'Cheque']
 
 const BLANK_OFFLINE = {
   open: false, step: 1 as 1 | 2,
@@ -52,7 +54,7 @@ export default function StudentsPage() {
   const [planLoading, setPlanLoading] = useState(false)
   const [fpForm, setFpForm] = useState(BLANK_FP)
   const [fpSaving, setFpSaving] = useState(false)
-  const [payForm, setPayForm] = useState<PayForm>({ open: false, multi: false, ids: [], date: todayStr(), notes: '' })
+  const [payForm, setPayForm] = useState<PayForm>({ open: false, multi: false, amountMode: false, amount: '', ids: [], date: todayStr(), method: 'Cash', notes: '' })
   const [paySaving, setPaySaving] = useState(false)
   const [statusSaving, setStatusSaving] = useState(false)
   const [toast, setToast] = useState('')
@@ -85,7 +87,7 @@ export default function StudentsPage() {
   }, [])
 
   const selectStudent = async (s: StudentDTO) => {
-    setSel(s); setPlans([]); setActivePlan(0); setFpForm(BLANK_FP); setPayForm(p => ({ ...p, open: false, ids: [] })); setEditForm(f => ({ ...f, open: false })); setDeleteConfirm(false)
+    setSel(s); setPlans([]); setActivePlan(0); setFpForm(BLANK_FP); setPayForm(p => ({ ...p, open: false, amountMode: false, amount: '', ids: [] })); setEditForm(f => ({ ...f, open: false })); setDeleteConfirm(false)
     setPlanLoading(true)
     const data = await apiFetch(`/api/admin/students/${s.id}`)
     setPlans(data.feePlans ?? [])
@@ -133,6 +135,19 @@ export default function StudentsPage() {
   const currentPlan = plans[activePlan] ?? null
   const fpCourseName = () => fpForm.courseName === 'Other' ? fpForm.courseCustom : fpForm.courseName
 
+  // Course and program are the same thing — prefill the plan form from the student's program
+  const openFpForm = () => {
+    const program = sel?.program ?? ''
+    const known = courses.find(c => c.name === program)
+    setFpForm({
+      ...BLANK_FP,
+      open: true,
+      courseName: program ? (known ? program : 'Other') : '',
+      courseCustom: known ? '' : program,
+      months: known?.months ? String(known.months) : BLANK_FP.months,
+    })
+  }
+
   const createPlan = async () => {
     if (!sel || !fpForm.totalFee || !fpForm.months) return
     setFpSaving(true)
@@ -152,6 +167,11 @@ export default function StudentsPage() {
     setFpSaving(false)
     if (data.plan) {
       setFpForm(BLANK_FP)
+      // Keep the student's program in sync with the (same) course
+      const newCourse = fpCourseName()
+      if (sel && newCourse && newCourse !== sel.program) {
+        await apiFetch(`/api/admin/students/${sel.id}`, { method: 'PATCH', body: JSON.stringify({ program: newCourse }) })
+      }
       if (sel) await refreshPlans(sel.id)
       // Switch to new plan tab (last one)
       setActivePlan(0) // newest plan is first (API returns newest-first)
@@ -180,18 +200,63 @@ export default function StudentsPage() {
 
   // ── pay ───────────────────────────────────────────────────────────────────
   const paySingle = (inst: InstallmentDTO) => {
-    setPayForm({ open: true, multi: false, ids: [Number(inst.id)], date: todayStr(), notes: '' })
+    setPayForm({ open: true, multi: false, amountMode: false, amount: '', ids: [Number(inst.id)], date: todayStr(), method: 'Cash', notes: '' })
+  }
+
+  const payAnyAmount = () => {
+    setPayForm({ open: true, multi: false, amountMode: true, amount: '', ids: [], date: todayStr(), method: 'Cash', notes: '' })
+  }
+
+  // Group paid installments by payment date → one row per payment
+  const paymentHistory = (plan: FeePlanDTO) => {
+    const map = new Map<string, InstallmentDTO[]>()
+    for (const i of plan.installments) {
+      if (!i.paidDate || (i.status !== 'paid' && i.paidAmount <= 0)) continue
+      const arr = map.get(i.paidDate) ?? []
+      arr.push(i)
+      map.set(i.paidDate, arr)
+    }
+    return Array.from(map.entries())
+      .map(([date, insts]) => ({
+        date,
+        insts,
+        amount: insts.reduce((s, i) => s + (i.paidAmount > 0 ? i.paidAmount : i.amount), 0),
+        labels: insts.map(i => i.label).join(', '),
+        method: insts[0].paymentMethod,
+        notes: insts[0].notes,
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date))
+  }
+
+  // Preview how a lump-sum amount spreads across pending installments
+  const allocPreview = (plan: FeePlanDTO, amt: number) => {
+    let left = amt
+    const parts: { label: string; pay: number; full: boolean }[] = []
+    for (const inst of plan.installments) {
+      if (left <= 0) break
+      if (inst.status === 'paid') continue
+      const due = inst.amount - inst.paidAmount
+      if (due <= 0) continue
+      const pay = Math.min(due, left)
+      left = Math.round((left - pay) * 100) / 100
+      parts.push({ label: inst.label, pay, full: pay >= due })
+    }
+    return { parts, excess: left }
   }
 
   const confirmPay = async () => {
-    if (!currentPlan || payForm.ids.length === 0) return
+    if (!currentPlan) return
+    const amt = Number(payForm.amount)
+    if (payForm.amountMode ? (!amt || amt <= 0) : payForm.ids.length === 0) return
     setPaySaving(true)
     await apiFetch(`/api/admin/fee-plans/${currentPlan.id}/pay`, {
       method: 'POST',
-      body: JSON.stringify({ installmentIds: payForm.ids, paidDate: payForm.date, paymentNotes: payForm.notes }),
+      body: JSON.stringify(payForm.amountMode
+        ? { amount: amt, paidDate: payForm.date, paymentNotes: payForm.notes, paymentMethod: payForm.method }
+        : { installmentIds: payForm.ids, paidDate: payForm.date, paymentNotes: payForm.notes, paymentMethod: payForm.method }),
     })
     setPaySaving(false)
-    setPayForm(p => ({ ...p, open: false, ids: [] }))
+    setPayForm(p => ({ ...p, open: false, amountMode: false, amount: '', ids: [] }))
     if (sel) await refreshPlans(sel.id)
     showToast('Payment recorded!')
   }
@@ -246,6 +311,7 @@ export default function StudentsPage() {
 
   const instStatus = (inst: InstallmentDTO) => {
     if (inst.status === 'paid') return { label: 'Paid', color: '#065f46', bg: '#d1fae5' }
+    if (inst.status === 'partial') return { label: 'Partial', color: '#1e40af', bg: '#dbeafe' }
     if (inst.dueDate < todayStr()) return { label: 'Overdue', color: '#991b1b', bg: '#fee2e2' }
     return { label: 'Pending', color: '#92400e', bg: '#fef3c7' }
   }
@@ -645,13 +711,13 @@ export default function StudentsPage() {
                       {plans.length > 0 && (
                         <div style={{ display: 'flex', gap: 4, marginBottom: 14, flexWrap: 'wrap' }}>
                           {plans.map((p, idx) => (
-                            <button key={p.id} onClick={() => { setActivePlan(idx); setPayForm(pf => ({ ...pf, open: false, multi: false, ids: [] })) }}
+                            <button key={p.id} onClick={() => { setActivePlan(idx); setPayForm(pf => ({ ...pf, open: false, multi: false, amountMode: false, amount: '', ids: [] })) }}
                               style={{ padding: '5px 12px', borderRadius: 20, border: `2px solid ${activePlan === idx ? '#1D5CE3' : '#e2e8f0'}`, background: activePlan === idx ? '#eff6ff' : '#fff', color: activePlan === idx ? '#1D5CE3' : '#64748b', fontWeight: 700, fontSize: '.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}>
                               {p.status === 'completed' ? <span style={{ color: '#065f46' }}>✓</span> : <span style={{ color: '#FF931E' }}>→</span>}
                               {p.courseName.length > 14 ? p.courseName.slice(0, 13) + '…' : p.courseName}
                             </button>
                           ))}
-                          <button onClick={() => { setFpForm(f => ({ ...f, open: true })); setActivePlan(plans.length) }}
+                          <button onClick={() => { openFpForm(); setActivePlan(plans.length) }}
                             style={{ padding: '5px 12px', borderRadius: 20, border: '2px dashed #cbd5e1', background: '#f8fafc', color: '#64748b', fontWeight: 700, fontSize: '.75rem', cursor: 'pointer', whiteSpace: 'nowrap' }}>
                             + New Course
                           </button>
@@ -664,7 +730,7 @@ export default function StudentsPage() {
                           <div style={{ fontSize: '1.6rem', marginBottom: 6 }}>📋</div>
                           <div style={{ fontWeight: 800, fontSize: '.9rem', color: '#1e293b', marginBottom: 4 }}>No fee plan set up yet</div>
                           <div style={{ fontSize: '.78rem', color: '#64748b', marginBottom: 14, lineHeight: 1.5 }}>Set up monthly installments to track<br />payments and generate receipts</div>
-                          <button onClick={() => setFpForm(f => ({ ...f, open: true }))}
+                          <button onClick={openFpForm}
                             style={{ padding: '9px 24px', background: '#1D5CE3', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '.88rem', cursor: 'pointer' }}>
                             + Setup Fee Plan
                           </button>
@@ -754,7 +820,7 @@ export default function StudentsPage() {
                                 <div style={{ fontSize: '.75rem', color: '#047857', marginTop: 1 }}>All instalments paid.</div>
                               </div>
                               <div style={{ display: 'flex', gap: 6 }}>
-                                <button onClick={() => setFpForm(f => ({ ...f, open: true }))}
+                                <button onClick={openFpForm}
                                   style={{ padding: '6px 12px', background: '#1D5CE3', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '.78rem', cursor: 'pointer', whiteSpace: 'nowrap' }}>
                                   + New Course
                                 </button>
@@ -796,10 +862,16 @@ export default function StudentsPage() {
 
                           {/* Multi-pay toggle */}
                           <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-                            <button onClick={() => setPayForm(p => ({ ...p, multi: !p.multi, ids: [], open: false }))}
+                            <button onClick={() => setPayForm(p => ({ ...p, multi: !p.multi, amountMode: false, amount: '', ids: [], open: false }))}
                               style={{ flex: 1, padding: '7px 0', border: `2px solid ${payForm.multi ? '#1D5CE3' : '#e2e8f0'}`, borderRadius: 10, background: payForm.multi ? '#eff6ff' : '#fff', color: payForm.multi ? '#1D5CE3' : '#64748b', fontWeight: 700, fontSize: '.8rem', cursor: 'pointer' }}>
                               {payForm.multi ? '✓ Select Months' : 'Pay Multiple Months'}
                             </button>
+                            {currentPlan.totalRemaining > 0 && (
+                              <button onClick={payAnyAmount}
+                                style={{ flex: 1, padding: '7px 0', border: `2px solid ${payForm.amountMode && payForm.open ? '#FF931E' : '#e2e8f0'}`, borderRadius: 10, background: payForm.amountMode && payForm.open ? '#fff7ed' : '#fff', color: payForm.amountMode && payForm.open ? '#FF931E' : '#64748b', fontWeight: 700, fontSize: '.8rem', cursor: 'pointer' }}>
+                                ₹ Pay Amount
+                              </button>
+                            )}
                             {payForm.multi && payForm.ids.length > 0 && (
                               <button onClick={() => setPayForm(p => ({ ...p, open: true }))}
                                 style={{ padding: '7px 14px', background: '#1D5CE3', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '.8rem', cursor: 'pointer' }}>
@@ -827,7 +899,7 @@ export default function StudentsPage() {
                                       <div style={{ minWidth: 0 }}>
                                         <div style={{ fontWeight: 700, fontSize: '.82rem', color: '#0d0d0d' }}>{inst.label}</div>
                                         <div style={{ fontSize: '.72rem', color: '#94a3b8', marginTop: 1 }}>Due: {inst.dueDate}{inst.paidDate ? ` · Paid: ${inst.paidDate}` : ''}</div>
-                                        {inst.notes && <div style={{ fontSize: '.7rem', color: '#94a3b8', marginTop: 1, fontStyle: 'italic' }}>{inst.notes}</div>}
+                                        {(inst.paymentMethod || inst.notes) && <div style={{ fontSize: '.7rem', color: '#94a3b8', marginTop: 1, fontStyle: 'italic' }}>{[inst.paymentMethod, inst.notes].filter(Boolean).join(' · ')}</div>}
                                       </div>
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
@@ -838,17 +910,23 @@ export default function StudentsPage() {
                                       <span style={{ padding: '2px 8px', borderRadius: 20, fontSize: '.7rem', fontWeight: 700, background: st.bg, color: st.color, textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
                                         {st.label}
                                       </span>
-                                      {inst.status === 'paid' ? (
-                                        <button onClick={() => generateInstallmentReceipt(inst, { ...sel, joinDate: sel.joinDate ?? '' }, currentPlan)}
+                                      {(inst.status === 'paid' || inst.paidAmount > 0) && (
+                                        <button onClick={() => {
+                                          // One payment = one receipt: group all months paid on the same date
+                                          const group = currentPlan.installments.filter(x =>
+                                            x.paidDate && x.paidDate === inst.paidDate && (x.status === 'paid' || x.paidAmount > 0))
+                                          generateInstallmentReceipt(group.length > 0 ? group : inst, { ...sel, joinDate: sel.joinDate ?? '' }, currentPlan)
+                                        }}
                                           style={{ padding: '4px 8px', background: '#f0fdf4', border: '1.5px solid #bbf7d0', borderRadius: 8, cursor: 'pointer', fontSize: '.72rem', fontWeight: 700, color: '#065f46', whiteSpace: 'nowrap' }}>
                                           ↓ Receipt
                                         </button>
-                                      ) : !payForm.multi ? (
+                                      )}
+                                      {inst.status !== 'paid' && !payForm.multi && (
                                         <button onClick={() => paySingle(inst)}
                                           style={{ padding: '4px 10px', background: '#1D5CE3', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: '.75rem', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap' }}>
                                           Pay
                                         </button>
-                                      ) : null}
+                                      )}
                                     </div>
                                   </div>
                                 </div>
@@ -856,27 +934,121 @@ export default function StudentsPage() {
                             })}
                           </div>
 
+                          {/* Payment history */}
+                          {(() => {
+                            const history = paymentHistory(currentPlan)
+                            if (history.length === 0) return null
+                            return (
+                              <div style={{ marginTop: 16 }}>
+                                <div style={{ fontWeight: 800, fontSize: '.8rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 8 }}>
+                                  Payment History ({history.length})
+                                </div>
+                                <div style={{ border: '1.5px solid #e2e8f0', borderRadius: 12, overflow: 'auto' }}>
+                                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                    <thead>
+                                      <tr style={{ background: '#f8fafc' }}>
+                                        {['#', 'Pay Date', 'Months', 'Method', 'Amount', ''].map(h => (
+                                          <th key={h} style={{ padding: '7px 12px', textAlign: h === 'Amount' ? 'right' : 'left', fontSize: '.68rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '.05em', whiteSpace: 'nowrap' }}>{h}</th>
+                                        ))}
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {history.map((h, idx) => (
+                                        <tr key={h.date} style={{ borderTop: '1px solid #f1f5f9' }}>
+                                          <td style={{ padding: '8px 12px', fontSize: '.75rem', color: '#94a3b8', fontWeight: 700 }}>{idx + 1}</td>
+                                          <td style={{ padding: '8px 12px', fontSize: '.8rem', fontWeight: 700, color: '#0d0d0d', whiteSpace: 'nowrap' }}>{h.date}</td>
+                                          <td style={{ padding: '8px 12px', fontSize: '.75rem', color: '#64748b' }}>
+                                            {h.labels}{h.notes ? <span style={{ color: '#94a3b8', fontStyle: 'italic' }}> · {h.notes}</span> : ''}
+                                          </td>
+                                          <td style={{ padding: '8px 12px', whiteSpace: 'nowrap' }}>
+                                            {h.method ? <span style={{ padding: '2px 8px', borderRadius: 20, fontSize: '.68rem', fontWeight: 700, background: '#eff6ff', color: '#1D5CE3' }}>{h.method}</span> : <span style={{ color: '#cbd5e1', fontSize: '.72rem' }}>—</span>}
+                                          </td>
+                                          <td style={{ padding: '8px 12px', fontSize: '.82rem', fontWeight: 800, color: '#065f46', textAlign: 'right', whiteSpace: 'nowrap' }}>{fmt(h.amount)}</td>
+                                          <td style={{ padding: '8px 12px', textAlign: 'right' }}>
+                                            <button onClick={() => generateInstallmentReceipt(h.insts, { ...sel, joinDate: sel.joinDate ?? '' }, currentPlan)}
+                                              style={{ padding: '3px 8px', background: '#f0fdf4', border: '1.5px solid #bbf7d0', borderRadius: 8, cursor: 'pointer', fontSize: '.7rem', fontWeight: 700, color: '#065f46', whiteSpace: 'nowrap' }}>
+                                              ↓ Receipt
+                                            </button>
+                                          </td>
+                                        </tr>
+                                      ))}
+                                      <tr style={{ borderTop: '1.5px solid #e2e8f0', background: '#eff6ff' }}>
+                                        <td colSpan={4} style={{ padding: '8px 12px', fontSize: '.78rem', fontWeight: 800, color: '#0d0d0d' }}>Total Paid</td>
+                                        <td style={{ padding: '8px 12px', fontSize: '.85rem', fontWeight: 800, color: '#065f46', textAlign: 'right', whiteSpace: 'nowrap' }}>{fmt(currentPlan.totalPaid)}</td>
+                                        <td />
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            )
+                          })()}
+
                           {/* Pay form */}
                           {payForm.open && (
                             <div style={{ marginTop: 14, background: '#f8fafc', borderRadius: 12, padding: 14, border: '1.5px solid #e2e8f0' }}>
                               <div style={{ fontWeight: 700, fontSize: '.85rem', color: '#0d0d0d', marginBottom: 10 }}>
-                                Record Payment — {payForm.ids.length} instalment{payForm.ids.length > 1 ? 's' : ''}
+                                {payForm.amountMode ? 'Record Payment — Any Amount' : `Record Payment — ${payForm.ids.length} instalment${payForm.ids.length > 1 ? 's' : ''}`}
                               </div>
                               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                <div>
-                                  <label style={{ fontSize: '.75rem', fontWeight: 700, color: '#64748b', display: 'block', marginBottom: 3 }}>Payment Date</label>
-                                  <input type="date" value={payForm.date} onChange={e => setPayForm(p => ({ ...p, date: e.target.value }))} style={panelInputSt} />
+                                {payForm.amountMode && (
+                                  <div>
+                                    <label style={{ fontSize: '.75rem', fontWeight: 700, color: '#64748b', display: 'block', marginBottom: 3 }}>Amount Received (₹)</label>
+                                    <input type="number" min="1" placeholder="10000" value={payForm.amount} autoFocus
+                                      onChange={e => setPayForm(p => ({ ...p, amount: e.target.value }))} style={panelInputSt} />
+                                    {(() => {
+                                      const amt = Number(payForm.amount)
+                                      if (!amt || amt <= 0) return (
+                                        <div style={{ fontSize: '.72rem', color: '#94a3b8', marginTop: 4 }}>
+                                          Enter any amount — it will fill the months in order. Remaining: {fmt(currentPlan.totalRemaining)}
+                                        </div>
+                                      )
+                                      const { parts, excess } = allocPreview(currentPlan, amt)
+                                      return (
+                                        <div style={{ marginTop: 6, background: '#eff6ff', borderRadius: 8, padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                          {parts.map(pt => (
+                                            <div key={pt.label} style={{ fontSize: '.75rem', fontWeight: 700, color: pt.full ? '#065f46' : '#1e40af' }}>
+                                              {pt.full ? '✓' : '◐'} {pt.label} — {fmt(pt.pay)}{pt.full ? '' : ' (partial)'}
+                                            </div>
+                                          ))}
+                                          {excess > 0 && (
+                                            <div style={{ fontSize: '.75rem', fontWeight: 700, color: '#dc2626' }}>
+                                              ⚠ {fmt(excess)} more than remaining fee — reduce the amount
+                                            </div>
+                                          )}
+                                        </div>
+                                      )
+                                    })()}
+                                  </div>
+                                )}
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                                  <div>
+                                    <label style={{ fontSize: '.75rem', fontWeight: 700, color: '#64748b', display: 'block', marginBottom: 3 }}>Payment Date</label>
+                                    <input type="date" value={payForm.date} onChange={e => setPayForm(p => ({ ...p, date: e.target.value }))} style={panelInputSt} />
+                                  </div>
+                                  <div>
+                                    <label style={{ fontSize: '.75rem', fontWeight: 700, color: '#64748b', display: 'block', marginBottom: 3 }}>Payment Method</label>
+                                    <select value={payForm.method} onChange={e => setPayForm(p => ({ ...p, method: e.target.value }))} style={panelSelectSt}>
+                                      {PAY_METHODS.map(m => <option key={m} value={m}>{m}</option>)}
+                                    </select>
+                                  </div>
                                 </div>
                                 <div>
                                   <label style={{ fontSize: '.75rem', fontWeight: 700, color: '#64748b', display: 'block', marginBottom: 3 }}>Notes (optional)</label>
-                                  <input type="text" placeholder="e.g. Cash, UPI…" value={payForm.notes} onChange={e => setPayForm(p => ({ ...p, notes: e.target.value }))} style={panelInputSt} />
+                                  <input type="text" placeholder="e.g. reference no., remarks…" value={payForm.notes} onChange={e => setPayForm(p => ({ ...p, notes: e.target.value }))} style={panelInputSt} />
                                 </div>
                                 <div style={{ display: 'flex', gap: 8 }}>
-                                  <button onClick={confirmPay} disabled={paySaving}
-                                    style={{ flex: 1, padding: '8px 0', background: '#065f46', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '.85rem', cursor: 'pointer' }}>
-                                    {paySaving ? 'Saving…' : 'Confirm Payment'}
-                                  </button>
-                                  <button onClick={() => setPayForm(p => ({ ...p, open: false }))}
+                                  {(() => {
+                                    const amt = Number(payForm.amount)
+                                    const invalid = paySaving || (payForm.amountMode && (!amt || amt <= 0 || allocPreview(currentPlan, amt).excess > 0))
+                                    return (
+                                      <button onClick={confirmPay} disabled={invalid}
+                                        style={{ flex: 1, padding: '8px 0', background: invalid ? '#94a3b8' : '#065f46', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '.85rem', cursor: invalid ? 'default' : 'pointer' }}>
+                                        {paySaving ? 'Saving…' : 'Confirm Payment'}
+                                      </button>
+                                    )
+                                  })()}
+                                  <button onClick={() => setPayForm(p => ({ ...p, open: false, amountMode: false, amount: '' }))}
                                     style={{ padding: '8px 14px', background: '#f1f5f9', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '.85rem', cursor: 'pointer', color: '#64748b' }}>
                                     Cancel
                                   </button>

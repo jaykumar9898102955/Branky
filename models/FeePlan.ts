@@ -33,6 +33,7 @@ export interface InstallmentRow extends RowDataPacket {
   paidDate: Date | string | null
   status: 'pending' | 'paid' | 'partial'
   paidAmount: string
+  payment_method: string | null
   notes: string | null
   reminderSent: number
   createdAt: Date
@@ -49,6 +50,7 @@ export interface InstallmentDTO {
   paidDate: string | null
   status: 'pending' | 'paid' | 'partial'
   paidAmount: number
+  paymentMethod: string
   notes: string
 }
 
@@ -104,6 +106,7 @@ function installmentToDTO(row: InstallmentRow): InstallmentDTO {
     paidDate: toDateStr(row.paidDate),
     status: row.status,
     paidAmount: Number(row.paidAmount),
+    paymentMethod: row.payment_method ?? '',
     notes: row.notes ?? '',
   }
 }
@@ -252,19 +255,66 @@ export async function getAllFeePlans(): Promise<FeePlanSummaryRow[]> {
   return rows
 }
 
+// Apply a lump-sum payment across pending/partial installments in order.
+// e.g. ₹10,000 on a ₹15,000/3-month plan → Month 1 paid, Month 2 paid.
+export async function payAmount(
+  planId: number,
+  amount: number,
+  paidDate: string,
+  paymentNotes?: string,
+  paymentMethod?: string
+): Promise<void> {
+  const pool = getPool()
+  const [rows] = await pool.query<InstallmentRow[]>(
+    `SELECT * FROM fees WHERE fee_plan_id = ? AND status != 'paid' ORDER BY installment_number ASC`,
+    [planId]
+  )
+
+  let left = Math.round(amount * 100) / 100
+  for (const row of rows) {
+    if (left <= 0) break
+    const due = Math.round((Number(row.amount) - Number(row.paidAmount)) * 100) / 100
+    if (due <= 0) continue
+    const pay = Math.min(due, left)
+    left = Math.round((left - pay) * 100) / 100
+    const newPaid = Math.round((Number(row.paidAmount) + pay) * 100) / 100
+    const fullyPaid = newPaid >= Number(row.amount) - 0.009
+    await pool.query(
+      `UPDATE fees
+       SET paidAmount = ?, status = ?, paidDate = ?,
+           payment_method = COALESCE(NULLIF(?, ''), payment_method),
+           notes = COALESCE(NULLIF(?, ''), notes)
+       WHERE id = ?`,
+      [newPaid, fullyPaid ? 'paid' : 'partial', paidDate, paymentMethod ?? '', paymentNotes ?? '', row.id]
+    )
+  }
+
+  await pool.query(
+    `UPDATE fee_plans fp
+     SET fp.status = IF(
+       (SELECT COUNT(*) FROM fees f WHERE f.fee_plan_id = fp.id AND f.status != 'paid') = 0,
+       'completed', 'active'
+     )
+     WHERE fp.id = ?`,
+    [planId]
+  )
+}
+
 export async function payInstallments(
   installmentIds: number[],
   paidDate: string,
-  paymentNotes?: string
+  paymentNotes?: string,
+  paymentMethod?: string
 ): Promise<void> {
   const pool = getPool()
   for (const feeId of installmentIds) {
     await pool.query(
       `UPDATE fees
        SET status = 'paid', paidDate = ?, paidAmount = amount,
+           payment_method = COALESCE(NULLIF(?, ''), payment_method),
            notes = COALESCE(NULLIF(?, ''), notes)
        WHERE id = ?`,
-      [paidDate, paymentNotes ?? '', feeId]
+      [paidDate, paymentMethod ?? '', paymentNotes ?? '', feeId]
     )
   }
   // Auto-complete plan if all instalments paid

@@ -101,6 +101,11 @@ SET @dc := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA =
 SET @sd := IF(@dc = 0, 'ALTER TABLE fee_plans ADD COLUMN discount DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER total_fee', 'SELECT 1');
 PREPARE stmt FROM @sd; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
+-- ─── Add payment_method column to fees (safe re-run) ─────────────────────
+SET @pm := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'fees' AND COLUMN_NAME = 'payment_method');
+SET @sp := IF(@pm = 0, 'ALTER TABLE fees ADD COLUMN payment_method VARCHAR(50) NULL AFTER paidDate', 'SELECT 1');
+PREPARE stmt FROM @sp; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
 -- ─── Program master (admin-only list used for student/fee-plan dropdowns) ─
 CREATE TABLE IF NOT EXISTS programs (
   id              INT AUTO_INCREMENT PRIMARY KEY,
