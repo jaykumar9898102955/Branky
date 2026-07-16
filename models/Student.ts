@@ -184,7 +184,11 @@ export async function updateStudent(id: number, patch: UpdateStudentInput): Prom
 
 export async function deleteStudent(id: number): Promise<boolean> {
   const pool = getPool()
-  const [result] = await pool.query<ResultSetHeader>('DELETE FROM students WHERE id = ?', [id])
+  // Deleting the registration cascades to the student, fee plans, and fee records
+  const [result] = await pool.query<ResultSetHeader>(
+    'DELETE r FROM registrations r JOIN students s ON s.registration_id = r.id WHERE s.id = ?',
+    [id]
+  )
   return result.affectedRows > 0
 }
 

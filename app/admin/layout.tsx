@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
-import { AlertTriangle, LayoutDashboard, ClipboardList, Users, BookOpen, Globe, LogOut } from 'lucide-react'
+import { AlertTriangle, LayoutDashboard, ClipboardList, Users, BookOpen, Globe, LogOut, Eye, EyeOff } from 'lucide-react'
 
 const NAV = [
   { href: '/admin',                  Icon: LayoutDashboard, label: 'Dashboard'     },
@@ -16,6 +16,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [authed, setAuthed]         = useState(false)
   const [sideOpen, setSideOpen]     = useState(false)
   const [loginForm, setLoginForm]   = useState({ email: '', password: '' })
+  const [showPw, setShowPw]         = useState(false)
   const [loginErr, setLoginErr]     = useState('')
   const [loggingIn, setLoggingIn]   = useState(false)
   const pathname = usePathname()
@@ -59,6 +60,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => { verify() }, [verify])
 
+  // The public site hides the native cursor (globals.css body{cursor:none})
+  // and draws a custom one — but the Cursor component skips /admin routes,
+  // so restore the real mouse pointer for the whole admin area.
+  useEffect(() => {
+    document.body.style.cursor = 'auto'
+    return () => { document.body.style.cursor = '' }
+  }, [])
+
   // ── login ────────────────────────────────────────────────────────────────
   const login = async () => {
     setLoggingIn(true); setLoginErr('')
@@ -90,15 +99,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div style={{ width: 44, height: 44, border: '4px solid #e2e8f0', borderTop: '4px solid #1D5CE3', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 16px' }} />
         <div style={{ color: '#64748b', fontWeight: 600 }}>Loading admin…</div>
       </div>
-      <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+      <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}body{cursor:auto!important}`}</style>
     </div>
   )
 
   // ── login form ───────────────────────────────────────────────────────────
   if (!authed) return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#1D5CE3,#1448b8)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, fontFamily: 'Karla, sans-serif' }}>
-      {/* hide global WhatsApp button on admin */}
-      <style>{`a[href*="wa.me"]{display:none!important}@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
+      {/* hide global WhatsApp button on admin + restore native cursor */}
+      <style>{`a[href*="wa.me"]{display:none!important}@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}body{cursor:auto!important}button:not(:disabled),a{cursor:pointer!important}input{cursor:text!important}`}</style>
       <div style={{ background: '#fff', borderRadius: 28, padding: 'clamp(32px,5vw,52px)', width: 'min(420px,96vw)', boxShadow: '0 40px 100px rgba(0,0,0,.3)', position: 'relative' }}>
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 5, background: 'linear-gradient(90deg,#1D5CE3,#FF931E)', borderRadius: '28px 28px 0 0' }} />
         <Image src="/assets/logo-main.png" alt="Branky" width={150} height={48} style={{ objectFit: 'contain', marginBottom: 8, display: 'block', height: 'auto' }} />
@@ -108,18 +117,30 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <AlertTriangle size={16} /> {loginErr}
           </div>
         )}
-        {[{ k: 'email', l: 'Email', t: 'email', p: 'admin@brankylabs.in' }, { k: 'password', l: 'Password', t: 'password', p: '••••••••' }].map(f => (
+        {[{ k: 'email', l: 'Email', t: 'email', p: 'admin@brankylabs.in' }, { k: 'password', l: 'Password', t: 'password', p: '••••••••' }].map(f => {
+          const isPw = f.k === 'password'
+          return (
           <div key={f.k} style={{ marginBottom: 14 }}>
             <label style={{ display: 'block', fontSize: '.73rem', fontWeight: 800, letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 6, color: '#1e293b' }}>{f.l}</label>
-            <input
-              type={f.t} placeholder={f.p}
-              value={(loginForm as any)[f.k]}
-              onChange={e => setLoginForm(x => ({ ...x, [f.k]: e.target.value }))}
-              onKeyDown={e => e.key === 'Enter' && login()}
-              style={{ width: '100%', padding: '12px 16px', background: '#f8fafc', border: '2px solid #e2e8f0', borderRadius: 12, fontFamily: 'Karla,sans-serif', fontSize: '.95rem', outline: 'none', boxSizing: 'border-box' }}
-            />
+            <div style={{ position: 'relative' }}>
+              <input
+                type={isPw && showPw ? 'text' : f.t} placeholder={f.p}
+                value={(loginForm as any)[f.k]}
+                onChange={e => setLoginForm(x => ({ ...x, [f.k]: e.target.value }))}
+                onKeyDown={e => e.key === 'Enter' && login()}
+                style={{ width: '100%', padding: '12px 16px', paddingRight: isPw ? 46 : 16, background: '#f8fafc', border: '2px solid #e2e8f0', borderRadius: 12, fontFamily: 'Karla,sans-serif', fontSize: '.95rem', outline: 'none', boxSizing: 'border-box' }}
+              />
+              {isPw && (
+                <button type="button" onClick={() => setShowPw(s => !s)} tabIndex={-1}
+                  title={showPw ? 'Hide password' : 'Show password'}
+                  style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#64748b', padding: 6, display: 'flex', alignItems: 'center' }}>
+                  {showPw ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              )}
+            </div>
           </div>
-        ))}
+          )
+        })}
         <button onClick={login} disabled={loggingIn}
           style={{ width: '100%', padding: 14, background: loggingIn ? '#94a3b8' : '#1D5CE3', color: '#fff', border: 'none', borderRadius: 14, fontWeight: 800, fontSize: '1rem', cursor: loggingIn ? 'not-allowed' : 'pointer', fontFamily: 'Karla,sans-serif', marginTop: 4 }}>
           {loggingIn ? 'Logging in…' : 'Login to Admin →'}
@@ -138,7 +159,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
         @media(max-width:768px){ .admin-sidebar{transform:translateX(-100%)!important} .admin-sidebar.open{transform:translateX(0)!important} .admin-overlay{display:block!important} }
         .admin-root,.admin-root *{cursor:default!important}
-        .admin-root button:not(:disabled),.admin-root a{cursor:pointer!important;}
+        .admin-root button:not(:disabled),.admin-root a,.admin-root select{cursor:pointer!important;}
+        .admin-root input[type=text],.admin-root input[type=email],.admin-root input[type=password],.admin-root input[type=tel],.admin-root input[type=number],.admin-root input[type=search],.admin-root textarea{cursor:text!important;}
         .admin-nav-link{transition:background .15s,color .15s;}
         .admin-nav-link:not(.nav-active):hover{background:rgba(255,255,255,.1)!important;color:rgba(255,255,255,.9)!important;}
         .admin-site-link:hover{background:rgba(255,255,255,.07)!important;color:rgba(255,255,255,.65)!important;}
@@ -195,7 +217,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Main content */}
-      <div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f1f5f9', display: 'flex', flexDirection: 'column' }}>
+      <div className="admin-main" style={{ marginLeft: 220, flex: 1, minHeight: '100vh', background: '#f1f5f9', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         {/* Top bar (mobile hamburger) */}
         <div style={{ background: '#0f172a', height: 52, display: 'none', alignItems: 'center', paddingLeft: 16, gap: 12, position: 'sticky', top: 0, zIndex: 30 }}
           className="mobile-topbar">
@@ -206,7 +228,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         <style>{`
           @media(max-width:768px){
-            div[style*="marginLeft: 220px"]{margin-left:0!important}
+            .admin-main{margin-left:0!important}
             .mobile-topbar{display:flex!important}
           }
         `}</style>

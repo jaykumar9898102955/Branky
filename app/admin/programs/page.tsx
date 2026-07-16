@@ -88,8 +88,8 @@ export default function ProgramsMasterPage() {
         </div>
 
         {/* Table */}
-        <div style={{ background: '#fff', borderRadius: 20, boxShadow: '0 2px 16px rgba(0,0,0,.05)', overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <div style={{ background: '#fff', borderRadius: 20, boxShadow: '0 2px 16px rgba(0,0,0,.05)', overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 480 }}>
             <thead>
               <tr style={{ background: '#f8fafc', textAlign: 'left' }}>
                 <th style={{ padding: '12px 20px', fontSize: '.78rem', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.05em' }}>Name</th>

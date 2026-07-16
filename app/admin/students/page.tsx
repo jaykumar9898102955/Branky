@@ -339,7 +339,8 @@ export default function StudentsPage() {
     <div style={{ minHeight: '100vh', background: '#f1f5f9', fontFamily: 'var(--font-body,system-ui,sans-serif)' }}>
       <style dangerouslySetInnerHTML={{ __html: `
         @media(max-width:600px){.stu-stats{grid-template-columns:1fr!important;}}
-        @media(max-width:768px){.stu-modal-cols{grid-template-columns:1fr!important;}.stu-modal-left{border-right:none!important;border-bottom:1px solid #e2e8f0;}}
+        @media(max-width:768px){.stu-modal-cols{grid-template-columns:1fr!important;}.stu-modal-right{order:1;}.stu-modal-left{order:2;border-right:none!important;border-top:1px solid #e2e8f0;}}
+        @media(max-width:480px){.stu-grid2{grid-template-columns:1fr!important;}}
       ` }} />
       {/* ── Offline Modal (2 steps) ── */}
       {offlineForm.open && (
@@ -367,7 +368,7 @@ export default function StudentsPage() {
             <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
               {offlineForm.step === 1 ? (
                 <>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <div className="stu-grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     {[{ label: 'Student Name *', key: 'studentName', type: 'text', ph: 'Full name' }, { label: 'Phone *', key: 'phone', type: 'tel', ph: '98765 43210' }].map(f => (
                       <div key={f.key}>
                         <label style={{ fontSize: '.75rem', fontWeight: 700, color: '#64748b', display: 'block', marginBottom: 3 }}>{f.label}</label>
@@ -423,7 +424,7 @@ export default function StudentsPage() {
                   <div style={{ background: '#eff6ff', borderRadius: 10, padding: '8px 14px', fontSize: '.85rem', fontWeight: 700, color: '#1D5CE3', border: '1.5px solid #bfdbfe' }}>
                     📚 {offlineForm.program === 'Other' ? offlineForm.customProgram : offlineForm.program}
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <div className="stu-grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     <div>
                       <label style={{ fontSize: '.75rem', fontWeight: 700, color: '#64748b', display: 'block', marginBottom: 3 }}>Total Fee (₹) *</label>
                       <input type="number" placeholder="15000" value={offlineForm.feeTotalFee}
@@ -435,7 +436,7 @@ export default function StudentsPage() {
                         onChange={e => setOfflineForm(p => ({ ...p, feeDiscount: e.target.value }))} style={inputSt} />
                     </div>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <div className="stu-grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     <div>
                       <label style={{ fontSize: '.75rem', fontWeight: 700, color: '#64748b', display: 'block', marginBottom: 3 }}>Duration (months)</label>
                       <input type="number" min="1" value={offlineForm.feeMonths}
@@ -680,8 +681,8 @@ export default function StudentsPage() {
                       </button>
                     ) : (
                       <div style={{ background: '#fef2f2', border: '1.5px solid #fca5a5', borderRadius: 10, padding: '12px' }}>
-                        <div style={{ fontWeight: 700, fontSize: '.8rem', color: '#991b1b', marginBottom: 6 }}>Delete this student and all fee records?</div>
-                        <div style={{ fontSize: '.72rem', color: '#b91c1c', marginBottom: 10 }}>This cannot be undone. The registration record will be kept.</div>
+                        <div style={{ fontWeight: 700, fontSize: '.8rem', color: '#991b1b', marginBottom: 6 }}>Delete this student completely?</div>
+                        <div style={{ fontSize: '.72rem', color: '#b91c1c', marginBottom: 10 }}>This deletes the student, their registration, fee plans and all payment records. This cannot be undone.</div>
                         <div style={{ display: 'flex', gap: 6 }}>
                           <button onClick={confirmDeleteStudent} disabled={deleting}
                             style={{ flex: 1, padding: '7px 0', background: deleting ? '#94a3b8' : '#dc2626', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '.8rem' }}>
@@ -698,7 +699,7 @@ export default function StudentsPage() {
                 </div>
 
                 {/* Right column — fee plans */}
-                <div style={{ padding: '20px 20px', overflowY: 'auto' }}>
+                <div className="stu-modal-right" style={{ padding: '20px 20px', overflowY: 'auto' }}>
                 {/* Fee Plans */}
                 <div>
                   <div style={{ fontWeight: 800, fontSize: '.95rem', color: '#0d0d0d', marginBottom: 14 }}>Fee Plans</div>
@@ -759,7 +760,7 @@ export default function StudentsPage() {
                                 onChange={e => setFpForm(p => ({ ...p, courseCustom: e.target.value }))} style={panelInputSt} />
                             </div>
                           )}
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                          <div className="stu-grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                             {[{ label: 'Total Fee (₹)', key: 'totalFee', type: 'number', ph: '15000' }, { label: 'Discount (₹)', key: 'discount', type: 'number', ph: '0' }].map(f => (
                               <div key={f.key}>
                                 <label style={{ fontSize: '.75rem', fontWeight: 700, color: '#64748b', display: 'block', marginBottom: 3 }}>{f.label}</label>
@@ -768,7 +769,7 @@ export default function StudentsPage() {
                               </div>
                             ))}
                           </div>
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                          <div className="stu-grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                             {[{ label: 'Duration (months)', key: 'months', type: 'number', ph: '3' }, { label: 'Start Date', key: 'startDate', type: 'date', ph: '' }].map(f => (
                               <div key={f.key}>
                                 <label style={{ fontSize: '.75rem', fontWeight: 700, color: '#64748b', display: 'block', marginBottom: 3 }}>{f.label}</label>
@@ -1021,7 +1022,7 @@ export default function StudentsPage() {
                                     })()}
                                   </div>
                                 )}
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                                <div className="stu-grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                                   <div>
                                     <label style={{ fontSize: '.75rem', fontWeight: 700, color: '#64748b', display: 'block', marginBottom: 3 }}>Payment Date</label>
                                     <input type="date" value={payForm.date} onChange={e => setPayForm(p => ({ ...p, date: e.target.value }))} style={panelInputSt} />

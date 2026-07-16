@@ -169,9 +169,20 @@ export async function generateInstallmentReceipt(
 </body>
 </html>`
 
-  const win = window.open('', '_blank', 'width=800,height=900')
-  if (win) {
-    win.document.write(html)
-    win.document.close()
+  // Open via a Blob URL as a plain new tab — mobile browsers block
+  // window.open with width/height features as a popup.
+  const blob = new Blob([html], { type: 'text/html' })
+  const url = URL.createObjectURL(blob)
+  const win = window.open(url, '_blank')
+  if (!win) {
+    // Popup still blocked — trigger the tab through a real anchor click
+    const a = document.createElement('a')
+    a.href = url
+    a.target = '_blank'
+    a.rel = 'noopener'
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
   }
+  setTimeout(() => URL.revokeObjectURL(url), 60_000)
 }
