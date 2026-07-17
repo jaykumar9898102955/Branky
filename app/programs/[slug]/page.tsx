@@ -13,8 +13,9 @@ export function generateStaticParams() {
   return programs.map(p => ({ slug: p.slug }))
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const program = getProgramBySlug(params.slug)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const program = getProgramBySlug(slug)
   if (!program) return {}
 
   const title = `${program.title} (Ages ${program.age}) — Branky STEM Labs Vadodara`
@@ -38,8 +39,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default function ProgramPage({ params }: { params: { slug: string } }) {
-  const program = getProgramBySlug(params.slug)
+export default async function ProgramPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const program = getProgramBySlug(slug)
   if (!program) notFound()
 
   const courseSchema = {

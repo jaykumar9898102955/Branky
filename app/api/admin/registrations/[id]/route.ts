@@ -9,9 +9,9 @@ function parseId(raw: string): number | null {
   return n
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!isAuthenticated(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  const id = parseId(params.id)
+  const id = parseId((await params).id)
   if (!id) return NextResponse.json({ error: 'Invalid id' }, { status: 400 })
   try {
     await connectDB()
@@ -25,9 +25,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!isAuthenticated(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  const id = parseId(params.id)
+  const id = parseId((await params).id)
   if (!id) return NextResponse.json({ error: 'Invalid id' }, { status: 400 })
   try {
     await connectDB()

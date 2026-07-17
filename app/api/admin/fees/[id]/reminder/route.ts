@@ -3,11 +3,12 @@ import { connectDB } from '@/lib/db'
 import { getFeeById, markReminderSent } from '@/models/Fee'
 import { isAuthenticated } from '@/lib/auth'
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!isAuthenticated(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const { id } = await params
   try {
     await connectDB()
-    const fee = await getFeeById(Number(params.id))
+    const fee = await getFeeById(Number(id))
     if (!fee) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
     const digits = (fee.phone || '').replace(/\D/g, '')
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
     const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
 
-    await markReminderSent(Number(params.id))
+    await markReminderSent(Number(id))
 
     return NextResponse.json({ success: true, whatsappUrl })
   } catch (err) {
