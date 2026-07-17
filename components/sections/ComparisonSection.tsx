@@ -28,7 +28,7 @@ export default function ComparisonSection() {
 
       {/* Decorative bg — wave top-left */}
       <div style={{ position: 'absolute', top: -40, left: -40, width: 260, pointerEvents: 'none', opacity: 0.08, animation: 'blobFloat 10s ease-in-out infinite' }}>
-        <Image src="/assets/brand-wave.png" alt="" width={260} height={260} style={{ width: '100%', height: 'auto', filter: 'brightness(0) invert(1)' }} />
+        <Image src="/assets/brand-wave.png" alt="" width={647} height={646} style={{ width: '100%', height: 'auto', filter: 'brightness(0) invert(1)' }} />
       </div>
 
       <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>

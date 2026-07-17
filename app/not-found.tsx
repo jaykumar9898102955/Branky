@@ -47,9 +47,9 @@ export default function NotFound() {
         <Image
           src="/assets/logo-main.png"
           alt="Branky STEM Labs"
-          width={140}
-          height={44}
-          style={{ objectFit: 'contain', marginBottom: 24, height: 'auto' }}
+          width={761}
+          height={285}
+          style={{ objectFit: 'contain', marginBottom: 24, width: 140, height: 'auto' }}
         />
 
         {/* 404 big number */}

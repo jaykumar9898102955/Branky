@@ -115,8 +115,8 @@ export default function TeachAndJoinSection() {
         <Image
           src="/assets/brand-wave.png"
           alt=""
-          width={900}
-          height={600}
+          width={647}
+          height={646}
           className="join-wave"
           aria-hidden="true"
         />

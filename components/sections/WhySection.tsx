@@ -17,11 +17,11 @@ export default function WhySection() {
     <section id="why" style={{ background:'var(--orange)', padding:'96px 5%', position:'relative', overflow:'hidden' }}>
       {/* Brand wave top-left */}
       <div style={{ position:'absolute', top:-20, left:-30, width:'20%', maxWidth:200, opacity:.1, pointerEvents:'none', animation:'blobFloat 10s ease-in-out infinite' }}>
-        <Image src="/assets/brand-wave.png" alt="" width={200} height={200} style={{ width:'100%', height:'auto', filter:'brightness(0) invert(1)' }} />
+        <Image src="/assets/brand-wave.png" alt="" width={647} height={646} style={{ width:'100%', height:'auto', filter:'brightness(0) invert(1)' }} />
       </div>
       {/* Brand shapes bottom-right */}
       <div style={{ position:'absolute', bottom:-30, right:-20, width:'18%', maxWidth:180, opacity:.07, pointerEvents:'none' }}>
-        <Image src="/assets/brand-shapes.png" alt="" width={180} height={180} style={{ width:'100%', height:'auto', filter:'brightness(0) invert(1)' }} />
+        <Image src="/assets/brand-shapes.png" alt="" width={1994} height={1836} style={{ width:'100%', height:'auto', filter:'brightness(0) invert(1)' }} />
       </div>
 
       <div style={{ maxWidth:1200, margin:'0 auto', position:'relative', zIndex:1 }}>

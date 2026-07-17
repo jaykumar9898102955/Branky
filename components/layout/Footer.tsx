@@ -24,14 +24,14 @@ export default function Footer() {
 
       {/* Brand wave decoration */}
       <div style={{ position:'absolute',left:-40,bottom:40,width:'18%',maxWidth:180,opacity:.05,pointerEvents:'none',transform:'scaleX(-1)' }}>
-        <Image src="/assets/brand-wave.png" alt="" width={180} height={180} style={{ width:'100%',height:'auto',filter:'brightness(0) invert(1)' }} />
+        <Image src="/assets/brand-wave.png" alt="" width={647} height={646} style={{ width:'100%',height:'auto',filter:'brightness(0) invert(1)' }} />
       </div>
 
       <div className='footer-wrapper' style={{ maxWidth:1200,margin:'0 auto',padding:'64px 0',display:'grid',gridTemplateColumns:'2fr 1.2fr 1fr 1.2fr',gap:'4%' }}>
 
         {/* Column 1 — Brand */}
         <div>
-          <Image src="/assets/logo-15.png" alt="Branky STEM Labs" width={150} height={48} style={{ objectFit:'contain',marginBottom:18,filter:'brightness(0) invert(1)',height:'auto' }} />
+          <Image src="/assets/logo-15.png" alt="Branky STEM Labs" width={717} height={283} style={{ objectFit:'contain',marginBottom:18,filter:'brightness(0) invert(1)',width:150,height:'auto' }} />
           <p style={{ fontSize:'.87rem',color:'rgba(255,255,255,.5)',lineHeight:1.8,marginBottom:24,maxWidth:280 }}>
             Vadodara's full-fledged AI, Robotics &amp; Coding centre for ages 4–14, built around hands-on learning, smart labs and real technology exposure.
           </p>

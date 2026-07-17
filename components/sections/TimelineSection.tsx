@@ -16,7 +16,7 @@ export default function TimelineSection() {
       <div style={{ position:'absolute', inset:0, backgroundImage:"url('/assets/brand-grid.png')", backgroundSize:'cover', opacity:.035, pointerEvents:'none', zIndex:0 }} />
       {/* Brand wave decor */}
       <div style={{ position:'absolute', right:-30, bottom:40, width:'16%', maxWidth:160, opacity:.06, pointerEvents:'none', transform:'rotate(180deg)' }}>
-        <Image src="/assets/brand-wave.png" alt="" width={160} height={160} style={{ width:'100%', height:'auto' }} />
+        <Image src="/assets/brand-wave.png" alt="" width={647} height={646} style={{ width:'100%', height:'auto' }} />
       </div>
 
       <div style={{ maxWidth:1100, margin:'0 auto', position:'relative', zIndex:1 }}>

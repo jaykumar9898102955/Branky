@@ -10,7 +10,7 @@ export default function AboutSection() {
     <section id="about" style={{ background:'var(--gray-xlight)',padding:'96px 5%',position:'relative',overflow:'hidden' }}>
       {/* Brand shapes bg */}
       <div style={{ position:'absolute',bottom:-60,right:-40,width:'30%',maxWidth:260,opacity:.04,pointerEvents:'none' }}>
-        <Image src="/assets/brand-shapes.png" alt="" width={260} height={260} style={{ width:'100%',height:'auto' }} />
+        <Image src="/assets/brand-shapes.png" alt="" width={1994} height={1836} style={{ width:'100%',height:'auto' }} />
       </div>
 
       <div style={{ maxWidth:1200,margin:'0 auto',display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8%',alignItems:'center' }}>

@@ -110,7 +110,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <style>{`a[href*="wa.me"]{display:none!important}@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}body{cursor:auto!important}button:not(:disabled),a{cursor:pointer!important}input{cursor:text!important}`}</style>
       <div style={{ background: '#fff', borderRadius: 28, padding: 'clamp(32px,5vw,52px)', width: 'min(420px,96vw)', boxShadow: '0 40px 100px rgba(0,0,0,.3)', position: 'relative' }}>
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 5, background: 'linear-gradient(90deg,#1D5CE3,#FF931E)', borderRadius: '28px 28px 0 0' }} />
-        <Image src="/assets/logo-main.png" alt="Branky" width={150} height={48} style={{ objectFit: 'contain', marginBottom: 8, display: 'block', height: 'auto' }} />
+        <Image src="/assets/logo-main.png" alt="Branky" width={761} height={285} style={{ objectFit: 'contain', marginBottom: 8, display: 'block', width: 150, height: 'auto' }} />
         <p style={{ fontSize: '.88rem', color: '#64748b', marginBottom: 28, fontWeight: 600 }}>Admin Panel — Secure Login</p>
         {loginErr && (
           <div style={{ background: '#fef2f2', border: '2px solid #fecaca', borderRadius: 12, padding: '11px 16px', marginBottom: 16, fontSize: '.87rem', color: '#dc2626', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -182,7 +182,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         style={{ width: 220, background: '#0f172a', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, bottom: 0, left: 0, zIndex: 50, transition: 'transform .25s ease', overflowY: 'auto' }}>
         {/* Logo */}
         <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid rgba(255,255,255,.08)' }}>
-          <Image src="/assets/logo-15.png" alt="Branky" width={110} height={36} style={{ objectFit: 'contain', filter: 'brightness(0) invert(1)', height: 'auto', display: 'block' }} />
+          <Image src="/assets/logo-15.png" alt="Branky" width={717} height={283} style={{ objectFit: 'contain', filter: 'brightness(0) invert(1)', width: 110, height: 'auto', display: 'block' }} />
           <div style={{ marginTop: 8, fontSize: '.72rem', color: 'rgba(255,255,255,.4)', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase' }}>Admin Panel</div>
         </div>
 

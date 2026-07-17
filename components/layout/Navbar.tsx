@@ -30,7 +30,7 @@ export default function Navbar() {
 
         {/* Logo */}
         <Link href="/" style={{ display:'flex', alignItems:'center', flexShrink:0 }}>
-          <Image src="/assets/logo-main.png" alt="Branky STEM Labs" width={140} height={44} style={{ objectFit:'contain', height:'auto' }} priority />
+          <Image src="/assets/logo-main.png" alt="Branky STEM Labs" width={761} height={285} style={{ objectFit:'contain', width:140, height:'auto' }} priority />
         </Link>
 
         {/* Desktop nav */}

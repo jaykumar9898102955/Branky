@@ -32,7 +32,7 @@ export default function ContactPage() {
         {/* Page Hero */}
         <section style={{ padding:'120px 5% 72px', background:'linear-gradient(135deg,var(--blue-xpale) 0%,#fff 70%)', position:'relative', overflow:'hidden' }}>
           <div style={{ position:'absolute', top:-40, right:-60, width:'30%', maxWidth:340, opacity:.12, pointerEvents:'none', animation:'blobFloat 10s ease-in-out infinite' }}>
-            <Image src="/assets/brand-wave.png" alt="" width={340} height={340} style={{ width:'100%', height:'auto' }} />
+            <Image src="/assets/brand-wave.png" alt="" width={647} height={646} style={{ width:'100%', height:'auto' }} />
           </div>
           <div style={{ maxWidth:1200, margin:'0 auto', position:'relative', zIndex:1, textAlign:'center' }}>
 <div className="tag tag-blue" style={{ margin:'0 auto 20px' }}>Get in Touch</div>

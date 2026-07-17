@@ -69,7 +69,7 @@ export default function ApplyModal({ isOpen, onClose, defaultProgram }: Props) {
 
         {!success?(
           <>
-            <Image src="/assets/logo-main.png" alt="Branky" width={130} height={42} style={{objectFit:'contain',marginBottom:18,display:'block',height:'auto'}} />
+            <Image src="/assets/logo-main.png" alt="Branky" width={761} height={285} style={{objectFit:'contain',marginBottom:18,display:'block',width:130,height:'auto'}} />
             <div style={{display:'inline-flex',alignItems:'center',gap:7,padding:'5px 14px',background:'var(--orange-pale)',border:'1.5px solid var(--orange-light)',borderRadius:50,fontSize:'.71rem',fontWeight:800,color:'var(--orange-dark)',letterSpacing:'.08em',textTransform:'uppercase',marginBottom:18}}>
               <span style={{width:7,height:7,background:'var(--orange)',borderRadius:'50%',animation:'pulse 2s ease infinite',display:'inline-block'}} />
               2026 Cohort · 120 Seats Only
@@ -117,7 +117,7 @@ export default function ApplyModal({ isOpen, onClose, defaultProgram }: Props) {
         ):(
           <div style={{textAlign:'center',padding:'16px 0'}}>
             <div style={{marginBottom:14,animation:'successPop .5s cubic-bezier(.23,1,.32,1)',display:'flex',justifyContent:'center',color:'var(--orange)'}}><PartyPopper size={60}/></div>
-            <Image src="/assets/logo-main.png" alt="Branky" width={130} height={42} style={{objectFit:'contain',margin:'0 auto 18px',display:'block',height:'auto'}} />
+            <Image src="/assets/logo-main.png" alt="Branky" width={761} height={285} style={{objectFit:'contain',margin:'0 auto 18px',display:'block',width:130,height:'auto'}} />
             <h3 className="h-display" style={{fontSize:'1.7rem',fontWeight:400,color:'var(--black)',marginBottom:10}}>Application Submitted!</h3>
             <p style={{fontSize:'.93rem',color:'var(--gray)',lineHeight:1.7,marginBottom:24}}>Thanks for applying!<br />Our team will call you within <strong>24 hours</strong>.</p>
             <div style={{background:'var(--blue-pale)',borderRadius:14,padding:'16px 18px',marginBottom:24,textAlign:'left',border:'2px solid rgba(29,92,227,.1)'}}>

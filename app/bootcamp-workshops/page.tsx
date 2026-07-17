@@ -41,7 +41,7 @@ export default function BootcampPage() {
       <main>
         <section style={{ padding:'120px 5% 72px', background:'var(--blue)', position:'relative', overflow:'hidden' }}>
           <div style={{ position:'absolute', top:-40, right:-60, width:'30%', maxWidth:340, opacity:.08, pointerEvents:'none', animation:'blobFloat 10s ease-in-out infinite', filter:'brightness(0) invert(1)' }}>
-            <Image src="/assets/brand-wave.png" alt="" width={340} height={340} style={{ width:'100%', height:'auto' }} />
+            <Image src="/assets/brand-wave.png" alt="" width={647} height={646} style={{ width:'100%', height:'auto' }} />
           </div>
           <div style={{ maxWidth:1200, margin:'0 auto', position:'relative', zIndex:1 }}>
             <div className="tag tag-white">Bootcamp &amp; Workshops</div>

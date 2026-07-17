@@ -7,10 +7,10 @@ export default function FreeDemoStrip() {
     <section className="demo-strip">
       {/* Wave decoration */}
       <div className="demo-deco demo-deco-r">
-        <Image src="/assets/brand-wave.png" alt="" width={240} height={240} style={{ width:'100%', height:'auto', filter:'brightness(0) invert(1)' }} />
+        <Image src="/assets/brand-wave.png" alt="" width={647} height={646} style={{ width:'100%', height:'auto', filter:'brightness(0) invert(1)' }} />
       </div>
       <div className="demo-deco demo-deco-l">
-        <Image src="/assets/brand-shapes.png" alt="" width={180} height={180} style={{ width:'100%', height:'auto', filter:'brightness(0) invert(1)' }} />
+        <Image src="/assets/brand-shapes.png" alt="" width={1994} height={1836} style={{ width:'100%', height:'auto', filter:'brightness(0) invert(1)' }} />
       </div>
 
       <div className="demo-inner">

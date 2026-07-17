@@ -16,7 +16,7 @@ export default function ApplyCtaSection({ onApply }: { onApply: () => void }) {
 
       {/* Brand wave decor */}
       <div style={{ position:'absolute', right:-20, top:20, width:'22%', maxWidth:220, opacity:.08, pointerEvents:'none', animation:'blobFloat 9s ease-in-out infinite' }}>
-        <Image src="/assets/brand-wave.png" alt="" width={220} height={220} style={{ width:'100%', height:'auto', filter:'brightness(0) invert(1)' }} />
+        <Image src="/assets/brand-wave.png" alt="" width={647} height={646} style={{ width:'100%', height:'auto', filter:'brightness(0) invert(1)' }} />
       </div>
       <div style={{ maxWidth:1200, margin:'0 auto', position:'relative', zIndex:1, display:'flex', alignItems:'center', justifyContent:'space-between', gap:48, flexWrap:'wrap' }}>
         <div style={{ flex:'1 1 300px' }}>
