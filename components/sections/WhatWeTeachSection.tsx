@@ -48,8 +48,8 @@ export default function WhatWeTeachSection() {
               <Image
                 src="/assets/robot2.png"
                 alt="Branky STEM student"
-                width={300}
-                height={420}
+                width={1792}
+                height={2400}
                 className="wt-photo"
               />
             </div>

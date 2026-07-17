@@ -70,7 +70,7 @@ export default function AboutPage() {
             </div>
             <div className="reveal-right" style={{ position:'relative' }}>
               <div style={{ borderRadius:28, overflow:'hidden', boxShadow:'0 28px 64px rgba(29,92,227,.14)' }}>
-                <Image src="/assets/robot2.png" alt="Branky STEM Labs" width={500} height={420} style={{ width:'100%', height:420, objectFit:'cover', objectPosition:'center', display:'block' }} />
+                <Image src="/assets/robot2.png" alt="Branky STEM Labs" width={1792} height={2400} style={{ width:'100%', height:420, objectFit:'cover', objectPosition:'center', display:'block' }} />
               </div>
               <div style={{ position:'absolute', bottom:-18, right:-18, padding:'14px 18px', background:'#fff', borderRadius:20, border:'2px solid var(--blue-pale)', boxShadow:'0 10px 28px rgba(29,92,227,.14)', display:'flex', alignItems:'center', gap:12 }}>
                 <div style={{ width:40, height:40, background:'var(--blue-pale)', borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>

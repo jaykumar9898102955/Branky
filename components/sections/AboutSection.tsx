@@ -28,7 +28,7 @@ export default function AboutSection() {
                 onMouseLeave={e=>e.currentTarget.style.transform=''} />
             </div>
             <div style={{ borderRadius:20,overflow:'hidden',boxShadow:'0 10px 32px rgba(255,147,30,.09)',border:'3px solid var(--orange-pale)' }}>
-              <Image src="/assets/robot2.png" alt="RC car project" width={300} height={210} style={{ width:'100%',height:200,objectFit:'cover',display:'block',transition:'transform .5s' }}
+              <Image src="/assets/robot2.png" alt="RC car project" width={1792} height={2400} style={{ width:'100%',height:200,objectFit:'cover',display:'block',transition:'transform .5s' }}
                 onMouseEnter={e=>e.currentTarget.style.transform='scale(1.05)'}
                 onMouseLeave={e=>e.currentTarget.style.transform=''} />
             </div>
