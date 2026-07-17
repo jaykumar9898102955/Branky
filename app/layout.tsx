@@ -4,6 +4,10 @@ import './globals.css'
 import ClientShell from '@/components/ui/ClientShell'
 import { programs } from '@/lib/programs-data'
 
+// Cap CDN caching of prerendered HTML (default is s-maxage=1 year, which
+// leaves stale pages referencing deleted build assets after a redeploy).
+export const revalidate = 300
+
 const siteUrl = 'https://brankystemlab.com'
 
 const structuredData = {
@@ -82,9 +86,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
         <link href="https://fonts.cdnfonts.com/css/neue-power" rel="stylesheet" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <link rel="icon" href="/assets/app-icon.png" />
-        <link rel="apple-touch-icon" href="/assets/app-icon.png" />
       </head>
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
