@@ -65,7 +65,6 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://brankystemlab.com'),
   title: 'Branky STEM Labs — AI, Robotics & Coding for Kids | Vadodara',
   description: "Vadodara's full-fledged AI, Robotics & Coding learning centre for children aged 4–14. Hands-on programs, smart labs, expert mentors.",
-  icons: { icon: '/assets/app-icon.png', apple: '/assets/app-icon.png' },
   openGraph: {
     siteName: 'Branky STEM Labs',
     type: 'website',
